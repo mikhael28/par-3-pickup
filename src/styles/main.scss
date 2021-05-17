@@ -89,6 +89,7 @@ body {
     color: var(--primary-text-color);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    padding-top: 100px;
 
     @include font-family("Raleway", sans-serif);
 }
