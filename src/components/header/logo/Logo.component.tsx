@@ -8,7 +8,7 @@ export default function Logo(): JSX.Element {
     return (
         <div className={ logo }>
             <Link href="/">
-                    PWA
+                    Seattle Par 3
             </Link>
         </div>
     );
