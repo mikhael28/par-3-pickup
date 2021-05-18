@@ -42,7 +42,7 @@
   "scripts": {
     "development": "NODE_ENV=development next",
     "start": "NODE_ENV=production next start",
-    "build": "next build",
+    "build": "next build && next export",
     "eslint": "eslint ./src"
   },
   "browserslist": {
