@@ -55,7 +55,7 @@ export default memo(
                     <nav>
                         <div className={ headerControls }>
                             <Logo />
-                            <ThemeToggler />
+                            {/* <ThemeToggler /> */}
                         </div>
                         <Items />
                     </nav>

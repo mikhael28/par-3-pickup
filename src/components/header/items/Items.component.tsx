@@ -10,10 +10,13 @@ const {
 } = styles;
 
 const links = [
-    { name: 'Home', url: '/', alias: [] },
-    { name: 'Pages', url: '/pages', alias: ['/[page]'] },
-    { name: 'Profile', url: '/profile', alias: [] }
+    { name: 'Play', url: '/', alias: [] },
+    // { name: 'Pages', url: '/pages', alias: ['/[page]'] },
+    // { name: 'Profile', url: '/profile', alias: [] },
+    { name: 'Stakes', url: '/stakes', alias: []}
 ];
+
+// @TODO: investigate why stakes link not really working, need hard refresh
 
 export default function Items(): JSX.Element {
     const { pathname } = useRouter();
@@ -27,7 +30,7 @@ export default function Items(): JSX.Element {
                     injectClassNames([
                         active,
                         pathname === url
-                        || alias.includes(pathname)
+                        // || alias.includes(pathname)
                     ])
                   }
                 >

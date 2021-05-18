@@ -51,6 +51,7 @@ export default class A2HS extends PureComponent<unknown, InstallState> {
             true,
             NOTIFICATION_IGNORE_TIME
         );
+        this.setState({ isOpen: false })
     }
 
     installListener = (event: BeforeInstallPromptEvent): void => {
@@ -83,7 +84,7 @@ export default class A2HS extends PureComponent<unknown, InstallState> {
         }
 
         return (
-            <figure className={ A2HSWrapper }>
+            <figure className={ A2HSWrapper } style={{display: 'flex', flexDirection: 'column'}}>
                 <figcaption>
                     👋 Welcome!<br/>
                     Add this app to your home screen for the best experience!

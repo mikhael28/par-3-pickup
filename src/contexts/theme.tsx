@@ -54,7 +54,8 @@ export function ThemeProvider(
         return isUserPreferenceSet ? userPreference : isSystemDarkMode;
     }, []);
 
-    const theme = useState(isDarkMode);
+    // I think editing the code below set default to day-time
+    const theme = useState(false);
 
     useThemeChange(theme);
 

@@ -8,12 +8,13 @@ const {
 export default function Footer(): JSX.Element {
     return (
         <footer className={ footer }>
-            <p>© PWA Boilerplate</p>
+            <p>© Seattle Par 3</p>
             <p>
-                View source code on <a
-                  href="https://github.com/tomburgs/pwa-boilerplate"
+                Source Code on <a
+                  href="https://github.com/mikhael28/seattle-par-3"
                   target="_blank"
                   rel="noreferrer"
+                  style={{cursor: 'pointer'}}
                 >
                     GitHub
                 </a>

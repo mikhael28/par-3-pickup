@@ -4,9 +4,12 @@ import Landing from 'routes/page/landing';
 import A2HS from 'components/a2hs';
 import Sidebar from 'components/sidebar';
 import Html from 'components/html';
+import Card from 'components/card';
 import { usePageData, usePageDetails } from 'hooks/page';
 import { injectClassNames } from 'utils/css';
 import styles from './Page.module.scss';
+import { courses } from '../../config'
+import { useRouter } from 'next/router';
 
 const {
     page,
@@ -50,6 +53,7 @@ export default function Page(props: PageProps): JSX.Element {
     const { isLanding } = props;
     const { title = '', description = '' } = usePageDetails();
     const { content = '' } = usePageData();
+    const router = useRouter();
 
     const classNames = injectClassNames(page, [pageLanding, isLanding]);
 
@@ -60,25 +64,26 @@ export default function Page(props: PageProps): JSX.Element {
                 { addDescriptionTag(description) }
                 <meta name="robots" content="INDEX,FOLLOW" />
             </Head>
-            <main className={ classNames }>
-                { isLanding && <Landing /> }
+            <main>
+                {/* { isLanding && <Landing /> } */}
                 <section>
-                    <div className={ pageContent }>
-                        <A2HS />
-                        <div className={ pageContent }>
-                            { content
-                                ? <Html content={ content } />
-                                : (
-                                    <>
-                                      <figure className={ placeholder } />
-                                      <figure className={ placeholder } />
-                                      <figure className={ placeholder } />
-                                    </>
-                                )
-                            }
-                        </div>
-                    </div>
-                    <Sidebar />
+                    
+                    <A2HS />
+                    <h1>Choose your course 🏌️‍♂️ ⛳</h1>
+                    {courses.map((course, index) => {
+                        return(
+                            <Card {...course} handleClick={() => router.push(`/course/${course.codeName}`)} key={index} />
+                        )
+                    })}
+                    {/* <Card title="Fore!" description="Click or tap here to start a new game!" onClick={() => props.history.push('/course/jackson')} /> */}
+                        {/* <div className={pageContent}>
+                            <>
+                                <figure className={ placeholder } />
+                                <figure className={ placeholder } />
+                                <figure className={ placeholder } />
+                            </>
+                        </div> */}
+                    {/* <Sidebar /> */}
                 </section>
             </main>
         </>
