@@ -57,3 +57,18 @@ export const courses = [
         picture: 'https://d3926qxcw0e1bh.cloudfront.net/pages_avatar_photos/64/0a/640ab7afec2c9468e9512fefbaca1223.jpg'
     }
 ]
+
+export const golfers = [
+    {
+        fName: 'Misha',
+        lName: 'Da 56',
+        handicap: 36,
+        id: 1,
+    },
+    {
+        fName: 'Derek',
+        lName: 'Silverhand',
+        handicap: 36,
+        id: 2
+    }
+]
