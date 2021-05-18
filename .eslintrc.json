@@ -56,7 +56,7 @@
             }
         ],
         "@typescript-eslint/no-unused-expressions": [
-            "warn",
+            "off",
             {
                 "allowShortCircuit": true,
                 "allowTernary": true,
@@ -64,7 +64,7 @@
             }
         ],
         "@typescript-eslint/no-unused-vars": [
-            "warn",
+            "off",
             {
                 "args": "none",
                 "ignoreRestSiblings": true
@@ -85,10 +85,10 @@
         ],
 
         "import/prefer-default-export": 0,
-        "import/no-useless-path-segments": 1,
+        "import/no-useless-path-segments": 0,
         "import/no-duplicates": 1,
         "import/order": 1,
-        "import/newline-after-import": 1,
+        "import/newline-after-import": 0,
         "import/no-unresolved": 0,
 
         "react/jsx-uses-vars": 1,
