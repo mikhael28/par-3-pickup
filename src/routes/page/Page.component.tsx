@@ -79,7 +79,7 @@ export default function Page(props: PageProps): JSX.Element {
 	return (
 		<React.Fragment>
 			<Head>
-				<title>Golf</title>
+				<title>Seattle Golf</title>
 				<meta name="og:title" content="Seattle Pickup Golf" />
 				<meta
 					name="description"

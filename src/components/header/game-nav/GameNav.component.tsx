@@ -9,7 +9,7 @@ import { useRouter } from 'next/router';
 import Card from 'components/card';
 import styles from './GameNav.module.scss';
 
-const { gameNav, active } = styles;
+const { gameNav, active, player } = styles;
 
 export default function GameNav(props: any): JSX.Element {
 	const router = useRouter();
@@ -77,19 +77,39 @@ export default function GameNav(props: any): JSX.Element {
 			<p>Per Hole Wager: ${props.activeGame.perHoleWager}</p>
 			{props.activeGame.players.map((player: any, idx: number) => {
 				return (
-					<div key={idx} style={{ display: 'flex', justifyContent: 'space-evenly' }}>
-						<p>{player.fName}</p>
-						<button onClick={() => decreaseStroke(player)}>-</button>
-						<p>Strokes: {props.activeGame.players[idx].holes[activeHole].score}</p>
+					<figure
+						className={styles.player}
+						key={idx}
+						style={{
+							display: 'flex',
+							alignItems: 'center',
+							justifyContent: 'space-between',
+							cursor: 'default'
+						}}
+					>
+						<div>
+							<img src={player.picture} height="60" width="60" alt={player.fName} />
+						</div>
+						<div>
+							<p>{player.fName}</p>
+						</div>
+						<div style={{ display: 'flex', justifyContent: 'space-between' }}>
+							<button onClick={() => decreaseStroke(player)} style={{ fontSize: 46, marginRight: 14 }}>
+								-
+							</button>
+							<p>Strokes: {props.activeGame.players[idx].holes[activeHole].score}</p>
 
-						<button onClick={() => increaseStroke(player)}>+</button>
-					</div>
+							<button onClick={() => increaseStroke(player)} style={{ fontSize: 46, marginLeft: 14 }}>
+								+
+							</button>
+						</div>
+					</figure>
 				);
 			})}
 			{activeHole === 8 ? <button onClick={saveRound}>Save and finish rounds</button> : null}
 			<div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
 				<button
-					style={{ backgroundColor: 'green', color: 'white', padding: 6 }}
+					style={{ backgroundColor: 'green', color: 'white', padding: 6, borderRadius: 4 }}
 					onClick={() => {
 						if (activeHole !== 0) {
 							const newHole = activeHole - 1;
@@ -102,7 +122,7 @@ export default function GameNav(props: any): JSX.Element {
 				</button>
 				<h1>Hole {activeHole + 1}</h1>
 				<button
-					style={{ backgroundColor: 'green', color: 'white', padding: 6 }}
+					style={{ backgroundColor: 'green', color: 'white', padding: 6, borderRadius: 4 }}
 					onClick={() => {
 						if (activeHole !== 8) {
 							const newHole = activeHole + 1;
@@ -111,7 +131,7 @@ export default function GameNav(props: any): JSX.Element {
 						}
 					}}
 				>
-					Next
+					&nbsp;&nbsp;&nbsp;Next&nbsp;&nbsp;&nbsp;
 				</button>
 			</div>
 		</div>

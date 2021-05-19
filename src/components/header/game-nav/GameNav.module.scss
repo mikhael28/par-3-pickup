@@ -2,55 +2,89 @@
 @use 'styles/variables/theme';
 
 .gameNav {
-    display: flex;
-    align-items: center;
-    flex-flow: column;
-    list-style: none;
-    padding: 0;
+	display: flex;
+	align-items: center;
+	flex-flow: column;
+	list-style: none;
+	padding: 0;
 
-    @include media.mobile {
-        position: fixed;
-        justify-content: space-evenly;
-        bottom: 0;
-        left: 0;
-        height: var(--header-items-height);
-        width: 100vw;
-        box-sizing: border-box;
-        padding: 1rem 1rem max(env(safe-area-inset-bottom), 1rem);
-        background-color: var(--primary-block-color);
-        box-shadow: var(--shadow);
-    }
+	@include media.mobile {
+		position: fixed;
+		justify-content: space-evenly;
+		bottom: 0;
+		left: 0;
+		height: var(--header-items-height);
+		width: 100vw;
+		box-sizing: border-box;
+		padding: 1rem 1rem max(env(safe-area-inset-bottom), 1rem);
+		background-color: var(--primary-block-color);
+		box-shadow: var(--shadow);
+	}
 
-    a {
-        color: var(--primary-text-color);
-        font-weight: 500;
-    }
+	a {
+		color: var(--primary-text-color);
+		font-weight: 500;
+	}
 
-    > li {
-        font-size: 18px;
-        border-radius: 20px;
-        padding: 10px 20px;
-        margin: 0 5px;
-        transition: background-color 200ms;
+	> li {
+		font-size: 18px;
+		border-radius: 20px;
+		padding: 10px 20px;
+		margin: 0 5px;
+		transition: background-color 200ms;
 
-        &:last-child {
-            @include media.after-mobile {
-                margin: 0 0 0 5px;
-            }
-        }
-    }
+		&:last-child {
+			@include media.after-mobile {
+				margin: 0 0 0 5px;
+			}
+		}
+	}
 }
 
 .active {
-    --background-color: rgba(0, 0, 0, .05);
+	--background-color: rgba(0, 0, 0, .05);
 
-    @include theme.dark-mode {
-        --background-color: rgba(255, 255, 255, .05);
-    }
+	@include theme.dark-mode {
+		--background-color: rgba(255, 255, 255, .05);
+	}
 
-    background-color: var(--background-color);
+	background-color: var(--background-color);
 
-    > a {
-        color: var(--highlight-color);
-    }
+	> a {
+		color: var(--highlight-color);
+	}
+}
+
+.player {
+	display: block;
+	width: 100%;
+	box-sizing: border-box;
+	padding: 1rem 2rem;
+	margin: 0 0 1rem;
+	border: var(--border);
+	border-radius: var(--border-radius);
+	background-color: var(--primary-block-color);
+	color: var(--primary-text-color);
+	text-align: center;
+	cursor: pointer;
+
+	span,
+	svg {
+		--icon-size: 19px;
+	}
+
+	p,
+	figcaption {
+		font-size: 16px;
+		font-weight: 400;
+		text-align: center;
+	}
+
+	p {
+		margin: 1rem 0;
+	}
+
+	figcaption {
+		font-weight: 500;
+	}
 }

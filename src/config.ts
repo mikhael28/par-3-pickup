@@ -162,13 +162,31 @@ export const golfers = [
 		lName: 'Da 56',
 		handicap: 36,
 		id: 1,
-		holes: simpleCourseData
+		holes: simpleCourseData,
+		picture: 'https://avatars.githubusercontent.com/u/15205259?v=4'
 	},
 	{
 		fName: 'Derek',
 		lName: 'Silverhand',
 		handicap: 36,
 		id: 2,
-		holes: simpleCourseData
+		holes: simpleCourseData,
+		picture: 'https://avatars.githubusercontent.com/u/59941613?v=4'
+	},
+	{
+		fName: 'Tiger',
+		lName: 'Woods',
+		handicap: 0,
+		id: 3,
+		holes: simpleCourseData,
+		picture: 'https://static.onecms.io/wp-content/uploads/sites/20/-0001/11/30/tiger-woods-2000.jpg'
+	},
+	{
+		fName: 'Arnold',
+		lName: 'Palmer',
+		handicap: 36,
+		id: 4,
+		holes: simpleCourseData,
+		picture: 'https://upload.wikimedia.org/wikipedia/commons/d/d8/YN3ArnoldPalmer.jpg'
 	}
 ];
