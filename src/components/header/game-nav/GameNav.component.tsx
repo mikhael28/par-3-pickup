@@ -50,12 +50,24 @@ export default function GameNav(props: any): JSX.Element {
 	}, []);
 
 	console.log(props.activeGame);
+	function saveRound() {
+		let records = localStorage.getItem('records');
+		if (records !== null) {
+			let jsRecords = JSON.parse(records);
+			jsRecords.push(props.activeGame);
+			localStorage.setItem('records', JSON.stringify(jsRecords));
+
+			localStorage.removeItem('activeCourse');
+			localStorage.removeItem('activeGame');
+			props.setActive(false);
+		}
+	}
 
 	return (
 		<div>
 			<button
 				onClick={() => {
-					localStorage.clear();
+					// localStorage.clear();
 					window.location.reload();
 				}}
 			>
@@ -74,6 +86,7 @@ export default function GameNav(props: any): JSX.Element {
 					</div>
 				);
 			})}
+			{activeHole === 8 ? <button onClick={saveRound}>Save and finish rounds</button> : null}
 			<div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
 				<button
 					style={{ backgroundColor: 'green', color: 'white', padding: 6 }}

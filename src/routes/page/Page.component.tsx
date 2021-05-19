@@ -1,3 +1,5 @@
+/* eslint-disable react/jsx-indent-props */
+/* eslint-disable indent */
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import Landing from 'routes/page/landing';
@@ -51,26 +53,24 @@ export default function Page(props: PageProps): JSX.Element {
 	const classNames = injectClassNames(page, [ pageLanding, isLanding ]);
 
 	useEffect(() => {
-		// localStorage.clear()
+		// localStorage.clear();
 		let gameCheck = localStorage.getItem('activeCourse');
 		if (gameCheck !== null) {
 			console.log('Course Check: ', JSON.parse(gameCheck));
 			setActiveCourse(JSON.parse(gameCheck));
 		}
 		let activeCheck = localStorage.getItem('activeGame');
+		console.log('Game? : ', activeCheck);
 		if (activeCheck !== null) {
 			console.log('Game check: ', JSON.parse(activeCheck));
 			setActiveGame(JSON.parse(activeCheck));
 			setActive(true);
 		}
+		let recordCheck = localStorage.getItem('records');
+		if (recordCheck === null) {
+			localStorage.setItem('records', JSON.stringify([]));
+		}
 	}, []);
-
-	useEffect(
-		() => {
-			console.log('New score');
-		},
-		[ activeGame ]
-	);
 
 	function update(game: any) {
 		setActiveGame(game);
@@ -93,7 +93,12 @@ export default function Page(props: PageProps): JSX.Element {
 				<section>
 					<A2HS />
 					{active === true ? (
-						<GameNav activeGame={activeGame} activeCourse={activeCourse} update={update} />
+						<GameNav
+							activeGame={activeGame}
+							activeCourse={activeCourse}
+							update={update}
+							setActive={setActive}
+						/>
 					) : (
 						<div>
 							<h1>Choose your course 🏌️‍♂️ ⛳</h1>
