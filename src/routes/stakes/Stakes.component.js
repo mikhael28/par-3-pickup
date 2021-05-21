@@ -33,12 +33,73 @@ export default function Stake(props) {
 		}
 	}, []);
 
+	// useEffect(() => {
+	// 	alert("state was updated")
+	// },[exampleStringState])
+
 	function handleClick(event) {
 		event.preventDefault();
 		// pretty self-evident, a simple demonstration of how to tie a function to a button through onClick
-
+				// create object for each player that shows who owes who money, 
+				// loop thru records object to create object for each player
+				// use results.push to push object we created into object array 
+		let resultsOne = []
+		let resultsTwo = []
+		let resultsThree = []
+		let resultsFour = []
+		
 		try {
-			setStringState('Persist and succeed');
+			
+			for (let index = 0; index < 9; index++){
+				resultsOne.push(records[0].players[0].holes[index].score)
+			};
+
+			for (let index = 0; index < 9; index++){
+				resultsTwo.push(records[0].players[1].holes[index].score)
+			};
+
+			for (let index = 0; index < resultsOne.length; index++){
+				if(resultsOne[index] > resultsTwo[index])
+				console.log('player 2 wins hole' + index );
+			}
+
+			// for (let index = 0; index < 9; index++){
+			// 	resultsThree.push(records[0].players[2].holes[index].score)
+			// };
+
+			// for (let index = 0; index < 9; index++){
+			// 	resultsFour.push(records[0].players[3].holes[index].score)
+			// };
+
+
+			
+			console.log(resultsOne);
+			console.log(resultsTwo);
+			// console.log(resultsThree);
+			// console.log(resultsFour);
+			//console.log(JSON.stringify(records));
+
+			// console.log(records[0].players[0].holes[1].score);
+			// console.log(records[0].players[0].holes[2].score);
+			// console.log(records[0].players[0].holes[3].score);
+			// console.log(records[0].players[0].holes[4].score);
+			// console.log(records[0].players[0].holes[5].score);
+			// console.log(records[0].players[0].holes[6].score);
+			// console.log(records[0].players[0].holes[7].score);
+			// console.log(records[0].players[0].holes[8].score);
+			
+			// resultsOne.push(records[0].players[0].holes[0].score);
+			// resultsOne.push(records[0].players[0].holes[1].score);
+			// resultsOne.push(records[0].players[0].holes[2].score);
+			// resultsOne.push(records[0].players[0].holes[3].score);
+			// resultsOne.push(records[0].players[0].holes[4].score);
+			// resultsOne.push(records[0].players[0].holes[5].score);
+			// resultsOne.push(records[0].players[0].holes[6].score);
+			// resultsOne.push(records[0].players[0].holes[7].score);
+			// resultsOne.push(records[0].players[0].holes[8].score);
+			
+			//console.log(records.players.holes.length);
+			
 		} catch (e) {
 			console.log('A wild error has appeared: ', e);
 		}
@@ -74,16 +135,21 @@ export default function Stake(props) {
 
 			{records.map((rec, i) => {
 				return (
-					<div>
+					<div style={{paddingLeft:20}} key={i}>
 						<p>{rec.course}</p>
 						<p>Players</p>
 						{rec.players.map((player, idx) => {
 							console.log(player);
 							return (
-								<div>
+								<div key={idx}>
 									<p>{player.fName}</p>
 									{player.holes.map((hole, i) => {
-										return <p>{hole.score}</p>;
+										return <div style={{display: "flex"}} key={i}>
+
+											<p>score: {hole.score}</p>
+											<p style={{paddingLeft: 20}}>par: {hole.par}</p>
+
+											</div>;
 									})}
 								</div>
 							);
@@ -94,9 +160,9 @@ export default function Stake(props) {
 
 			{/* a simple button function for you */}
 
-			{/* <button onClick={handleClick} style={{ backgroundColor: 'red', color: 'white' }}>
+			 <button onClick={handleClick} style={{ backgroundColor: 'red', color: 'white' }}>
 				Click me to change the string
-			</button> */}
+			</button> 
 		</div>
 	);
 }
