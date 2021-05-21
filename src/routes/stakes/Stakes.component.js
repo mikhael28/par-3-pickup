@@ -1,3 +1,10 @@
+/* eslint-disable react/jsx-curly-spacing */
+/* eslint-disable arrow-parens */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable no-console */
+/* eslint-disable semi */
+/* eslint-disable comma-dangle */
+/* eslint-disable indent */
 import React, { useEffect, useState } from 'react';
 
 export default function Stake(props) {
@@ -7,6 +14,8 @@ export default function Stake(props) {
 	const [ exampleStringState, setStringState ] = useState("Let's get it.");
 	const [ exampleArrayOfObjects, setObjects ] = useState([]);
 	const [ records, setRecords ] = useState([]);
+	const [ player1Incoming, setPlayer1 ] = useState(0);
+	const [ player2Incoming, setPlayer2 ] = useState(0);
 
 	// You can console log values to assist in debugging.
 	console.log('What are my props: ', props);
@@ -40,70 +49,69 @@ export default function Stake(props) {
 	function handleClick(event) {
 		event.preventDefault();
 		// pretty self-evident, a simple demonstration of how to tie a function to a button through onClick
-				// create object for each player that shows who owes who money, 
-				// loop thru records object to create object for each player
-				// use results.push to push object we created into object array 
-		let resultsOne = []
-		let resultsTwo = []
-		let resultsThree = []
-		let resultsFour = []
-		
+		// create object for each player that shows who owes who money,
+		// loop thru records object to create object for each player
+		// use results.push to push object we created into object array
+		let paper = [];
+		let newPlayers = [];
+
 		try {
-			
-			for (let index = 0; index < 9; index++){
-				resultsOne.push(records[0].players[0].holes[index].score)
-			};
-
-			for (let index = 0; index < 9; index++){
-				resultsTwo.push(records[0].players[1].holes[index].score)
-			};
-
-			for (let index = 0; index < resultsOne.length; index++){
-				if(resultsOne[index] > resultsTwo[index])
-				console.log('player 2 wins hole' + index );
+			for (let index = 0; index < 9; index++) {
+				let player1 = records[0].players[0].holes[index].score;
+				let player2 = records[0].players[1].holes[index].score;
+				if (player1 > player2) {
+					console.log('Player 1 wins hole', index + 1);
+					paper.push({
+						winner: 0,
+						amount: 5
+					});
+				} else if (player2 > player1) {
+					console.log('Player 2 wins hole', index + 1);
+					paper.push({
+						winner: 1,
+						amount: 5
+					});
+				} else if (player1 === player2) {
+					console.log('Tie Game at hole ', index + 1);
+					paper.push({
+						winner: null,
+						amount: 0
+					});
+				}
 			}
 
-			// for (let index = 0; index < 9; index++){
-			// 	resultsThree.push(records[0].players[2].holes[index].score)
-			// };
+			for (let finalIndex = 0; finalIndex < records[0].players.length; finalIndex++) {
+				let currentValue = 0;
 
-			// for (let index = 0; index < 9; index++){
-			// 	resultsFour.push(records[0].players[3].holes[index].score)
-			// };
+				paper.forEach((item) => {
+					if (item.winner === finalIndex) {
+						currentValue = currentValue + item.amount;
+					}
+				});
+				// console.log(`Player ${finalIndex}`, currentValue);
+				// console.log(records[0].players[finalIndex]);
 
+				let tempPlayer = {
+					...records[0].players[finalIndex],
+					winnings: currentValue
+				};
+				// console.log('Temp record: ', tempPlayer);
+				newPlayers.push(tempPlayer);
+			}
 
-			
-			console.log(resultsOne);
-			console.log(resultsTwo);
-			// console.log(resultsThree);
-			// console.log(resultsFour);
-			//console.log(JSON.stringify(records));
+			let tempRecords = {
+				...records[0],
+				players: newPlayers
+			};
 
-			// console.log(records[0].players[0].holes[1].score);
-			// console.log(records[0].players[0].holes[2].score);
-			// console.log(records[0].players[0].holes[3].score);
-			// console.log(records[0].players[0].holes[4].score);
-			// console.log(records[0].players[0].holes[5].score);
-			// console.log(records[0].players[0].holes[6].score);
-			// console.log(records[0].players[0].holes[7].score);
-			// console.log(records[0].players[0].holes[8].score);
-			
-			// resultsOne.push(records[0].players[0].holes[0].score);
-			// resultsOne.push(records[0].players[0].holes[1].score);
-			// resultsOne.push(records[0].players[0].holes[2].score);
-			// resultsOne.push(records[0].players[0].holes[3].score);
-			// resultsOne.push(records[0].players[0].holes[4].score);
-			// resultsOne.push(records[0].players[0].holes[5].score);
-			// resultsOne.push(records[0].players[0].holes[6].score);
-			// resultsOne.push(records[0].players[0].holes[7].score);
-			// resultsOne.push(records[0].players[0].holes[8].score);
-			
-			//console.log(records.players.holes.length);
-			
+			// console.log('Paper: ', tempRecords);
+			setRecords([ tempRecords ]);
 		} catch (e) {
 			console.log('A wild error has appeared: ', e);
 		}
 	}
+
+	console.log('Records: ', records);
 
 	return (
 		// this CSS class comes from '/styles/main.scss'
@@ -135,7 +143,7 @@ export default function Stake(props) {
 
 			{records.map((rec, i) => {
 				return (
-					<div style={{paddingLeft:20}} key={i}>
+					<div style={{ paddingLeft: 20 }} key={i}>
 						<p>{rec.course}</p>
 						<p>Players</p>
 						{rec.players.map((player, idx) => {
@@ -143,14 +151,17 @@ export default function Stake(props) {
 							return (
 								<div key={idx}>
 									<p>{player.fName}</p>
-									{player.holes.map((hole, i) => {
-										return <div style={{display: "flex"}} key={i}>
-
-											<p>score: {hole.score}</p>
-											<p style={{paddingLeft: 20}}>par: {hole.par}</p>
-
-											</div>;
-									})}
+									<p>{player.winnings}</p>
+									<div style={{ display: 'flex' }}>
+										{player.holes.map((hole, i) => {
+											return (
+												<div style={{ display: 'flex' }} key={i}>
+													<p>score: {hole.score}</p>
+													<p style={{ paddingLeft: 20 }}>par: {hole.par}</p>
+												</div>
+											);
+										})}
+									</div>
 								</div>
 							);
 						})}
@@ -160,9 +171,9 @@ export default function Stake(props) {
 
 			{/* a simple button function for you */}
 
-			 <button onClick={handleClick} style={{ backgroundColor: 'red', color: 'white' }}>
-				Click me to change the string
-			</button> 
+			<button onClick={handleClick} style={{ backgroundColor: 'red', color: 'white' }}>
+				Calculate
+			</button>
 		</div>
 	);
 }

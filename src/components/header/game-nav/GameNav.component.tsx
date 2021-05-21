@@ -67,7 +67,7 @@ export default function GameNav(props: any): JSX.Element {
 		<div>
 			<button
 				onClick={() => {
-					// localStorage.clear();
+					localStorage.clear();
 					window.location.reload();
 				}}
 			>
