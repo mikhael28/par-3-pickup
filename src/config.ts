@@ -153,6 +153,48 @@ export const courses = [
 		putting: 0,
 		picture: 'https://d3926qxcw0e1bh.cloudfront.net/pages_avatar_photos/64/0a/640ab7afec2c9468e9512fefbaca1223.jpg',
 		holes: simpleCourseData
+	},
+	{
+		id: '4',
+		name: 'Green Lake',
+		codeName: 'greenlake',
+		par3: true,
+		eighteen: false,
+		street: '',
+		city: 'Seattle',
+		zip: '',
+		par: 27,
+		putting: 0,
+		picture: 'http://www.seattle.gov/Images/Council/Logos/City-of-Seattle-Logo_Color-on-Transparent.png',
+		holes: simpleCourseData
+	},
+	{
+		id: '5',
+		name: 'Jefferson Park',
+		codeName: 'jefferson',
+		par3: true,
+		eighteen: true,
+		street: '',
+		city: 'Seattle',
+		zip: '',
+		par: 27,
+		putting: 0,
+		picture: 'http://www.seattle.gov/Images/Council/Logos/City-of-Seattle-Logo_Color-on-Transparent.png',
+		holes: simpleCourseData
+	},
+	{
+		id: '6',
+		name: 'Interbay',
+		codeName: 'interbay',
+		par3: true,
+		eighteen: false,
+		street: '',
+		city: 'Seattle',
+		zip: '',
+		par: 27,
+		putting: 0,
+		picture: 'https://cdn.cybergolf.com/images/2285/PremierGC_interbay_2021logo_r1.png',
+		holes: simpleCourseData
 	}
 ];
 
@@ -163,7 +205,8 @@ export const golfers = [
 		handicap: 36,
 		id: 1,
 		holes: simpleCourseData,
-		picture: 'https://avatars.githubusercontent.com/u/15205259?v=4'
+		picture: 'https://avatars.githubusercontent.com/u/15205259?v=4',
+		eth: '0x31C2f97f2c755D44Bcb9Ab07321155e5F7F0Df83'
 	},
 	{
 		fName: 'Derek',
@@ -171,7 +214,8 @@ export const golfers = [
 		handicap: 36,
 		id: 2,
 		holes: simpleCourseData,
-		picture: 'https://avatars.githubusercontent.com/u/59941613?v=4'
+		picture: 'https://avatars.githubusercontent.com/u/59941613?v=4',
+		eth: '0x31C2f97f2c755D44Bcb9Ab07321155e5F7F0Df83'
 	},
 	{
 		fName: 'Tiger',
@@ -179,7 +223,8 @@ export const golfers = [
 		handicap: 0,
 		id: 3,
 		holes: simpleCourseData,
-		picture: 'https://static.onecms.io/wp-content/uploads/sites/20/-0001/11/30/tiger-woods-2000.jpg'
+		picture: 'https://static.onecms.io/wp-content/uploads/sites/20/-0001/11/30/tiger-woods-2000.jpg',
+		eth: '0x31C2f97f2c755D44Bcb9Ab07321155e5F7F0Df83'
 	},
 	{
 		fName: 'Arnold',
@@ -187,6 +232,7 @@ export const golfers = [
 		handicap: 36,
 		id: 4,
 		holes: simpleCourseData,
-		picture: 'https://upload.wikimedia.org/wikipedia/commons/d/d8/YN3ArnoldPalmer.jpg'
+		picture: 'https://upload.wikimedia.org/wikipedia/commons/d/d8/YN3ArnoldPalmer.jpg',
+		eth: '0x31C2f97f2c755D44Bcb9Ab07321155e5F7F0Df83'
 	}
 ];

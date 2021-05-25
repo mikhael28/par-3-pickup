@@ -9,6 +9,7 @@ import { Provider } from 'react-redux';
 import { statusBarStyle } from 'config';
 import { AppProps } from 'next/app';
 import 'styles/main.scss';
+import 'styles/index.css';
 
 export default function App({ Component, pageProps }: AppProps): JSX.Element {
     useEffect(() => {
