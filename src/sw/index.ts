@@ -121,4 +121,4 @@
 // router.setRoute(/\/static\/|\.(js|css)/, CacheFirst);
 // router.setDefault(StaleWhileRevalidate);
 
-// export default {};
+export default {};
