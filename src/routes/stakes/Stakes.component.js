@@ -7,17 +7,20 @@
 /* eslint-disable comma-dangle */
 /* eslint-disable indent */
 import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import Web3Utils from 'web3-utils';
 
 export default function Stake(props) {
 	const [ records, setRecords ] = useState([]);
 	const [ usd, setUsd ] = useState(1);
+	const router = useRouter();
 
 	useEffect(() => {
 		let recs = localStorage.getItem('records');
 		console.log('Recs fetch: ', JSON.parse(recs));
 		if (recs !== null) {
 			setRecords(JSON.parse(recs));
-			calculateWinnings();
+			calculateWinnings(JSON.parse(recs));
 			conversion();
 		}
 	}, []);
@@ -30,22 +33,22 @@ export default function Stake(props) {
 			});
 	}
 
-	function calculateWinnings() {
+	function calculateWinnings(recs) {
 		let paper = [];
 		let newPlayers = [];
 
 		try {
 			for (let index = 0; index < 9; index++) {
-				let player1 = records[0].players[0].holes[index].score;
-				let player2 = records[0].players[1].holes[index].score;
+				let player1 = recs[0].players[0].holes[index].score;
+				let player2 = recs[0].players[1].holes[index].score;
 				if (player1 > player2) {
 					paper.push({
-						winner: 0,
+						winner: 1,
 						amount: 5
 					});
 				} else if (player2 > player1) {
 					paper.push({
-						winner: 1,
+						winner: 0,
 						amount: 5
 					});
 				} else if (player1 === player2) {
@@ -56,7 +59,7 @@ export default function Stake(props) {
 				}
 			}
 
-			for (let finalIndex = 0; finalIndex < records[0].players.length; finalIndex++) {
+			for (let finalIndex = 0; finalIndex < recs[0].players.length; finalIndex++) {
 				let currentValue = 0;
 
 				paper.forEach((item) => {
@@ -68,14 +71,14 @@ export default function Stake(props) {
 				});
 
 				let tempPlayer = {
-					...records[0].players[finalIndex],
+					...recs[0].players[finalIndex],
 					winnings: currentValue
 				};
 				newPlayers.push(tempPlayer);
 			}
 
 			let tempRecords = {
-				...records[0],
+				...recs[0],
 				players: newPlayers
 			};
 
@@ -85,7 +88,56 @@ export default function Stake(props) {
 		}
 	}
 
-	console.log('Records: ', records);
+	useEffect(() => {
+		//Have to check the ethereum binding on the window object to see if it's installed
+
+		if (Boolean(window.ethereum && window.ethereum.isMetaMask) === false) {
+			openWallet();
+		}
+	}, []);
+
+	async function registerWallet() {
+		// this will allow us to connect to MetaMask
+		await window.ethereum.request({ method: 'eth_requestAccounts' });
+	}
+
+	async function openWallet() {
+		const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+		console.log(accounts);
+	}
+
+	async function payWinner(winnerAddress, winnings) {
+		let stringValue = winnings.toFixed(14).toString();
+		console.log('Hopefully final string value', stringValue);
+
+		// this only happens if you are the loser, and are paying the winner
+		const transactionParameters = {
+			nonce: '0x00', // ignored by MetaMask
+			// gasPrice: '0x001184e72a000', // customizable by user during MetaMask confirmation.
+			// gas: '0x2710', // customizable by user during MetaMask confirmation.
+			to: winnerAddress, // Required except during contract publications.
+			// the from value is sad - it means that in order to send money, I must be logged in on my device.
+			from: window.ethereum.selectedAddress, // must match user's active address.
+			// may need to define this with BN.js ?
+			// value: finalWinnings,
+			value: `0x00${parseInt(Web3Utils.toWei(stringValue, 'ether')).toString(16)}`
+			// Only required to send ether to the recipient from the initiating external account.
+			// data:
+			// 	'0x7f7465737432000000000000000000000000000000000000000000000000000000600057',
+			// Optional, but used for defining smart contract creation and interaction.
+			// chainId: '0x3',
+			// Used to prevent transaction reuse across blockchains. Auto-filled by MetaMask.
+		};
+
+		// txHash is a hex string
+		// As with any RPC call, it may throw an error
+		const txHash = await window.ethereum.request({
+			method: 'eth_sendTransaction',
+			params: [ transactionParameters ]
+		});
+
+		console.log(txHash);
+	}
 
 	return (
 		// this CSS class comes from '/styles/main.scss'
@@ -137,18 +189,44 @@ export default function Stake(props) {
 						{rec.players.map((player, index) => {
 							if (player.winnings > 0) {
 								return (
-									<button className="pay-button" key={index}>
-										<img
-											src={
-												'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Ethereum-icon-purple.svg/440px-Ethereum-icon-purple.svg.png'
-											}
-											height="30"
-											width="30"
-										/>{' '}
-										<p style={{ marginBottom: 7, color: 'black', fontSize: 20 }}>
-											Pay {player.fName}
-										</p>
-									</button>
+									<div style={{ display: 'flex' }}>
+										<button
+											className="pay-button"
+											key={index}
+											onClick={() => {
+												payWinner(player.eth, player.winnings / usd);
+											}}
+										>
+											<img
+												src={
+													'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Ethereum-icon-purple.svg/440px-Ethereum-icon-purple.svg.png'
+												}
+												height="30"
+												width="30"
+											/>{' '}
+											<p style={{ marginBottom: 7, color: 'black', fontSize: 20 }}>
+												Pay {player.fName}
+											</p>
+										</button>
+										<button
+											className="pay-button"
+											key={index}
+											style={{ marginLeft: 10, marginRight: 12 }}
+											onClick={() => {
+												localStorage.clear();
+												router.push('/');
+											}}
+										>
+											<img
+												src={
+													'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Ethereum-icon-purple.svg/440px-Ethereum-icon-purple.svg.png'
+												}
+												height="30"
+												width="30"
+											/>{' '}
+											<p style={{ marginBottom: 7, color: 'black', fontSize: 20 }}>Clear Data</p>
+										</button>
+									</div>
 								);
 							}
 						})}

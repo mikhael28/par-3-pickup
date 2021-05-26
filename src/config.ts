@@ -215,7 +215,7 @@ export const golfers = [
 		id: 2,
 		holes: simpleCourseData,
 		picture: 'https://avatars.githubusercontent.com/u/59941613?v=4',
-		eth: '0x31C2f97f2c755D44Bcb9Ab07321155e5F7F0Df83'
+		eth: '0xF84c9a3eb77d6d51CEd0A5251bAEdEDF6F76921b'
 	},
 	{
 		fName: 'Tiger',
@@ -224,7 +224,7 @@ export const golfers = [
 		id: 3,
 		holes: simpleCourseData,
 		picture: 'https://static.onecms.io/wp-content/uploads/sites/20/-0001/11/30/tiger-woods-2000.jpg',
-		eth: '0x31C2f97f2c755D44Bcb9Ab07321155e5F7F0Df83'
+		eth: '0xF84c9a3eb77d6d51CEd0A5251bAEdEDF6F76921b'
 	},
 	{
 		fName: 'Arnold',
@@ -233,6 +233,6 @@ export const golfers = [
 		id: 4,
 		holes: simpleCourseData,
 		picture: 'https://upload.wikimedia.org/wikipedia/commons/d/d8/YN3ArnoldPalmer.jpg',
-		eth: '0x31C2f97f2c755D44Bcb9Ab07321155e5F7F0Df83'
+		eth: '0xF84c9a3eb77d6d51CEd0A5251bAEdEDF6F76921b'
 	}
 ];
