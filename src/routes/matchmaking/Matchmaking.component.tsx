@@ -1,8 +1,10 @@
+/* eslint-disable indent */
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Pages from 'components/pages';
 import Placeholder from 'components/placeholder';
 import Card from 'components/card';
+import PlayerCard from 'components/player-card';
 import styles from './Matchmaking.module.scss';
 import { golfers, Course, Golfer } from '../../config';
 import { useRouter } from 'next/router';
@@ -11,7 +13,8 @@ const { matchMaking, matchMakingContainer } = styles;
 
 export default function Matchmaking(): JSX.Element {
 	const router = useRouter();
-	const [ stake, setStake ] = useState<string>('');
+	const [ stake, setStake ] = useState<string>('0');
+	const [ disabledButton, setDisabledButton ] = useState<boolean>(false);
 	const [ chosenGolfers, setGolfers ] = useState<Golfer[]>([]);
 	const [ course, setCourse ] = useState<Course>({
 		id: '',
@@ -41,6 +44,9 @@ export default function Matchmaking(): JSX.Element {
 		let newGolfers = chosenGolfers.slice();
 		newGolfers.push(JSON.parse(event.target.value));
 		setGolfers(newGolfers);
+		if (newGolfers.length > 1) {
+			setDisabledButton(true);
+		}
 	}
 
 	function handleStake(event: any) {
@@ -52,21 +58,15 @@ export default function Matchmaking(): JSX.Element {
 	// then need to mark 'complete' and have a screen to review.
 
 	function startGame() {
-		// here we start the game
 		const newGame = {
 			id: '123',
 			course: course.name,
-			perHoleWager: parseInt(stake, 10),
+			perHoleWager: parseInt(stake, 10) || 0,
 			ldWager: 5,
-			// array for players?
 			players: chosenGolfers,
-
-			// or array for each hole, with each hole having an object.
-			// how will the gambling fit in?
 			holes: course.holes
 		};
 		try {
-			console.log(newGame);
 			localStorage.setItem('activeGame', JSON.stringify(newGame));
 			router.push('/');
 		} catch (e) {
@@ -80,27 +80,37 @@ export default function Matchmaking(): JSX.Element {
 				<title>Matchmaking</title>
 			</Head>
 			<main className={matchMaking}>
-				<Card {...course} />
 				<h1>Matchmaking</h1>
-				<p>Select Per Hole Stake</p>
-				<input value={stake} onChange={handleStake} />
-				<p>Select the players.</p>
-				<select onChange={handleSelectChange}>
-					<option value="none">Choose Your Players</option>
-					{golfers.map((golfer, idx) => (
-						<option value={JSON.stringify(golfer)} key={idx}>
-							{golfer.fName}
-						</option>
-					))}
-				</select>
+				<Card {...course} />
+				{/* <p>Select Per Hole Stake</p>
+				<input value={stake} onChange={handleStake} /> */}
+				{chosenGolfers.length < 2 ? (
+					<div>
+						<p>Select the players.</p>
+						<select onChange={handleSelectChange}>
+							<option value="none">Choose Your Players</option>
+							{golfers.map((golfer, idx) => (
+								<option value={JSON.stringify(golfer)} key={idx}>
+									{golfer.fName}
+								</option>
+							))}
+						</select>
+					</div>
+				) : null}
 				<div className={matchMakingContainer}>
 					{chosenGolfers.map((player, idx) => {
-						return <div key={idx}>{player.fName}</div>;
+						return <PlayerCard {...player} key={idx} />;
 					})}
 				</div>
-				<button onClick={startGame} style={{ backgroundColor: 'green', color: 'white', padding: 12 }}>
-					Start game
-				</button>
+				{disabledButton === true ? (
+					<button
+						className="pay-button"
+						onClick={startGame}
+						style={{ backgroundColor: 'green', color: 'white', padding: 12 }}
+					>
+						Start game
+					</button>
+				) : null}
 			</main>
 		</React.Fragment>
 	);
