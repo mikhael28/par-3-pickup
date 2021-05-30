@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Card from 'components/card';
 import styles from './GameNav.module.scss';
+import { API } from 'aws-amplify';
 
 const { gameNav, active, player } = styles;
 
@@ -15,8 +16,6 @@ export default function GameNav(props: any): JSX.Element {
 	const router = useRouter();
 	const [ activeHole, setActiveHole ] = useState<number>(0);
 	const [ strokes, setActiveStrokes ] = useState<number>(0);
-
-	console.log('More props');
 
 	function increaseStroke(player: any) {
 		const oldGame = { ...props.activeGame };
@@ -49,13 +48,16 @@ export default function GameNav(props: any): JSX.Element {
 		}
 	}, []);
 
-	console.log(props.activeGame);
-	function saveRound() {
-		let records = localStorage.getItem('records');
+	async function saveRound() {
+		const records = localStorage.getItem('records');
 		if (records !== null) {
-			let jsRecords = JSON.parse(records);
+			const jsRecords = JSON.parse(records);
 			jsRecords.push(props.activeGame);
 			localStorage.setItem('records', JSON.stringify(jsRecords));
+
+			await API.put('matches', '/sp3', {
+				body: props.activeGame
+			});
 
 			localStorage.removeItem('activeCourse');
 			localStorage.removeItem('activeGame');
@@ -65,14 +67,6 @@ export default function GameNav(props: any): JSX.Element {
 
 	return (
 		<div>
-			<button
-				onClick={() => {
-					localStorage.clear();
-					window.location.reload();
-				}}
-			>
-				Clear
-			</button>
 			<Card {...props.activeCourse} />
 			<p>Per Hole Wager: ${props.activeGame.perHoleWager}</p>
 			{props.activeGame.players.map((player: any, idx: number) => {
@@ -84,13 +78,18 @@ export default function GameNav(props: any): JSX.Element {
 							display: 'flex',
 							alignItems: 'center',
 							justifyContent: 'space-between',
-							cursor: 'default'
+							cursor: 'default',
+							alignContent: 'center'
 						}}
 					>
 						<div>
-							<img src={player.picture} height="60" width="60" alt={player.fName} />
-						</div>
-						<div>
+							<img
+								src={player.picture}
+								height="60"
+								width="60"
+								alt={player.fName}
+								style={{ borderRadius: 15 }}
+							/>
 							<p>{player.fName}</p>
 						</div>
 						<div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -106,7 +105,15 @@ export default function GameNav(props: any): JSX.Element {
 					</figure>
 				);
 			})}
-			{activeHole === 8 ? <button onClick={saveRound}>Save and finish rounds</button> : null}
+			{activeHole === 8 ? (
+				<button
+					onClick={saveRound}
+					className="pay-button"
+					style={{ width: '90vw', marginRight: 20, marginBottom: 20 }}
+				>
+					Save and finish rounds
+				</button>
+			) : null}
 			<div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
 				<button
 					style={{ backgroundColor: 'green', color: 'white', padding: 6, borderRadius: 4 }}
@@ -120,7 +127,18 @@ export default function GameNav(props: any): JSX.Element {
 				>
 					Previous
 				</button>
-				<h1>Hole {activeHole + 1}</h1>
+				<div>
+					<h1>Hole {activeHole + 1}</h1>
+					<button
+						onClick={() => {
+							localStorage.clear();
+							window.location.reload();
+						}}
+						style={{ backgroundColor: 'red', color: 'white', borderRadius: 3, padding: 4 }}
+					>
+						Delete Data
+					</button>
+				</div>
 				<button
 					style={{ backgroundColor: 'green', color: 'white', padding: 6, borderRadius: 4 }}
 					onClick={() => {
