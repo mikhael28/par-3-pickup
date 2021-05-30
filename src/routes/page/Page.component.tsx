@@ -6,6 +6,7 @@ import Landing from 'routes/page/landing';
 import A2HS from 'components/a2hs';
 import Sidebar from 'components/sidebar';
 import Html from 'components/html';
+import { API } from 'aws-amplify';
 import Card from 'components/card';
 import GameNav from 'components/header/game-nav';
 import { usePageData, usePageDetails } from 'hooks/page';
@@ -13,6 +14,7 @@ import { injectClassNames } from 'utils/css';
 import styles from './Page.module.scss';
 import { courses, Course, Game } from '../../config';
 import { useRouter } from 'next/router';
+import RecordCard from 'components/record-card';
 
 const { page, pageLanding, pageContent, placeholder } = styles;
 
@@ -26,6 +28,7 @@ export default function Page(props: PageProps): JSX.Element {
 	const { content = '' } = usePageData();
 	const router = useRouter();
 	const [ active, setActive ] = useState<boolean>(false);
+	const [ games, setGames ] = useState<Game>([]);
 	const [ activeCourse, setActiveCourse ] = useState<Course>({
 		id: '',
 		name: '',
@@ -70,10 +73,24 @@ export default function Page(props: PageProps): JSX.Element {
 		if (recordCheck === null) {
 			localStorage.setItem('records', JSON.stringify([]));
 		}
+		fetchOnlineGames();
 	}, []);
 
 	function update(game: any) {
 		setActiveGame(game);
+	}
+
+	async function fetchOnlineGames() {
+		let newDate = new Date();
+		try {
+			const onlineGames = await API.get(
+				'matches',
+				`/sp3/date/${newDate.getMonth() + 1}-${newDate.getDate()}-${newDate.getFullYear()}`
+			);
+			setGames(onlineGames);
+		} catch (e) {
+			console.error('Problem fetching todays games: ', e);
+		}
 	}
 
 	return (
@@ -92,6 +109,14 @@ export default function Page(props: PageProps): JSX.Element {
 				{/* { isLanding && <Landing /> } */}
 				<section>
 					<A2HS />
+					{active === false ? (
+						<div>
+							{games.length > 0 ? <h1>Join a Game</h1> : null}
+							{games.map((game, idx) => {
+								return <RecordCard {...game} key={idx} />;
+							})}
+						</div>
+					) : null}
 					{active === true ? (
 						<GameNav
 							activeGame={activeGame}
