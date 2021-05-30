@@ -13,10 +13,8 @@ const links = [
     { name: 'Play', url: '/', alias: [] },
     // { name: 'Pages', url: '/pages', alias: ['/[page]'] },
     // { name: 'Profile', url: '/profile', alias: [] },
-    { name: 'Stakes', url: '/stakes', alias: []}
+    { name: 'Records', url: '/stakes', alias: []}
 ];
-
-// @TODO: investigate why stakes link not really working, need hard refresh
 
 export default function Items(): JSX.Element {
     const { pathname } = useRouter();

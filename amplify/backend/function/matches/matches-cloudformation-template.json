@@ -16,13 +16,13 @@
     "s3Key": {
       "Type": "String"
     },
-    "storagegamesName": {
+    "storageGolfDevName": {
       "Type": "String",
-      "Default": "storagegamesName"
+      "Default": "storageGolfDevName"
     },
-    "storagegamesArn": {
+    "storageGolfDevArn": {
       "Type": "String",
-      "Default": "storagegamesArn"
+      "Default": "storageGolfDevArn"
     }
   },
   "Conditions": {
@@ -55,12 +55,12 @@
         "FunctionName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "MatchesAPI",
+            "matches",
             {
               "Fn::Join": [
                 "",
                 [
-                  "MatchesAPI",
+                  "matches",
                   "-",
                   {
                     "Ref": "env"
@@ -97,12 +97,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "seattlepar3LambdaRolef65305f2",
+            "sp3LambdaRoleff0d74d4",
             {
               "Fn::Join": [
                 "",
                 [
-                  "seattlepar3LambdaRolef65305f2",
+                  "sp3LambdaRoleff0d74d4",
                   "-",
                   {
                     "Ref": "env"
@@ -182,14 +182,14 @@
               ],
               "Resource": [
                 {
-                  "Ref": "storagegamesArn"
+                  "Ref": "storageGolfDevArn"
                 },
                 {
                   "Fn::Join": [
                     "/",
                     [
                       {
-                        "Ref": "storagegamesArn"
+                        "Ref": "storageGolfDevArn"
                       },
                       "index/*"
                     ]

@@ -1,19 +1,33 @@
 {
   "storage": {
-    "games": {
+    "notes": {
       "service": "DynamoDB",
-      "providerPlugin": "awscloudformation"
+      "serviceType": "imported",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": []
+    },
+    "matches": {
+      "service": "DynamoDB",
+      "serviceType": "imported",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": []
+    },
+    "GolfDev": {
+      "service": "DynamoDB",
+      "serviceType": "imported",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": []
     }
   },
   "function": {
-    "MatchesAPI": {
+    "matches": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda",
       "dependsOn": [
         {
           "category": "storage",
-          "resourceName": "games",
+          "resourceName": "GolfDev",
           "attributes": [
             "Name",
             "Arn"
@@ -24,11 +38,6 @@
           }
         }
       ]
-    },
-    "records": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
     }
   },
   "api": {
@@ -38,15 +47,7 @@
       "dependsOn": [
         {
           "category": "function",
-          "resourceName": "MatchesAPI",
-          "attributes": [
-            "Name",
-            "Arn"
-          ]
-        },
-        {
-          "category": "function",
-          "resourceName": "records",
+          "resourceName": "matches",
           "attributes": [
             "Name",
             "Arn"

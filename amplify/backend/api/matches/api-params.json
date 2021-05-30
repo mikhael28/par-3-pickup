@@ -1,50 +1,31 @@
 {
   "paths": [
     {
-      "name": "/matches",
-      "lambdaFunction": "MatchesAPI",
+      "name": "/sp3",
+      "lambdaFunction": "matches",
       "privacy": {
         "open": true
       },
-      "policyResourceName": "/matches"
-    },
-    {
-      "name": "/records",
-      "lambdaFunction": "records",
-      "privacy": {
-        "open": true
-      },
-      "policyResourceName": "/records"
+      "policyResourceName": "/sp3"
     }
   ],
   "resourceName": "matches",
   "apiName": "matches",
   "functionArns": [
     {
-      "lambdaFunction": "MatchesAPI"
-    },
-    {
-      "lambdaFunction": "records"
+      "lambdaFunction": "matches"
     }
   ],
   "privacy": {
     "auth": 0,
     "unauth": 0,
-    "authRoleName": "amplify-seattlepar3-dev-102646-authRole",
-    "unAuthRoleName": "amplify-seattlepar3-dev-102646-unauthRole"
+    "authRoleName": "amplify-sp3-dev-101229-authRole",
+    "unAuthRoleName": "amplify-sp3-dev-101229-unauthRole"
   },
   "dependsOn": [
     {
       "category": "function",
-      "resourceName": "MatchesAPI",
-      "attributes": [
-        "Name",
-        "Arn"
-      ]
-    },
-    {
-      "category": "function",
-      "resourceName": "records",
+      "resourceName": "matches",
       "attributes": [
         "Name",
         "Arn"
