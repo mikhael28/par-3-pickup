@@ -1,0 +1,35 @@
+{
+  "paths": [
+    {
+      "name": "/sp3",
+      "lambdaFunction": "matches",
+      "privacy": {
+        "open": true
+      },
+      "policyResourceName": "/sp3"
+    }
+  ],
+  "resourceName": "matches",
+  "apiName": "matches",
+  "functionArns": [
+    {
+      "lambdaFunction": "matches"
+    }
+  ],
+  "privacy": {
+    "auth": 0,
+    "unauth": 0,
+    "authRoleName": "amplify-sp3-dev-101229-authRole",
+    "unAuthRoleName": "amplify-sp3-dev-101229-unauthRole"
+  },
+  "dependsOn": [
+    {
+      "category": "function",
+      "resourceName": "matches",
+      "attributes": [
+        "Name",
+        "Arn"
+      ]
+    }
+  ]
+}
