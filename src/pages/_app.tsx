@@ -8,12 +8,19 @@ import store from 'stores';
 import { Provider } from 'react-redux';
 import { statusBarStyle } from 'config';
 import { AppProps } from 'next/app';
-import Amplify from 'aws-amplify';
-import awsconfig from '../aws-exports';
+import { API } from '@aws-amplify/api';
 import 'styles/main.scss';
 import 'styles/index.css';
 
-Amplify.configure(awsconfig);
+API.configure({
+	endpoints: [
+		{
+			name: 'matches',
+			endpoint: 'https://oti30m47rd.execute-api.us-east-1.amazonaws.com/dev',
+			region: 'us-east-1'
+		}
+	]
+});
 
 export default function App({ Component, pageProps }: AppProps): JSX.Element {
 	useEffect(() => {

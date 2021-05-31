@@ -8,7 +8,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Card from 'components/card';
 import styles from './GameNav.module.scss';
-import { API } from 'aws-amplify';
+import { API } from '@aws-amplify/api';
 
 const { gameNav, active, player } = styles;
 

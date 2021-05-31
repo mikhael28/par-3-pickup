@@ -9,7 +9,7 @@ import styles from './Matchmaking.module.scss';
 import { golfers, Course, Golfer } from '../../config';
 import { useRouter } from 'next/router';
 import short from 'short-uuid';
-import { API } from 'aws-amplify';
+import { API } from '@aws-amplify/api';
 
 const { matchMaking, matchMakingContainer } = styles;
 

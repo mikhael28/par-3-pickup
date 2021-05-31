@@ -6,7 +6,7 @@ import Landing from 'routes/page/landing';
 import A2HS from 'components/a2hs';
 import Sidebar from 'components/sidebar';
 import Html from 'components/html';
-import { API } from 'aws-amplify';
+import API from '@aws-amplify/api';
 import Card from 'components/card';
 import GameNav from 'components/header/game-nav';
 import { usePageData, usePageDetails } from 'hooks/page';
@@ -28,7 +28,7 @@ export default function Page(props: PageProps): JSX.Element {
 	const { content = '' } = usePageData();
 	const router = useRouter();
 	const [ active, setActive ] = useState<boolean>(false);
-	const [ games, setGames ] = useState<Game>([]);
+	const [ games, setGames ] = useState<Game[]>([]);
 	const [ activeCourse, setActiveCourse ] = useState<Course>({
 		id: '',
 		name: '',
@@ -85,7 +85,8 @@ export default function Page(props: PageProps): JSX.Element {
 		try {
 			const onlineGames = await API.get(
 				'matches',
-				`/sp3/date/${newDate.getMonth() + 1}-${newDate.getDate()}-${newDate.getFullYear()}`
+				`/sp3/date/${newDate.getMonth() + 1}-${newDate.getDate()}-${newDate.getFullYear()}`,
+				{}
 			);
 			setGames(onlineGames);
 		} catch (e) {

@@ -5,7 +5,7 @@
 	"license": "MIT",
 	"dependencies": {
 		"@svgr/webpack": "5.5.0",
-		"aws-amplify": "^4.0.3",
+		"@aws-amplify/api": "^4.0.1",
 		"html-react-parser": "^1.2.3",
 		"jstoxml": "^2.0.3",
 		"next": "^10.0.5",
@@ -52,15 +52,7 @@
 		"eslint": "eslint ./src"
 	},
 	"browserslist": {
-		"production": [
-			">0.2%",
-			"not dead",
-			"not op_mini all"
-		],
-		"development": [
-			"last 1 chrome version",
-			"last 1 firefox version",
-			"last 1 safari version"
-		]
+		"production": [ ">0.2%", "not dead", "not op_mini all" ],
+		"development": [ "last 1 chrome version", "last 1 firefox version", "last 1 safari version" ]
 	}
 }
