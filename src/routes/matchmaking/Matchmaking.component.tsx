@@ -1,3 +1,5 @@
+/* eslint-disable react/jsx-curly-spacing */
+/* eslint-disable react/jsx-indent-props */
 /* eslint-disable indent */
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
@@ -5,17 +7,20 @@ import Pages from 'components/pages';
 import Placeholder from 'components/placeholder';
 import Card from 'components/card';
 import PlayerCard from 'components/player-card';
-import styles from './Matchmaking.module.scss';
-import { golfers, Course, Golfer } from '../../config';
+import { API } from '@aws-amplify/api';
 import { useRouter } from 'next/router';
 import short from 'short-uuid';
-import { API } from '@aws-amplify/api';
+import { golfers, Course, Golfer } from '../../config';
+import styles from './Matchmaking.module.scss';
 
 const { matchMaking, matchMakingContainer } = styles;
 
 export default function Matchmaking(): JSX.Element {
 	const router = useRouter();
 	const [ stake, setStake ] = useState<string>('0');
+	const [ time, setTime ] = useState<string>('AM');
+	const [ hour, setHour ] = useState<string>('10');
+	const [ minute, setMinute ] = useState<string>('15');
 	const [ disabledButton, setDisabledButton ] = useState<boolean>(false);
 	const [ chosenGolfers, setGolfers ] = useState<Golfer[]>([]);
 	const [ course, setCourse ] = useState<Course>({
@@ -55,12 +60,14 @@ export default function Matchmaking(): JSX.Element {
 		setStake(event.target.value);
 	}
 
+	console.log(time);
+
 	// now, it's time to add the matchmaking, to add the players to the localStorage game, set the gambling amounts, and create.
 	// from there, need to add the counters for the holes,
 	// then need to mark 'complete' and have a screen to review.
 
 	async function startGame() {
-		let newDate = new Date();
+		const newDate = new Date();
 
 		const body = {
 			id: '123',
@@ -71,16 +78,25 @@ export default function Matchmaking(): JSX.Element {
 			holes: course.holes,
 			PK: `${newDate.getMonth() + 1}-${newDate.getDate()}-${newDate.getFullYear()}`,
 			SK: short.generate(),
-			LSI1: 'userIdHere'
+			LSI1: 'userIdHere',
+			time: `${hour}:${minute} ${time}`
 		};
 		try {
 			localStorage.setItem('activeGame', JSON.stringify(body));
-			let createdGame = await API.post('matches', '/sp3', { body });
-			console.log('Created Game: ', createdGame);
-			// router.push('/');
+			await API.post('matches', '/sp3', { body });
+			router.push('/');
 		} catch (e) {
-			console.log(e);
+			console.error(e);
 		}
+	}
+
+	const minuteItems = [];
+	for (let i = 0; i < 60; i++) {
+		let iStr = i.toString();
+		if (iStr.length < 2) {
+			iStr = `0${iStr}`;
+		}
+		minuteItems.push(<option value={`${iStr}`}>{iStr}</option>);
 	}
 
 	return (
@@ -88,36 +104,88 @@ export default function Matchmaking(): JSX.Element {
 			<Head>
 				<title>Matchmaking</title>
 			</Head>
-			<main className={matchMaking}>
+			<main style={{ display: 'flex', flexDirection: 'column' }}>
 				<Card {...course} name={`Matchmaking at ${course.name}`} />
-				<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-					<div>
-						<p>Select Per Hole Stake</p>
-						<input value={stake} onChange={handleStake} placeholder="0" />
+				<div>
+					<h2>$ Skin Per Hole</h2>
+					<input value={stake} onChange={handleStake} placeholder="0" />
+				</div>
+
+				<div>
+					<h1>
+						Tee Time: {hour}:{minute} {time}
+					</h1>
+				</div>
+				<div className="flex">
+					<div className="flex-down-select">
+						<label htmlFor="hour">Hour</label>
+						<select
+							name="hour"
+							id="hours"
+							onChange={(ev: React.ChangeEvent<HTMLSelectElement>): void => setHour(ev.target.value)}
+							value={hour}
+						>
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+							<option value="4">4</option>
+							<option value="5">5</option>
+							<option value="6">6</option>
+							<option value="7">7</option>
+							<option value="8">8</option>
+							<option value="9">9</option>
+							<option value="10">10</option>
+							<option value="11">11</option>
+							<option value="12">12</option>
+						</select>
 					</div>
-					<div>
-						{chosenGolfers.length < 2 ? (
-							<React.Fragment>
-								{/* <p>Select the players.</p> */}
-								<span className="custom-dropdown">
-									<select onChange={handleSelectChange} className="custom-dropdown">
-										<option value="none">Choose Your Players</option>
-										{golfers.map((golfer, idx) => (
-											<option value={JSON.stringify(golfer)} key={idx}>
-												{golfer.fName}
-											</option>
-										))}
-									</select>
-								</span>
-							</React.Fragment>
-						) : null}
+					<div className="flex-down-select">
+						<label htmlFor="minute">Minute</label>
+						<select
+							name="minute"
+							id="minute"
+							value={minute}
+							onChange={(ev: React.ChangeEvent<HTMLSelectElement>): void => setMinute(ev.target.value)}
+						>
+							{minuteItems}
+						</select>
+					</div>
+					<div className="flex-down-select">
+						<label htmlFor="time">AM/PM</label>
+						<select
+							name="time"
+							id="time"
+							value={time}
+							onChange={(ev: React.ChangeEvent<HTMLSelectElement>): void => setTime(ev.target.value)}
+						>
+							<option value="AM">AM</option>
+							<option value="PM">PM</option>
+						</select>
 					</div>
 				</div>
+
+				<br />
+				<div>
+					{chosenGolfers.length < 2 ? (
+						<span className="custom-dropdown">
+							<select onChange={handleSelectChange} className="custom-dropdown">
+								<option value="none">Choose Your Players</option>
+								{golfers.map((golfer, idx) => (
+									<option value={JSON.stringify(golfer)} key={idx}>
+										{golfer.fName}
+									</option>
+								))}
+							</select>
+						</span>
+					) : null}
+				</div>
+
 				<div className={matchMakingContainer}>
 					{chosenGolfers.map((player, idx) => {
 						return <PlayerCard {...player} key={idx} />;
 					})}
 				</div>
+
 				{disabledButton === true ? (
 					<button
 						className="pay-button"

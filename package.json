@@ -4,8 +4,8 @@
 	"version": "0.2.0",
 	"license": "MIT",
 	"dependencies": {
-		"@svgr/webpack": "5.5.0",
 		"@aws-amplify/api": "^4.0.1",
+		"@svgr/webpack": "5.5.0",
 		"html-react-parser": "^1.2.3",
 		"jstoxml": "^2.0.3",
 		"next": "^10.0.5",

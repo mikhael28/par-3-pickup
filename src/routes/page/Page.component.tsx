@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable react/jsx-indent-props */
 /* eslint-disable indent */
 import React, { useEffect, useState } from 'react';
@@ -11,10 +12,10 @@ import Card from 'components/card';
 import GameNav from 'components/header/game-nav';
 import { usePageData, usePageDetails } from 'hooks/page';
 import { injectClassNames } from 'utils/css';
-import styles from './Page.module.scss';
-import { courses, Course, Game } from '../../config';
-import { useRouter } from 'next/router';
 import RecordCard from 'components/record-card';
+import { useRouter } from 'next/router';
+import { courses, Course, Game } from '../../config';
+import styles from './Page.module.scss';
 
 const { page, pageLanding, pageContent, placeholder } = styles;
 
@@ -57,19 +58,19 @@ export default function Page(props: PageProps): JSX.Element {
 
 	useEffect(() => {
 		// localStorage.clear();
-		let gameCheck = localStorage.getItem('activeCourse');
+		const gameCheck = localStorage.getItem('activeCourse');
 		if (gameCheck !== null) {
-			console.log('Course Check: ', JSON.parse(gameCheck));
+			// console.log('Course Check: ', JSON.parse(gameCheck));
 			setActiveCourse(JSON.parse(gameCheck));
 		}
-		let activeCheck = localStorage.getItem('activeGame');
-		console.log('Game? : ', activeCheck);
+		const activeCheck = localStorage.getItem('activeGame');
+		// console.log('Game? : ', activeCheck);
 		if (activeCheck !== null) {
-			console.log('Game check: ', JSON.parse(activeCheck));
+			// console.log('Game check: ', JSON.parse(activeCheck));
 			setActiveGame(JSON.parse(activeCheck));
 			setActive(true);
 		}
-		let recordCheck = localStorage.getItem('records');
+		const recordCheck = localStorage.getItem('records');
 		if (recordCheck === null) {
 			localStorage.setItem('records', JSON.stringify([]));
 		}
@@ -81,7 +82,7 @@ export default function Page(props: PageProps): JSX.Element {
 	}
 
 	async function fetchOnlineGames() {
-		let newDate = new Date();
+		const newDate = new Date();
 		try {
 			const onlineGames = await API.get(
 				'matches',
@@ -97,7 +98,7 @@ export default function Page(props: PageProps): JSX.Element {
 	return (
 		<React.Fragment>
 			<Head>
-				<title>Seattle Golf</title>
+				<title>Seattle Par 3 Golf</title>
 				<meta name="og:title" content="Seattle Pickup Golf" />
 				<meta
 					name="description"

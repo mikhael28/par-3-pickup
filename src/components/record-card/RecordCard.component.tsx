@@ -4,7 +4,6 @@ import styles from './RecordCard.module.scss';
 
 export default function RecordCard(props: any) {
 	const { card } = styles;
-	console.log(props);
 	return (
 		<figure
 			className={card}
@@ -13,7 +12,7 @@ export default function RecordCard(props: any) {
 		>
 			<div>
 				<h2>Course: {props.course}</h2>
-				<p>{props.date}</p>
+				<p>{props.time} Tee Time</p>
 			</div>
 			<div>
 				{props.players.map((player: any, index: any) => {

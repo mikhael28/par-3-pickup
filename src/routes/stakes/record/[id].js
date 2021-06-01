@@ -91,9 +91,12 @@ export default function Stake(props) {
 
 	useEffect(() => {
 		//Have to check the ethereum binding on the window object to see if it's installed
-
-		if (Boolean(window.ethereum && window.ethereum.isMetaMask) === false) {
+		if (Boolean(window.ethereum && window.ethereum.isMetaMask) === true) {
 			openWallet();
+		} else if (window.ethereum === true && window.ethereum.isMetaMask === false) {
+			registerWallet();
+		} else {
+			console.log('No MetaMask Connection Detected!');
 		}
 	}, []);
 
@@ -103,13 +106,12 @@ export default function Stake(props) {
 	}
 
 	async function openWallet() {
-		const accounts = await window.ethereum.request({ method: 'eth_accounts' });
-		console.log(accounts);
+		// opens the wallet, to simply get our transaction history, check our Eth balance.
+		await window.ethereum.request({ method: 'eth_accounts' });
 	}
 
 	async function payWinner(winnerAddress, winnings) {
 		let stringValue = winnings.toFixed(14).toString();
-		console.log('Hopefully final string value', stringValue);
 
 		// this only happens if you are the loser, and are paying the winner
 		const transactionParameters = {
