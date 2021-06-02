@@ -128,35 +128,39 @@ export default function Stake(props) {
 	}
 
 	async function payWinner(winnerAddress, winnings) {
-		let stringValue = winnings.toFixed(14).toString();
+		if (window.ethereum === true && window.ethereum.isMetaMask === false) {
+			registerWallet();
+		} else {
+			let stringValue = winnings.toFixed(14).toString();
 
-		// this only happens if you are the loser, and are paying the winner
-		const transactionParameters = {
-			nonce: '0x00', // ignored by MetaMask
-			// gasPrice: '0x001184e72a000', // customizable by user during MetaMask confirmation.
-			// gas: '0x2710', // customizable by user during MetaMask confirmation.
-			to: winnerAddress, // Required except during contract publications.
-			// the from value is sad - it means that in order to send money, I must be logged in on my device.
-			from: window.ethereum.selectedAddress, // must match user's active address.
-			// may need to define this with BN.js ?
-			// value: finalWinnings,
-			value: `0x00${parseInt(Web3Utils.toWei(stringValue, 'ether')).toString(16)}`
-			// Only required to send ether to the recipient from the initiating external account.
-			// data:
-			// 	'0x7f7465737432000000000000000000000000000000000000000000000000000000600057',
-			// Optional, but used for defining smart contract creation and interaction.
-			// chainId: '0x3',
-			// Used to prevent transaction reuse across blockchains. Auto-filled by MetaMask.
-		};
+			// this only happens if you are the loser, and are paying the winner
+			const transactionParameters = {
+				nonce: '0x00', // ignored by MetaMask
+				// gasPrice: '0x001184e72a000', // customizable by user during MetaMask confirmation.
+				// gas: '0x2710', // customizable by user during MetaMask confirmation.
+				to: winnerAddress, // Required except during contract publications.
+				// the from value is sad - it means that in order to send money, I must be logged in on my device.
+				from: window.ethereum.selectedAddress, // must match user's active address.
+				// may need to define this with BN.js ?
+				// value: finalWinnings,
+				value: `0x00${parseInt(Web3Utils.toWei(stringValue, 'ether')).toString(16)}`
+				// Only required to send ether to the recipient from the initiating external account.
+				// data:
+				// 	'0x7f7465737432000000000000000000000000000000000000000000000000000000600057',
+				// Optional, but used for defining smart contract creation and interaction.
+				// chainId: '0x3',
+				// Used to prevent transaction reuse across blockchains. Auto-filled by MetaMask.
+			};
 
-		// txHash is a hex string
-		// As with any RPC call, it may throw an error
-		const txHash = await window.ethereum.request({
-			method: 'eth_sendTransaction',
-			params: [ transactionParameters ]
-		});
+			// txHash is a hex string
+			// As with any RPC call, it may throw an error
+			const txHash = await window.ethereum.request({
+				method: 'eth_sendTransaction',
+				params: [ transactionParameters ]
+			});
 
-		console.log(txHash);
+			console.log(txHash);
+		}
 	}
 
 	// the lobby itself may or may not contain the game details? That would be contained in each individuals record, and the game would just pull the records from the individual records?
