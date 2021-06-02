@@ -12,16 +12,12 @@ import RecordCard from 'components/record-card';
 
 export default function Stakes(props) {
 	const [ records, setRecords ] = useState([]);
-	const [ usd, setUsd ] = useState(1);
 	const router = useRouter();
 
 	useEffect(() => {
 		let recs = localStorage.getItem('records');
-		console.log('Recs fetch: ', JSON.parse(recs));
 		if (recs !== null) {
 			setRecords(JSON.parse(recs));
-			// calculateWinnings(JSON.parse(recs));
-			// conversion();
 		}
 	}, []);
 
@@ -35,9 +31,8 @@ export default function Stakes(props) {
 							course={rec.course}
 							date={'2021-5-28'}
 							handleClick={() => {
-								console.log('testing')
 								localStorage.setItem('activeRecord', JSON.stringify(rec));
-								router.push(`/stakes/stake/${rec.id}`)
+								router.push(`/stakes/stake/${rec.PK}_${rec.SK}`);
 							}}
 							picture={rec.picture}
 						/>

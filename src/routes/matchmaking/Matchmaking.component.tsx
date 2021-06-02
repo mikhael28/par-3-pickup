@@ -20,6 +20,8 @@ export default function Matchmaking(): JSX.Element {
 	const [ stake, setStake ] = useState<string>('0');
 	const [ time, setTime ] = useState<string>('AM');
 	const [ hour, setHour ] = useState<string>('10');
+	const [ description, setDescription ] = useState<string>('');
+	const [ phone, setPhone ] = useState<string>('');
 	const [ minute, setMinute ] = useState<string>('15');
 	const [ disabledButton, setDisabledButton ] = useState<boolean>(false);
 	const [ chosenGolfers, setGolfers ] = useState<Golfer[]>([]);
@@ -51,7 +53,7 @@ export default function Matchmaking(): JSX.Element {
 		let newGolfers = chosenGolfers.slice();
 		newGolfers.push(JSON.parse(event.target.value));
 		setGolfers(newGolfers);
-		if (newGolfers.length > 1) {
+		if (newGolfers.length >= 1) {
 			setDisabledButton(true);
 		}
 	}
@@ -60,7 +62,15 @@ export default function Matchmaking(): JSX.Element {
 		setStake(event.target.value);
 	}
 
-	console.log(time);
+	function handlePhone(event: any) {
+		if (phone.length <= 11) {
+			setPhone(event.target.value);
+		}
+	}
+
+	function handleDescription(event: any) {
+		setDescription(event.target.value);
+	}
 
 	// now, it's time to add the matchmaking, to add the players to the localStorage game, set the gambling amounts, and create.
 	// from there, need to add the counters for the holes,
@@ -79,7 +89,9 @@ export default function Matchmaking(): JSX.Element {
 			PK: `${newDate.getMonth() + 1}-${newDate.getDate()}-${newDate.getFullYear()}`,
 			SK: short.generate(),
 			LSI1: 'userIdHere',
-			time: `${hour}:${minute} ${time}`
+			time: `${hour}:${minute} ${time}`,
+			hostPhone: phone,
+			description: description
 		};
 		try {
 			localStorage.setItem('activeGame', JSON.stringify(body));
@@ -109,6 +121,20 @@ export default function Matchmaking(): JSX.Element {
 				<div>
 					<h2>$ Skin Per Hole</h2>
 					<input value={stake} onChange={handleStake} placeholder="0" />
+				</div>
+				<div>
+					<h2>Host Phone Number</h2>
+					<input value={phone} onChange={handlePhone} placeholder="6508687480" />
+				</div>
+				<div>
+					<h2>Meetup Notes</h2>
+					<textarea
+						onChange={handleDescription}
+						rows={4}
+						placeholder="Meet outside the pro-shop, by the benches close to the first tee."
+					>
+						{description}
+					</textarea>
 				</div>
 
 				<div>
@@ -166,7 +192,7 @@ export default function Matchmaking(): JSX.Element {
 
 				<br />
 				<div>
-					{chosenGolfers.length < 2 ? (
+					{chosenGolfers.length <= 1 ? (
 						<span className="custom-dropdown">
 							<select onChange={handleSelectChange} className="custom-dropdown">
 								<option value="none">Choose Your Players</option>

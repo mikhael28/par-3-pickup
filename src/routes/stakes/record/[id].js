@@ -7,6 +7,7 @@
 /* eslint-disable comma-dangle */
 /* eslint-disable indent */
 import React, { useEffect, useState } from 'react';
+import API from '@aws-amplify/api';
 import { useRouter } from 'next/router';
 import Web3Utils from 'web3-utils';
 
@@ -14,7 +15,6 @@ export default function Stake(props) {
 	const [ records, setRecords ] = useState([]);
 	const [ usd, setUsd ] = useState(1);
 	const router = useRouter();
-	const { pid } = router.query;
 
 	useEffect(() => {
 		let recs = localStorage.getItem('activeRecord');
@@ -23,8 +23,25 @@ export default function Stake(props) {
 			setRecords([ JSON.parse(recs) ]);
 			calculateWinnings([ JSON.parse(recs) ]);
 			conversion();
+			fetchGame(JSON.parse(recs).PK, JSON.parse(recs).SK);
+		} else {
+			let path = window.location.pathname.split('/');
+			let newPath = path[3].split('_');
+
+			fetchGame(newPath[0], newPath[1]);
 		}
 	}, []);
+
+	async function fetchGame(PK, SK) {
+		try {
+			let game = await API.get('matches', `/sp3/object/${PK}/${SK}`);
+			setRecords([ game ]);
+			calculateWinnings([ game ]);
+			conversion();
+		} catch (e) {
+			console.log('Error: ', e);
+		}
+	}
 
 	async function conversion() {
 		await fetch('https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD,ETH')
@@ -142,54 +159,6 @@ export default function Stake(props) {
 		console.log(txHash);
 	}
 
-	async function saveGameRecord(event) {
-		event.preventDefault();
-		let body = {
-			// partition key, refers to the game id
-			id: '',
-			// composite sort key
-			params: '',
-			course: '',
-			perHolewager: 5,
-			players: records[0].players,
-			holes: records[0].holes
-		};
-		// I need to have a lobby, where people can create games. And people can join games. Sort key can be course_date_active - but will this allow me to simply get an entire list? I guess a scan doesn't need a sort key.
-		// I can have one table, where we store records of games at a course, sorted by DATE_HostID.
-		// I can have a user table, where we store the games someone is affiliated with. We can also store personal bests here, for each course.
-		// Then they can easily join them, once they finish.
-		// I could just run a query, to get all items in the table for a particular course, then do some front-end rendering to check whether the players JSON object inside contains my ID. If it does, then I will add it to my new list of games which will then render once I update it with the useState hook.
-		try {
-			// this is where I send the API request to create the match object in the database
-		} catch (e) {
-			console.error('Dynamo Issue: ', e);
-		}
-
-		// 	const result = await dynamoDb.get(params);
-
-		// 	const results = await client.query({
-		// 		TableName: 'games-dev',
-		// 		KeyConditionExpression: 'PK = :pk',
-		// 		FilterExpression: 'params begins_with :host',
-		// 		ExpressionAttributeValues: {
-		// 			':pk': '2021-05-26',
-		// 			':date': 'host-id'
-		// 		}
-		// 	});
-		// 	// all games that start today, organized by host_id
-		// 	const results = await client.query({
-		// 		TableName: 'games-dev',
-		// 		KeyConditionExpression: 'PK = :pk',
-		// 		FilterExpression: 'Host begins_with :host',
-		// 		ExpressionAttributeValues: {
-		// 			':pk': '2021-05-26',
-		// 			':host': 'id1'
-		// 		}
-		// 	});
-
-		// 	// have a secondary index to fetch games by host ID.
-	}
-
 	// the lobby itself may or may not contain the game details? That would be contained in each individuals record, and the game would just pull the records from the individual records?
 	// pk - date
 	// sk - gameId
@@ -240,14 +209,18 @@ export default function Stake(props) {
 								</div>
 							);
 						})}
-						<h2>Winnings</h2>
-						{rec.players.map((player, i) => {
-							return (
-								<h3 key={i}>
-									{player.fName}'s Winnings: ${player.winnings} or {player.winnings / usd} ETH
-								</h3>
-							);
-						})}
+						{rec.players.length > 1 ? (
+							<React.Fragment>
+								<h2>Winnings</h2>
+								{rec.players.map((player, i) => {
+									return (
+										<h3 key={i}>
+											{player.fName}'s Winnings: ${player.winnings} or {player.winnings / usd} ETH
+										</h3>
+									);
+								})}
+							</React.Fragment>
+						) : null}
 						{rec.players.map((player, index) => {
 							if (player.winnings > 0) {
 								return (
