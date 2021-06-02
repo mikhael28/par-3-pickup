@@ -9,12 +9,13 @@ import { useRouter } from 'next/router';
 import Dialog from '@material-ui/core/Dialog';
 import Slide from '@material-ui/core/Slide';
 import RecordCard from 'components/record-card';
+import { TransitionProps } from '@material-ui/core/transitions';
 import ProfileModal from './ProfileModal';
 import styles from './Profile.module.scss';
 
 const { profile, profileMain, profilePicture, profileContent, followersIcon, followersPlaceholder, about } = styles;
 
-const Transition = React.forwardRef(function Transition(props, ref) {
+const Transition = React.forwardRef<unknown, TransitionProps>((props: any, ref: any) => {
 	return <Slide direction="up" ref={ref} {...props} />;
 });
 
@@ -22,7 +23,6 @@ export default function Profile(): JSX.Element {
 	const { name, bio, avatar_url, followers } = useUser();
 	const [ newName, setName ] = useState<string>('Panther Forest');
 	const [ newBio, setBio ] = useState<string>('New to the tour.');
-	const [ summary, setSummary ] = useState<string>('');
 	const [ newPhone, setPhone ] = useState<string>('6508687480');
 	const [ refresh, setRefresh ] = useState<boolean>(false);
 	const [ modal, setModal ] = useState<boolean>(false);
@@ -39,7 +39,6 @@ export default function Profile(): JSX.Element {
 	useEffect(() => {
 		let localName = localStorage.getItem('name');
 		let localBio = localStorage.getItem('bio');
-		let localSummary = localStorage.getItem('localSummary');
 		let localPhone = localStorage.getItem('phone');
 
 		if (localName === null || localBio === null || localPhone === null) {
@@ -47,7 +46,6 @@ export default function Profile(): JSX.Element {
 		} else {
 			setName(localName);
 			setBio(localBio);
-			setSummary(localSummary);
 			setPhone(localPhone);
 		}
 	}, []);
@@ -91,7 +89,7 @@ export default function Profile(): JSX.Element {
 					</div>
 				</div>
 				<br />
-				{records.map((rec, i) => {
+				{records.map((rec: any, i) => {
 					return (
 						<div key={i}>
 							<RecordCard
