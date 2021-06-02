@@ -12,7 +12,9 @@ export default function RecordCard(props: any) {
 		>
 			<div>
 				<h2>Course: {props.course}</h2>
-				<p>{props.time} Tee Time</p>
+				<p>
+					{props.time} Tee Time <br />
+				</p>
 			</div>
 			<div>
 				{props.players.map((player: any, index: any) => {

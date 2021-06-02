@@ -1,4 +1,8 @@
-import React, { useEffect } from 'react';
+/* eslint-disable react/jsx-curly-spacing */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable no-mixed-spaces-and-tabs */
+/* eslint-disable indent */
+import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { ThemeProvider } from 'contexts/theme';
 import Header from 'components/header';
@@ -23,6 +27,19 @@ API.configure({
 });
 
 export default function App({ Component, pageProps }: AppProps): JSX.Element {
+	const [ code, setCode ] = useState<string>('');
+	const [ errorMessage, setMessage ] = useState<string>('');
+
+	function handleSuccess(data: any) {
+		setCode(data.code);
+		setMessage('');
+	}
+
+	function handleFailure(error: any) {
+		setCode('');
+		setMessage(error.errorMessage);
+	}
+
 	useEffect(() => {
 		if ('serviceWorker' in navigator) {
 			navigator.serviceWorker.register(process.env.serviceWorkerUrl as string, { scope: '/' });
@@ -38,10 +55,8 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
 				/>
 				<meta name="apple-mobile-web-app-capable" content="yes" />
 				<meta name="apple-mobile-web-app-status-bar-style" content={statusBarStyle} />
-				<link rel="apple-touch-startup-image" sizes="512x512" href="/logo512.png" />
-				<link rel="apple-touch-startup-image" sizes="256x256" href="/logo256.png" />
-				<link rel="apple-touch-icon" sizes="512x512" href="/logo512.png" />
-				<link rel="apple-touch-icon" sizes="256x256" href="/logo256.png" />
+				<link rel="apple-touch-startup-image" sizes="196x196" href="/android-chrome-196x196.png" />
+				<link rel="apple-touch-icon" sizes="196x196" href="/android-chrome-196x196.png" />
 				<link rel="manifest" href="/manifest.json" />
 			</Head>
 			<Provider store={store}>
