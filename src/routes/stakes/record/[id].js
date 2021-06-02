@@ -10,11 +10,13 @@ import React, { useEffect, useState } from 'react';
 import API from '@aws-amplify/api';
 import { useRouter } from 'next/router';
 import Web3Utils from 'web3-utils';
+// import MetaMaskOnboarding from '@metamask/onboarding';
 
 export default function Stake(props) {
 	const [ records, setRecords ] = useState([]);
 	const [ usd, setUsd ] = useState(1);
 	const router = useRouter();
+	// const [ accounts, setAccounts ] = React.useState([]);
 
 	useEffect(() => {
 		let recs = localStorage.getItem('activeRecord');
@@ -109,8 +111,11 @@ export default function Stake(props) {
 	useEffect(() => {
 		//Have to check the ethereum binding on the window object to see if it's installed
 		if (Boolean(window.ethereum && window.ethereum.isMetaMask) === true) {
+			console.log('opening?');
+			registerWallet();
 			openWallet();
-		} else if (window.ethereum === true && window.ethereum.isMetaMask === false) {
+		} else if (Boolean(window.ethereum && window.ethereum.isMetaMask) === false) {
+			console.log('registering?');
 			registerWallet();
 		} else {
 			console.log('No MetaMask Connection Detected!');
@@ -119,7 +124,22 @@ export default function Stake(props) {
 
 	async function registerWallet() {
 		// this will allow us to connect to MetaMask
+		console.log('Register?');
 		await window.ethereum.request({ method: 'eth_requestAccounts' });
+		// const onboarding = new MetaMaskOnboarding();
+		// onboarding.startOnboarding();
+
+		// function handleNewAccounts(newAccounts) {
+		// 	setAccounts(newAccounts);
+		// }
+
+		// if (MetaMaskOnboarding.isMetaMaskInstalled()) {
+		// 	window.ethereum.request({ method: 'eth_requestAccounts' }).then(handleNewAccounts);
+		// 	window.ethereum.on('accountsChanged', handleNewAccounts);
+		// 	return () => {
+		// 		window.ethereum.off('accountsChanged', handleNewAccounts);
+		// 	};
+		// }
 	}
 
 	async function openWallet() {
@@ -129,6 +149,7 @@ export default function Stake(props) {
 
 	async function payWinner(winnerAddress, winnings) {
 		if (window.ethereum === true && window.ethereum.isMetaMask === false) {
+			console.log('Hello?');
 			registerWallet();
 		} else {
 			let stringValue = winnings.toFixed(14).toString();
@@ -252,8 +273,9 @@ export default function Stake(props) {
 											key={index}
 											style={{ marginLeft: 10, marginRight: 12 }}
 											onClick={() => {
-												localStorage.clear();
-												router.push('/');
+												openWallet();
+												// localStorage.clear();
+												// router.push('/');
 											}}
 										>
 											<img
@@ -263,7 +285,9 @@ export default function Stake(props) {
 												height="30"
 												width="30"
 											/>{' '}
-											<p style={{ marginBottom: 7, color: 'black', fontSize: 20 }}>Clear Data</p>
+											<p style={{ marginBottom: 7, color: 'black', fontSize: 20 }}>
+												MetaMask Connect
+											</p>
 										</button>
 									</div>
 								);
