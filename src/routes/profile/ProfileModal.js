@@ -1,8 +1,86 @@
 /* eslint-disable indent */
 import React, { useState } from 'react';
 import DialogContent from '@material-ui/core/DialogContent';
+import LinkedIn from 'linkedin-login-for-react';
+import API from '@aws-amplify/api';
 
 function ProfileModal(props) {
+	async function callbackLinkedIn(error, code, redirectUri) {
+		if (error) {
+			// signin failed
+			console.log('Error: ', error);
+		} else {
+			// Obtain authorization token from linkedin api
+			// see https://developer.linkedin.com/docs/oauth2 for more info
+			// set authenticated to true, store something in local storage?
+			console.log(code);
+			console.log(redirectUri);
+			let linkedInfo = await fetchLinkedInInfo(code);
+			let profileInfo = await fetchProfileData(linkedInfo.profile.id);
+			console.log('Profile Info: ', profileInfo);
+			if (profileInfo.fName === undefined) {
+				let body = {
+					PK: 'member',
+					SK: linkedInfo.profile.id,
+					LSI1: 'seattle',
+					fName: linkedInfo.profile.localizedFirstName,
+					lName: linkedInfo.profile.localizedLastName,
+					profilePicture:
+						linkedInfo.picture.profilePicture['displayImage~'].elements[0].identifiers[0].identifier,
+					access_token: linkedInfo.token.accessToken,
+					// array of records, to track best hole score, etc.
+					records: [],
+					phone: '',
+					bio: ''
+				};
+				try {
+					let newUser = await API.post('matches', '/sp3', { body });
+					console.log('New User: ', newUser);
+					props.setGolfer(body);
+					localStorage.setItem('golfer', JSON.stringify(body));
+				} catch (e) {
+					console.log('User creation error: ', e);
+				}
+
+				localStorage.setItem('profile', JSON.stringify(body));
+				localStorage.setItem('authenticated', 'true');
+				localStorage.setItem('id', linkedInfo.profile.id);
+				props.setAuthenticated(true);
+			} else {
+				props.setGolfer(profileInfo);
+				localStorage.setItem('golfer', JSON.stringify(profileInfo));
+				localStorage.setItem('authenticated', 'true');
+				props.setAuthenticated(true);
+			}
+		}
+	}
+
+	async function fetchProfileData(id) {
+		try {
+			// PK of 'profile', SK of ID?
+			let response = await API.get('matches', `/sp3/object/profile/${id}`);
+
+			return response;
+		} catch (e) {
+			console.log('Error fetching profile: ', e);
+		}
+	}
+
+	async function fetchLinkedInInfo(authorizationCode) {
+		// we are sending a post to our LinkedIn OAuth API to get the access token, and then on the server side to get profile info and send it back here, in the form of a returned 'data' object.
+		try {
+			let data = await API.post('util', `/auth`, {
+				body: {
+					authorization: authorizationCode
+				}
+			});
+			console.log('Profile Data: ', data);
+			return data;
+		} catch (e) {
+			console.log('OAuth LI Error: ', e);
+		}
+	}
+
 	function handleName(event) {
 		props.setName(event.target.value);
 	}
@@ -29,27 +107,63 @@ function ProfileModal(props) {
 	}
 
 	return (
-		<React.Fragment>
-			<h1 style={{ textAlign: 'center' }}>Edit Your Profile</h1>
-			<DialogContent style={{ textAlign: 'center' }}>
-				<form onSubmit={handleSubmit}>
-					<div>
-						<h2>Name</h2>
-						<input value={props.name} onChange={handleName} placeholder="6508687480" />
+		<div style={{ padding: 20 }}>
+			{props.authenticated === false ? (
+				<div>
+					<div className="flex-between">
+						<h1>Login / Register</h1>
+						<button onClick={props.closeModal}>Close</button>
 					</div>
-					<div>
-						<h2>Bio</h2>
-						<input value={props.bio} onChange={handleBio} placeholder="6508687480" />
+					<h2>Benefits</h2>
+					<ol style={{ listStyleType: 'upper-roman', padding: 10, margin: 8 }}>
+						<li className="list-style">Track your golfing achievements to grow your GS (Golfer Score)</li>
+						<li className="list-style">
+							Invite connections on LinkedIn to play golf & develop those relationships
+						</li>
+						<li className="list-style">Set skins on a game, for a friendly wager with friends.</li>
+						<li className="list-style">Join a community of beginner & experienced players alike.</li>
+					</ol>
+					<div id="linkedin-connect">
+						<LinkedIn
+							clientId="86ydeex4svad2m"
+							callback={callbackLinkedIn}
+							className="social-button"
+							scope={[ 'r_liteprofile', 'r_emailaddress' ]}
+							text="Login With LinkedIn"
+						/>
 					</div>
-					<div>
-						<h2>Phone Number</h2>
-						<input value={props.phone} onChange={handlePhone} placeholder="6508687480" />
+				</div>
+			) : (
+				<div>
+					<div className="flex-between">
+						<h1 style={{ textAlign: 'center' }}>Edit Profile</h1>
+						<button onClick={props.closeModal}>Close</button>
 					</div>
-					<br />
-					<button>Edit</button>
-				</form>
-			</DialogContent>
-		</React.Fragment>
+					<DialogContent style={{ textAlign: 'center' }}>
+						<img src={props.golfer.picture} height="100" width="100" />
+						<p>
+							{props.golfer.fName} {props.golfer.lName}
+						</p>
+						<form onSubmit={handleSubmit}>
+							{/* <div>
+								<h2>Name</h2>
+								<input value={props.name} onChange={handleName} placeholder="6508687480" />
+							</div> */}
+							<div>
+								<h2>Bio</h2>
+								<input value={props.bio} onChange={handleBio} placeholder="I am a cool golfer" />
+							</div>
+							<div>
+								<h2>Phone Number</h2>
+								<input value={props.phone} onChange={handlePhone} placeholder="6508687480" />
+							</div>
+							<br />
+							<button>Edit</button>
+						</form>
+					</DialogContent>
+				</div>
+			)}
+		</div>
 	);
 }
 

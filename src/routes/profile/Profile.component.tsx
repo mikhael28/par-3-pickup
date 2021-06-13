@@ -6,26 +6,19 @@ import Icon from 'components/icon';
 import Placeholder from 'components/placeholder';
 import { useUser } from 'hooks/user';
 import { useRouter } from 'next/router';
-import Dialog from '@material-ui/core/Dialog';
 import Slide from '@material-ui/core/Slide';
 import RecordCard from 'components/record-card';
 import { TransitionProps } from '@material-ui/core/transitions';
-import ProfileModal from './ProfileModal';
 import styles from './Profile.module.scss';
 
 const { profile, profileMain, profilePicture, profileContent, followersIcon, followersPlaceholder, about } = styles;
 
-const Transition = React.forwardRef<unknown, TransitionProps>((props: any, ref: any) => {
-	return <Slide direction="up" ref={ref} {...props} />;
-});
-
-export default function Profile(): JSX.Element {
+export default function Profile(props: any): JSX.Element {
 	const { name, bio, avatar_url, followers } = useUser();
 	const [ newName, setName ] = useState<string>('Panther Forest');
 	const [ newBio, setBio ] = useState<string>('New to the tour.');
 	const [ newPhone, setPhone ] = useState<string>('6508687480');
 	const [ refresh, setRefresh ] = useState<boolean>(false);
-	const [ modal, setModal ] = useState<boolean>(false);
 	const [ records, setRecords ] = useState([]);
 	const router = useRouter();
 
@@ -58,20 +51,16 @@ export default function Profile(): JSX.Element {
 			</Head>
 			<main className={profile}>
 				<div className={profileMain}>
-					{/* <Image
-                      isPlaceholder={ !avatar_url }
-                      src={ avatar_url }
-                      className={ profilePicture }
-                    /> */}
+					<Image isPlaceholder={!avatar_url} src={props.golfer.profilePicture} className={profilePicture} />
 					<div className={profileContent}>
 						<h1>
-							<Placeholder content={newName} length="short" />
+							<Placeholder content={`${props.golfer.fName} ${props.golfer.lName}`} length="short" />
 						</h1>
 						<p>
-							<Placeholder content={newPhone} length="short" />
+							<Placeholder content={props.golfer.phone} length="short" />
 						</p>
 						<p>
-							<Placeholder content={newBio} length="long" />
+							<Placeholder content={props.golfer.bio} length="long" />
 						</p>
 						{/* <h3>
                             <Icon
@@ -82,9 +71,26 @@ export default function Profile(): JSX.Element {
                                 followers ?? <span className={ followersPlaceholder } />
                             } Followers
                         </h3> */}
-						<h3 style={{ cursor: 'pointer' }} onClick={() => setModal(true)}>
+						<h3
+							style={{ cursor: 'pointer' }}
+							onClick={() => {
+								props.setModal(true);
+								router.push('/');
+							}}
+						>
 							<Icon asset="People" className={followersIcon} />
 							Edit
+						</h3>
+						<br />
+						<h3
+							style={{ cursor: 'pointer' }}
+							onClick={() => {
+								localStorage.clear();
+								router.push('/');
+							}}
+						>
+							<Icon asset="People" className={followersIcon} />
+							Logout
 						</h3>
 					</div>
 				</div>
@@ -110,32 +116,6 @@ export default function Profile(): JSX.Element {
 						{summary}
 					</p>
 				</div> */}
-				<Dialog
-					style={{
-						margin: 'auto',
-						width: '50vw'
-					}}
-					open={modal}
-					TransitionComponent={Transition}
-					keepMounted
-					// disableEscapeKeyDown={true}
-					// fullScreen={true}
-					// fullWidth={true}
-					// disableBackdropClick={true}
-					// hideBackdrop={false}
-					aria-labelledby="edit-profile"
-					aria-describedby="Edit the profile"
-				>
-					<ProfileModal
-						closeModal={() => setModal(false)}
-						name={newName}
-						bio={newBio}
-						phone={newPhone}
-						setName={setName}
-						setBio={setBio}
-						setPhone={setPhone}
-					/>
-				</Dialog>
 			</main>
 		</React.Fragment>
 	);

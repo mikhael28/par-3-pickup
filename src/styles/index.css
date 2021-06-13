@@ -141,3 +141,55 @@
 .flex {
 	display: flex;
 }
+
+.social-button {
+	background-position: 25px 0px;
+	box-sizing: border-box;
+	color: black;
+	cursor: pointer;
+	display: inline-block;
+	height: 50px;
+	line-height: 50px;
+	text-align: left;
+	text-decoration: none;
+	text-transform: uppercase;
+	vertical-align: middle;
+	width: 100%;
+	border-radius: 3px;
+	margin: 10px auto;
+	outline: rgb(255, 255, 255) none 0px;
+	padding-left: 20%;
+	transition: all 0.2s cubic-bezier(0.72, 0.01, 0.56, 1) 0s;
+	-webkit-transition: all .3s ease;
+	-moz-transition: all .3s ease;
+	-ms-transition: all .3s ease;
+	-o-transition: all .3s ease;
+	transition: all .3s ease;
+	background: white
+		url('https://raw.githubusercontent.com/eswarasai/social-login/master/img/linkedin.svg?sanitize=true') no-repeat
+		scroll 13px 0px / 28px 45px padding-box border-box;
+	border: 1px solid rgb(0, 119, 181);
+}
+
+.social-button:hover {
+	border-color: rgb(0, 119, 181);
+	color: white;
+	background: rgb(0, 119, 181)
+		url('https://raw.githubusercontent.com/eswarasai/social-login/master/img/linkedin-white.svg?sanitize=true')
+		no-repeat scroll 13px 0px / 28px 45px padding-box border-box;
+	-webkit-transition: all .8s ease-out;
+	-moz-transition: all .3s ease;
+	-ms-transition: all .3s ease;
+	-o-transition: all .3s ease;
+	transition: all .3s ease-out;
+}
+
+.list-style {
+	font-size: 16px;
+	margin-top: 10px;
+}
+
+.flex-between {
+	display: flex;
+	justify-content: space-between;
+}
