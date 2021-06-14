@@ -6,7 +6,7 @@ import Icon from 'components/icon';
 import Placeholder from 'components/placeholder';
 import { useUser } from 'hooks/user';
 import { useRouter } from 'next/router';
-import RecordCard from 'components/record-card';
+import SmallRecordCard from 'components/small-record-card';
 import styles from './Profile.module.scss';
 
 const { profile, profileMain, profilePicture, profileContent, followersIcon, followersPlaceholder, about } = styles;
@@ -23,7 +23,7 @@ export default function Profile(props: any): JSX.Element {
 	useEffect(() => {
 		let recs = localStorage.getItem('records');
 		if (recs !== null) {
-			setRecords(JSON.parse(recs));
+			setRecords(props.golfer.records);
 		} else {
 			// dynamo request to get all records records, then you can click in to get the real dookie
 		}
@@ -95,19 +95,17 @@ export default function Profile(props: any): JSX.Element {
 					</div>
 				</div>
 				<br />
+				<h2>Previous Game Records</h2>
 				{records.map((rec: any, i) => {
 					return (
-						<div key={i}>
-							<RecordCard
-								players={rec.players}
-								course={rec.course}
-								handleClick={() => {
-									localStorage.setItem('activeRecord', JSON.stringify(rec));
-									router.push(`/stakes/stake/${rec.PK}_${rec.SK}`);
-								}}
-								picture={rec.picture}
-							/>
-						</div>
+						<SmallRecordCard
+							course={rec.course}
+							gamePK={rec.gamePK}
+							handleClick={() => {
+								localStorage.setItem('activeRecord', JSON.stringify(rec));
+								router.push(`/stakes/stake/${rec.PK}_${rec.SK}`);
+							}}
+						/>
 					);
 				})}
 				{/* <div className={about}>

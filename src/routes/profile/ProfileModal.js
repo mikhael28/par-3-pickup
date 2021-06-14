@@ -41,7 +41,6 @@ function ProfileModal(props) {
 					console.log('User creation error: ', e);
 				}
 
-				localStorage.setItem('profile', JSON.stringify(body));
 				localStorage.setItem('authenticated', 'true');
 				localStorage.setItem('id', linkedInfo.profile.id);
 				props.setAuthenticated(true);

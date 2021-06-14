@@ -19,19 +19,10 @@ export default function Stake(props) {
 	// const [ accounts, setAccounts ] = React.useState([]);
 
 	useEffect(() => {
-		let recs = localStorage.getItem('activeRecord');
-		console.log('Recs fetch: ', JSON.parse(recs));
-		if (recs !== null) {
-			setRecords([ JSON.parse(recs) ]);
-			calculateWinnings([ JSON.parse(recs) ]);
-			conversion();
-			fetchGame(JSON.parse(recs).PK, JSON.parse(recs).SK);
-		} else {
-			let path = window.location.pathname.split('/');
-			let newPath = path[3].split('_');
+		let path = window.location.pathname.split('/');
+		let newPath = path[3].split('_');
 
-			fetchGame(newPath[0], newPath[1]);
-		}
+		fetchGame(newPath[0], newPath[1]);
 	}, []);
 
 	async function fetchGame(PK, SK) {

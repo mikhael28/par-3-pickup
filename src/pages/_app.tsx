@@ -94,7 +94,7 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
 		}
 
 		let storedAuth = localStorage.getItem('authenticated');
-		console.log(storedAuth);
+		console.log('Logged in? ', storedAuth);
 		if (storedAuth !== null) {
 			// get profile data if it's not already there
 			let profileData = localStorage.getItem('golfer');
@@ -102,6 +102,7 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
 				console.log(JSON.parse(profileData));
 				setGolfer(JSON.parse(profileData));
 			}
+			// @TODO: add async background profile grab to have latest data
 		} else {
 			setAuthenticated(false);
 			setModal(true);
