@@ -15,11 +15,12 @@ import styles from './Matchmaking.module.scss';
 
 const { matchMaking, matchMakingContainer } = styles;
 
-export default function Matchmaking(): JSX.Element {
+export default function Matchmaking(props: any): JSX.Element {
 	const router = useRouter();
+	const [ gameMode, setGameMode ] = useState<string>('public');
 	const [ stake, setStake ] = useState<string>('0');
-	const [ time, setTime ] = useState<string>('AM');
-	const [ hour, setHour ] = useState<string>('10');
+	const [ time, setTime ] = useState<string>('PM');
+	const [ hour, setHour ] = useState<string>('4');
 	const [ description, setDescription ] = useState<string>('');
 	const [ phone, setPhone ] = useState<string>('');
 	const [ minute, setMinute ] = useState<string>('15');
@@ -39,6 +40,178 @@ export default function Matchmaking(): JSX.Element {
 		picture: '',
 		holes: []
 	});
+
+	const courseGoals = {
+		name: course.name,
+		code: course.codeName,
+		allTimeStrokes: [ 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
+		allTimeRecord: 0,
+		placeholder: {
+			name: '',
+			value: 10,
+			completed: false,
+			description: ''
+		},
+		firstTee: {
+			name: 'First Tee!',
+			value: 10,
+			completed: false,
+			description: 'Completing your 9 holes on a course!'
+		},
+		personalBest1: {
+			name: 'Beat your personal best!',
+			value: 10,
+			completed: false,
+			description:
+				'Making progress is the most important thing - you just beat your personal best on this course.'
+		},
+		personalBest2: {
+			name: 'Beat your personal best again!',
+			value: 10,
+			completed: false,
+			description:
+				'Making progress is the most important thing - you just beat your personal best on this course.'
+		},
+		personalBest3: {
+			name: 'Beat your personal best three times!',
+			value: 10,
+			completed: false,
+			description:
+				'Making progress is the most important thing - you just beat your personal best on this course.'
+		},
+		victory: {
+			name: 'To the victor go the spoils',
+			value: 10,
+			completed: false,
+			description: 'Congratulations on beating an opponent on this course.'
+		},
+		averageJuniorPar: {
+			name: 'You got a score of 36 on a Par 3 course - you have great potential to improve your game!',
+			value: 10,
+			completed: false,
+			description: ''
+		},
+		averagePar: {
+			name: 'You got a score of 27 on a Par 3 course - the next stop for you might be the Tour.',
+			value: 10,
+			completed: false,
+			description: ''
+		},
+		ace: {
+			name: 'Ace',
+			value: 10,
+			completed: false,
+			description: 'Wow, you got a hole in one! That is quite ridiculous, great job.'
+		},
+		par1: {
+			name: 'Par on the first hole!',
+			value: 10,
+			completed: false,
+			description: 'Congratulations on earning par for this hole!'
+		},
+		par2: {
+			name: 'Par on the first hole!',
+			value: 10,
+			completed: false,
+			description: 'Congratulations on earning par for this hole!'
+		},
+		par3: {
+			name: 'Par on the first hole!',
+			value: 10,
+			completed: false,
+			description: 'Congratulations on earning par for this hole!'
+		},
+		par4: {
+			name: 'Par on the first hole!',
+			value: 10,
+			completed: false,
+			description: 'Congratulations on earning par for this hole!'
+		},
+		par5: {
+			name: 'Par on the first hole!',
+			value: 10,
+			completed: false,
+			description: 'Congratulations on earning par for this hole!'
+		},
+		par6: {
+			name: 'Par on the first hole!',
+			value: 10,
+			completed: false,
+			description: 'Congratulations on earning par for this hole!'
+		},
+		par7: {
+			name: 'Par on the first hole!',
+			value: 10,
+			completed: false,
+			description: 'Congratulations on earning par for this hole!'
+		},
+		par8: {
+			name: 'Par on the first hole!',
+			value: 10,
+			completed: false,
+			description: 'Congratulations on earning par for this hole!'
+		},
+		par9: {
+			name: 'Par on the first hole!',
+			value: 10,
+			completed: false,
+			description: 'Congratulations on earning par for this hole!'
+		},
+		birdie1: {
+			name: 'birdie on the first hole!',
+			value: 10,
+			completed: false,
+			description: 'Congratulations on earning birdie for this hole!'
+		},
+		birdie2: {
+			name: 'birdie on the first hole!',
+			value: 10,
+			completed: false,
+			description: 'Congratulations on earning birdie for this hole!'
+		},
+		birdie3: {
+			name: 'birdie on the first hole!',
+			value: 10,
+			completed: false,
+			description: 'Congratulations on earning birdie for this hole!'
+		},
+		birdie4: {
+			name: 'birdie on the first hole!',
+			value: 10,
+			completed: false,
+			description: 'Congratulations on earning birdie for this hole!'
+		},
+		birdie5: {
+			name: 'birdie on the first hole!',
+			value: 10,
+			completed: false,
+			description: 'Congratulations on earning birdie for this hole!'
+		},
+		birdie6: {
+			name: 'birdie on the first hole!',
+			value: 10,
+			completed: false,
+			description: 'Congratulations on earning birdie for this hole!'
+		},
+		birdie7: {
+			name: 'birdie on the first hole!',
+			value: 10,
+			completed: false,
+			description: 'Congratulations on earning birdie for this hole!'
+		},
+		birdie8: {
+			name: 'birdie on the first hole!',
+			value: 10,
+			completed: false,
+			description: 'Congratulations on earning birdie for this hole!'
+		},
+		birdie9: {
+			name: 'birdie on the first hole!',
+			value: 10,
+			completed: false,
+			description: 'Congratulations on earning birdie for this hole!'
+		}
+	};
 
 	useEffect(() => {
 		// this is where we pull the course name from localStorage
@@ -79,23 +252,55 @@ export default function Matchmaking(): JSX.Element {
 	async function startGame() {
 		const newDate = new Date();
 
+		let gameSK = short.generate();
+
+		// achievements being added in
+		let achievementCheck = false;
+		let achievementRecords = props.golfer.achievements.slice();
+		achievementRecords.forEach((ach: any, i: any) => {
+			if (ach.code === course.codeName) {
+				achievementCheck = true;
+			}
+		});
+
+		if (achievementCheck === false) {
+			achievementRecords.push(courseGoals);
+		}
+
 		const body = {
-			id: '123',
 			course: course.name,
 			perHoleWager: parseInt(stake, 10) || 0,
 			ldWager: 5,
 			players: chosenGolfers,
 			holes: course.holes,
 			PK: `${newDate.getMonth() + 1}-${newDate.getDate()}-${newDate.getFullYear()}`,
-			SK: short.generate(),
-			LSI1: 'userIdHere',
+			SK: gameSK,
+			LSI1: props.golfer.SK,
 			time: `${hour}:${minute} ${time}`,
 			hostPhone: phone,
-			description: description
+			description: description,
+			gameMode: gameMode
 		};
+
+		const recordBody = {
+			course: course.name,
+			courseCode: course.codeName,
+			gamePK: `${newDate.getMonth() + 1}-${newDate.getDate()}-${newDate.getFullYear()}`,
+			gameSK: gameSK
+		};
+
+		let profileBody = { ...props.golfer };
+		profileBody.records.push(recordBody);
+		profileBody.achievements = achievementRecords;
+		console.log('New Profile Body: ', profileBody);
 		try {
 			localStorage.setItem('activeGame', JSON.stringify(body));
 			await API.post('matches', '/sp3', { body });
+			await API.put('matches', `/sp3`, {
+				body: profileBody
+			});
+			props.setGolfer(profileBody);
+			localStorage.setItem('golfer', JSON.stringify(profileBody));
 			router.push('/');
 		} catch (e) {
 			console.error(e);
@@ -186,6 +391,18 @@ export default function Matchmaking(): JSX.Element {
 						>
 							<option value="AM">AM</option>
 							<option value="PM">PM</option>
+						</select>
+					</div>
+					<div className="flex-down-select">
+						<label htmlFor="online">Make Game Public or Private?</label>
+						<select
+							name="gameMode"
+							id="gameMode"
+							value={gameMode}
+							onChange={(ev: React.ChangeEvent<HTMLSelectElement>): void => setGameMode(ev.target.value)}
+						>
+							<option value="public">Public</option>
+							<option value="private">Private</option>
 						</select>
 					</div>
 				</div>

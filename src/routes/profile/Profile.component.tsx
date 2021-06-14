@@ -6,9 +6,7 @@ import Icon from 'components/icon';
 import Placeholder from 'components/placeholder';
 import { useUser } from 'hooks/user';
 import { useRouter } from 'next/router';
-import Slide from '@material-ui/core/Slide';
 import RecordCard from 'components/record-card';
-import { TransitionProps } from '@material-ui/core/transitions';
 import styles from './Profile.module.scss';
 
 const { profile, profileMain, profilePicture, profileContent, followersIcon, followersPlaceholder, about } = styles;
@@ -26,6 +24,8 @@ export default function Profile(props: any): JSX.Element {
 		let recs = localStorage.getItem('records');
 		if (recs !== null) {
 			setRecords(JSON.parse(recs));
+		} else {
+			// dynamo request to get all records records, then you can click in to get the real dookie
 		}
 	}, []);
 

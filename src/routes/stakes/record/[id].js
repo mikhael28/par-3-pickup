@@ -273,7 +273,7 @@ export default function Stake(props) {
 											key={index}
 											style={{ marginLeft: 10, marginRight: 12 }}
 											onClick={() => {
-												openWallet();
+												registerWallet();
 												// localStorage.clear();
 												// router.push('/');
 											}}

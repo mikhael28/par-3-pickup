@@ -13,11 +13,8 @@ function ProfileModal(props) {
 			// Obtain authorization token from linkedin api
 			// see https://developer.linkedin.com/docs/oauth2 for more info
 			// set authenticated to true, store something in local storage?
-			console.log(code);
-			console.log(redirectUri);
 			let linkedInfo = await fetchLinkedInInfo(code);
 			let profileInfo = await fetchProfileData(linkedInfo.profile.id);
-			console.log('Profile Info: ', profileInfo);
 			if (profileInfo.fName === undefined) {
 				let body = {
 					PK: 'member',
@@ -27,11 +24,13 @@ function ProfileModal(props) {
 					lName: linkedInfo.profile.localizedLastName,
 					profilePicture:
 						linkedInfo.picture.profilePicture['displayImage~'].elements[0].identifiers[0].identifier,
-					access_token: linkedInfo.token.accessToken,
+					access_token: linkedInfo.token.access_token,
 					// array of records, to track best hole score, etc.
 					records: [],
+					achievements: [],
 					phone: '',
-					bio: ''
+					bio: '',
+					xp: 0
 				};
 				try {
 					let newUser = await API.post('matches', '/sp3', { body });
@@ -58,7 +57,7 @@ function ProfileModal(props) {
 	async function fetchProfileData(id) {
 		try {
 			// PK of 'profile', SK of ID?
-			let response = await API.get('matches', `/sp3/object/profile/${id}`);
+			let response = await API.get('matches', `/sp3/object/member/${id}`);
 
 			return response;
 		} catch (e) {
