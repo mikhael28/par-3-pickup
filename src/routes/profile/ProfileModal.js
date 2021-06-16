@@ -71,7 +71,9 @@ function ProfileModal(props) {
 	async function fetchLinkedInInfo(authorizationCode) {
 		// we are sending a post to our LinkedIn OAuth API to get the access token, and then on the server side to get profile info and send it back here, in the form of a returned 'data' object.
 		let link;
-		process.env.NODE_ENV === 'development' ? (link = 'http://localhost:3000/') : 'https://seattlepar3.com';
+		process.env.NODE_ENV === 'development'
+			? (link = 'http://localhost:3000/')
+			: (link = 'https://www.seattlepar3.com');
 		try {
 			let data = await API.post('util', `/auth`, {
 				body: {
