@@ -77,8 +77,8 @@ export default function GameNav(props: any): JSX.Element {
 	}
 
 	function checkForAchievement(hole: any) {
-		let achievementArray;
-		let achievementIndex;
+		let achievementArray: any;
+		let achievementIndex: any;
 		let strokeCount = props.activeGame.players[0].holes[hole].score;
 		// this only works for one player
 		props.golfer.achievements.forEach((ach: any, idx: number) => {

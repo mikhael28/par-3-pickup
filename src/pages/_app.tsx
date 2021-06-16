@@ -114,7 +114,7 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
 	async function fetchProfileData(id: any) {
 		try {
 			// PK of 'profile', SK of ID?
-			let response = await API.get('matches', `/sp3/object/member/${id}`);
+			let response = await API.get('matches', `/sp3/object/member/${id}`, {});
 
 			setGolfer(response);
 		} catch (e) {
