@@ -73,7 +73,7 @@ function ProfileModal(props) {
 		let link;
 		process.env.NODE_ENV === 'development'
 			? (link = 'http://localhost:3000/')
-			: (link = 'https://www.seattlepar3.com');
+			: (link = 'https://www.seattlepar3.com/');
 		try {
 			let data = await API.post('util', `/auth`, {
 				body: {
