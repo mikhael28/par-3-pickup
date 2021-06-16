@@ -51,6 +51,7 @@ export default function GameNav(props: any): JSX.Element {
 	}, []);
 
 	async function saveRound() {
+		checkForAchievement(activeHole);
 		const records = localStorage.getItem('records');
 		if (records !== null) {
 			const jsRecords = JSON.parse(records);
@@ -87,12 +88,11 @@ export default function GameNav(props: any): JSX.Element {
 			}
 		});
 
-		console.log('Achievement Array: ', achievementArray);
-		console.log(achievementArray[`par${hole + 1}`].completed);
-
 		// check par
 		if (achievementArray !== undefined) {
 			let newGolfer = { ...props.golfer };
+
+			// checking for par
 
 			if (achievementArray[`par${hole + 1}`].completed === false && strokeCount === 3) {
 				newGolfer.achievements[achievementIndex][`par${hole + 1}`].completed = true;
@@ -108,6 +108,8 @@ export default function GameNav(props: any): JSX.Element {
 					})
 				);
 			}
+
+			// checking for birdie
 			if (achievementArray[`birdie${hole + 1}`].completed === false && strokeCount === 2) {
 				newGolfer.achievements[achievementIndex][`birdie${hole + 1}`].completed = true;
 				if ((newGolfer.achievements[achievementIndex][`par${hole + 1}`].completed = false)) {
@@ -115,7 +117,6 @@ export default function GameNav(props: any): JSX.Element {
 					newGolfer.xp = newGolfer.xp + newGolfer.achievements[achievementIndex][`par${hole + 1}`].value;
 				}
 				newGolfer.xp = newGolfer.xp + newGolfer.achievements[achievementIndex][`birdie${hole + 1}`].value;
-				props.setGolfer(newGolfer);
 				store.dispatch(
 					showNotification({
 						message: `You hit birdie on hole ${hole + 1} - you've earned ${newGolfer.achievements[
@@ -125,6 +126,19 @@ export default function GameNav(props: any): JSX.Element {
 					})
 				);
 			}
+
+			// check for record
+			if (achievementArray.allTimeStrokes[hole] > strokeCount || achievementArray.allTimeStrokes[hole] === 0) {
+				newGolfer.achievements[achievementIndex].allTimeStrokes[hole] = strokeCount;
+				store.dispatch(
+					showNotification({
+						message: `You hit a new record on Hole ${hole + 1}!`,
+						isExpirable: true
+					})
+				);
+			}
+
+			props.setGolfer(newGolfer);
 		}
 	}
 

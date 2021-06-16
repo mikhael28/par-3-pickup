@@ -111,10 +111,10 @@ export default function Page(props: any): JSX.Element {
 					<A2HS />
 					{active === false ? (
 						<div>
-							{games.length > 0 ? <h1>Join a Game Today</h1> : null}
+							{/* {games.length > 0 ? <h1>Join a Game Today</h1> : null}
 							{games.map((game, idx) => {
 								return <RecordCard {...game} key={idx} />;
-							})}
+							})} */}
 						</div>
 					) : null}
 					{active === true ? (

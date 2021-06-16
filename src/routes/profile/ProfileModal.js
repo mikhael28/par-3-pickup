@@ -44,11 +44,13 @@ function ProfileModal(props) {
 				localStorage.setItem('authenticated', 'true');
 				localStorage.setItem('id', linkedInfo.profile.id);
 				props.setAuthenticated(true);
+				props.closeModal();
 			} else {
 				props.setGolfer(profileInfo);
 				localStorage.setItem('golfer', JSON.stringify(profileInfo));
 				localStorage.setItem('authenticated', 'true');
 				props.setAuthenticated(true);
+				props.closeModal();
 			}
 		}
 	}
@@ -110,7 +112,7 @@ function ProfileModal(props) {
 				<div>
 					<div className="flex-between">
 						<h1>Login / Register</h1>
-						<button onClick={props.closeModal}>Close</button>
+						{/* <button onClick={props.closeModal}>Close</button> */}
 					</div>
 					<h2>Benefits</h2>
 					<ol style={{ listStyleType: 'upper-roman', padding: 10, margin: 8 }}>
@@ -135,7 +137,7 @@ function ProfileModal(props) {
 				<div>
 					<div className="flex-between">
 						<h1 style={{ textAlign: 'center' }}>Edit Profile</h1>
-						<button onClick={props.closeModal}>Close</button>
+						{/* <button onClick={props.closeModal}>Close</button> */}
 					</div>
 					<DialogContent style={{ textAlign: 'center' }}>
 						<img src={props.golfer.picture} height="100" width="100" />

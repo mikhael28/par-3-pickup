@@ -157,10 +157,10 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
 						open={modal}
 						TransitionComponent={Transition}
 						keepMounted
-						disableEscapeKeyDown={false}
+						disableEscapeKeyDown={true}
 						// fullScreen={true}
 						// fullWidth={true}
-						disableBackdropClick={false}
+						disableBackdropClick={true}
 						// hideBackdrop={false}
 						aria-labelledby="edit-profile"
 						aria-describedby="Edit the profile"

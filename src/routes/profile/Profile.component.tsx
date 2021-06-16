@@ -85,10 +85,10 @@ export default function Profile(props: any): JSX.Element {
 						<div className="flex-between">
 							<h3
 								style={{ cursor: 'pointer' }}
-								onClick={() => {
-									props.setModal(true);
-									router.push('/');
-								}}
+								// onClick={() => {
+								// 	props.setModal(true);
+								// 	router.push('/');
+								// }}
 							>
 								<Icon asset="People" className={followersIcon} />
 								Edit
