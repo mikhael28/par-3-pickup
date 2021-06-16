@@ -10,7 +10,7 @@ import PlayerCard from 'components/player-card';
 import { API } from '@aws-amplify/api';
 import { useRouter } from 'next/router';
 import short from 'short-uuid';
-import { golfers, Course, Golfer } from '../../config';
+import { golfers, Course, Golfer, simpleCourseData } from '../../config';
 import styles from './Matchmaking.module.scss';
 
 const { matchMaking, matchMakingContainer } = styles;
@@ -24,7 +24,7 @@ export default function Matchmaking(props: any): JSX.Element {
 	const [ description, setDescription ] = useState<string>('');
 	const [ phone, setPhone ] = useState<string>('');
 	const [ minute, setMinute ] = useState<string>('15');
-	const [ disabledButton, setDisabledButton ] = useState<boolean>(false);
+	const [ disabledButton, setDisabledButton ] = useState<boolean>(true);
 	const [ chosenGolfers, setGolfers ] = useState<Golfer[]>([]);
 	const [ course, setCourse ] = useState<Course>({
 		id: '',
@@ -46,17 +46,11 @@ export default function Matchmaking(props: any): JSX.Element {
 		code: course.codeName,
 		allTimeStrokes: [ 0, 0, 0, 0, 0, 0, 0, 0, 0 ],
 		allTimeRecord: 0,
-		placeholder: {
-			name: '',
-			value: 10,
-			completed: false,
-			description: ''
-		},
 		firstTee: {
 			name: 'First Tee!',
 			value: 10,
 			completed: false,
-			description: 'Completing your 9 holes on a course!'
+			description: 'Completing your 9 holes on a course.'
 		},
 		personalBest1: {
 			name: 'Beat your personal best!',
@@ -70,14 +64,14 @@ export default function Matchmaking(props: any): JSX.Element {
 			value: 10,
 			completed: false,
 			description:
-				'Making progress is the most important thing - you just beat your personal best on this course.'
+				'Making progress is the most important thing - you just beat your personal best on this course twice over.'
 		},
 		personalBest3: {
 			name: 'Beat your personal best three times!',
 			value: 10,
 			completed: false,
 			description:
-				'Making progress is the most important thing - you just beat your personal best on this course.'
+				'Making progress is the most important thing - you just beat your personal best on this course three times over.'
 		},
 		victory: {
 			name: 'To the victor go the spoils',
@@ -86,16 +80,16 @@ export default function Matchmaking(props: any): JSX.Element {
 			description: 'Congratulations on beating an opponent on this course.'
 		},
 		averageJuniorPar: {
-			name: 'You got a score of 36 on a Par 3 course - you have great potential to improve your game!',
+			name: 'Average Junior Par (4)',
 			value: 10,
 			completed: false,
-			description: ''
+			description: 'You got a score of 36 on a Par 3 course - you have great potential to improve your game!'
 		},
 		averagePar: {
-			name: 'You got a score of 27 on a Par 3 course - the next stop for you might be the Tour.',
+			name: 'Average Par (3)',
 			value: 10,
 			completed: false,
-			description: ''
+			description: 'You got a score of 27 on a Par 3 course - the next stop for you might be the Tour.'
 		},
 		ace: {
 			name: 'Ace',
@@ -104,109 +98,109 @@ export default function Matchmaking(props: any): JSX.Element {
 			description: 'Wow, you got a hole in one! That is quite ridiculous, great job.'
 		},
 		par1: {
-			name: 'Par on the first hole!',
+			name: 'Hole 1 Par',
 			value: 10,
 			completed: false,
 			description: 'Congratulations on earning par for this hole!'
 		},
 		par2: {
-			name: 'Par on the first hole!',
+			name: 'Hole 2 Par',
 			value: 10,
 			completed: false,
 			description: 'Congratulations on earning par for this hole!'
 		},
 		par3: {
-			name: 'Par on the first hole!',
+			name: 'Hole 3 Par',
 			value: 10,
 			completed: false,
 			description: 'Congratulations on earning par for this hole!'
 		},
 		par4: {
-			name: 'Par on the first hole!',
+			name: 'Hole 4 Par',
 			value: 10,
 			completed: false,
 			description: 'Congratulations on earning par for this hole!'
 		},
 		par5: {
-			name: 'Par on the first hole!',
+			name: 'Hole 5 Par',
 			value: 10,
 			completed: false,
 			description: 'Congratulations on earning par for this hole!'
 		},
 		par6: {
-			name: 'Par on the first hole!',
+			name: 'Hole 6 Par',
 			value: 10,
 			completed: false,
 			description: 'Congratulations on earning par for this hole!'
 		},
 		par7: {
-			name: 'Par on the first hole!',
+			name: 'Hole 7 Par',
 			value: 10,
 			completed: false,
 			description: 'Congratulations on earning par for this hole!'
 		},
 		par8: {
-			name: 'Par on the first hole!',
+			name: 'Hole 8 Par',
 			value: 10,
 			completed: false,
 			description: 'Congratulations on earning par for this hole!'
 		},
 		par9: {
-			name: 'Par on the first hole!',
+			name: 'Hole 9 Par',
 			value: 10,
 			completed: false,
 			description: 'Congratulations on earning par for this hole!'
 		},
 		birdie1: {
-			name: 'birdie on the first hole!',
+			name: 'Hole 1 Birdie',
 			value: 10,
 			completed: false,
 			description: 'Congratulations on earning birdie for this hole!'
 		},
 		birdie2: {
-			name: 'birdie on the first hole!',
+			name: 'Hole 2 Birdie',
 			value: 10,
 			completed: false,
 			description: 'Congratulations on earning birdie for this hole!'
 		},
 		birdie3: {
-			name: 'birdie on the first hole!',
+			name: 'Hole 3 Birdie',
 			value: 10,
 			completed: false,
 			description: 'Congratulations on earning birdie for this hole!'
 		},
 		birdie4: {
-			name: 'birdie on the first hole!',
+			name: 'Hole 4 Birdie',
 			value: 10,
 			completed: false,
 			description: 'Congratulations on earning birdie for this hole!'
 		},
 		birdie5: {
-			name: 'birdie on the first hole!',
+			name: 'Hole 5 Birdie',
 			value: 10,
 			completed: false,
 			description: 'Congratulations on earning birdie for this hole!'
 		},
 		birdie6: {
-			name: 'birdie on the first hole!',
+			name: 'Hole 6 Birdie',
 			value: 10,
 			completed: false,
 			description: 'Congratulations on earning birdie for this hole!'
 		},
 		birdie7: {
-			name: 'birdie on the first hole!',
+			name: 'Hole 7 Birdie',
 			value: 10,
 			completed: false,
 			description: 'Congratulations on earning birdie for this hole!'
 		},
 		birdie8: {
-			name: 'birdie on the first hole!',
+			name: 'Hole 8 Birdie',
 			value: 10,
 			completed: false,
 			description: 'Congratulations on earning birdie for this hole!'
 		},
 		birdie9: {
-			name: 'birdie on the first hole!',
+			name: 'Hole 9 Birdie',
 			value: 10,
 			completed: false,
 			description: 'Congratulations on earning birdie for this hole!'
@@ -250,6 +244,15 @@ export default function Matchmaking(props: any): JSX.Element {
 	// then need to mark 'complete' and have a screen to review.
 
 	async function startGame() {
+		const you = {
+			fName: props.golfer.fName,
+			lName: props.golfer.lName,
+			handicap: 36,
+			id: props.golfer.SK,
+			holes: simpleCourseData,
+			picture: props.golfer.profilePicture
+		};
+
 		const newDate = new Date();
 
 		let gameSK = short.generate();
@@ -271,7 +274,7 @@ export default function Matchmaking(props: any): JSX.Element {
 			course: course.name,
 			perHoleWager: parseInt(stake, 10) || 0,
 			ldWager: 5,
-			players: chosenGolfers,
+			players: [ you ],
 			holes: course.holes,
 			PK: `${newDate.getMonth() + 1}-${newDate.getDate()}-${newDate.getFullYear()}`,
 			SK: gameSK,
@@ -393,7 +396,7 @@ export default function Matchmaking(props: any): JSX.Element {
 							<option value="PM">PM</option>
 						</select>
 					</div>
-					<div className="flex-down-select">
+					{/* <div className="flex-down-select">
 						<label htmlFor="online">Make Game Public or Private?</label>
 						<select
 							name="gameMode"
@@ -404,11 +407,11 @@ export default function Matchmaking(props: any): JSX.Element {
 							<option value="public">Public</option>
 							<option value="private">Private</option>
 						</select>
-					</div>
+					</div> */}
 				</div>
 
 				<br />
-				<div>
+				{/* <div>
 					{chosenGolfers.length <= 1 ? (
 						<span className="custom-dropdown">
 							<select onChange={handleSelectChange} className="custom-dropdown">
@@ -427,7 +430,7 @@ export default function Matchmaking(props: any): JSX.Element {
 					{chosenGolfers.map((player, idx) => {
 						return <PlayerCard {...player} key={idx} />;
 					})}
-				</div>
+				</div> */}
 
 				{disabledButton === true ? (
 					<button

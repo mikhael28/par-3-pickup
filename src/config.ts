@@ -21,7 +21,7 @@ export const theme = {
  */
 export const statusBarStyle = 'black-translucent';
 
-const simpleCourseData = [
+export const simpleCourseData = [
 	{
 		par: 3,
 		longestDrive: null,

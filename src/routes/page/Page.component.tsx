@@ -19,11 +19,7 @@ import styles from './Page.module.scss';
 
 const { page, pageLanding, pageContent, placeholder } = styles;
 
-type PageProps = {
-	isLanding?: boolean;
-};
-
-export default function Page(props: PageProps): JSX.Element {
+export default function Page(props: any): JSX.Element {
 	const { isLanding } = props;
 	const { title = '', description = '' } = usePageDetails();
 	const { content = '' } = usePageData();
@@ -44,6 +40,8 @@ export default function Page(props: PageProps): JSX.Element {
 		picture: '',
 		holes: []
 	});
+
+	console.log(props);
 
 	const [ activeGame, setActiveGame ] = useState<Game>({
 		id: '',
@@ -125,6 +123,8 @@ export default function Page(props: PageProps): JSX.Element {
 							activeCourse={activeCourse}
 							update={update}
 							setActive={setActive}
+							golfer={props.golfer}
+							setGolfer={props.setGolfer}
 						/>
 					) : (
 						<div>

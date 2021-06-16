@@ -75,7 +75,8 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
 		lName: '',
 		profilePicture:
 			'https://s.yimg.com/ny/api/res/1.2/d6CkB0jKWvG8XAV8G2Nvdw--/YXBwaWQ9aGlnaGxhbmRlcjt3PTk2MDtoPTY0MA--/https://s.yimg.com/os/creatr-uploaded-images/2021-05/b381af10-bdab-11eb-bbcb-41db0ef49265',
-		records: []
+		records: [],
+		achievements: []
 	});
 
 	function handleSuccess(data: any) {
@@ -101,6 +102,7 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
 			if (profileData !== null) {
 				console.log(JSON.parse(profileData));
 				setGolfer(JSON.parse(profileData));
+				fetchProfileData(JSON.parse(profileData).SK);
 			}
 			// @TODO: add async background profile grab to have latest data
 		} else {
@@ -108,6 +110,19 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
 			setModal(true);
 		}
 	}, []);
+
+	async function fetchProfileData(id: any) {
+		try {
+			// PK of 'profile', SK of ID?
+			let response = await API.get('matches', `/sp3/object/member/${id}`);
+
+			setGolfer(response);
+		} catch (e) {
+			console.log('Error fetching profile: ', e);
+		}
+	}
+
+	console.log('Golfer data: ', golfer);
 
 	return (
 		<React.Fragment>

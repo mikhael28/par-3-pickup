@@ -9,6 +9,8 @@ import { useRouter } from 'next/router';
 import Card from 'components/card';
 import styles from './GameNav.module.scss';
 import { API } from '@aws-amplify/api';
+import store from 'stores';
+import { showNotification } from 'stores/notifications';
 
 const { gameNav, active, player } = styles;
 
@@ -53,22 +55,85 @@ export default function GameNav(props: any): JSX.Element {
 		if (records !== null) {
 			const jsRecords = JSON.parse(records);
 			jsRecords.push(props.activeGame);
-			localStorage.setItem('records', JSON.stringify(jsRecords));
+			// @TODO: need to make this better, it will break with current JS in the records
+			// localStorage.setItem('records', JSON.stringify(jsRecords));
 
 			await API.put('matches', '/sp3', {
 				body: props.activeGame
 			});
 
+			console.log('Golfer Profile to be saved: ', props.golfer);
+
+			await API.put('matches', '/sp3', {
+				body: props.golfer
+			});
+
 			localStorage.removeItem('activeCourse');
 			localStorage.removeItem('activeGame');
+			localStorage.removeItem('activeHole');
 			props.setActive(false);
 		}
 	}
 
+	function checkForAchievement(hole: any) {
+		let achievementArray;
+		let achievementIndex;
+		let strokeCount = props.activeGame.players[0].holes[hole].score;
+		// this only works for one player
+		props.golfer.achievements.forEach((ach: any, idx: number) => {
+			if (ach.code === props.activeCourse.codeName) {
+				achievementArray = ach;
+				achievementIndex = idx;
+			}
+		});
+
+		console.log('Achievement Array: ', achievementArray);
+		console.log(achievementArray[`par${hole + 1}`].completed);
+
+		// check par
+		if (achievementArray !== undefined) {
+			let newGolfer = { ...props.golfer };
+
+			if (achievementArray[`par${hole + 1}`].completed === false && strokeCount === 3) {
+				newGolfer.achievements[achievementIndex][`par${hole + 1}`].completed = true;
+				newGolfer.xp = newGolfer.xp + newGolfer.achievements[achievementIndex][`par${hole + 1}`].value;
+				props.setGolfer(newGolfer);
+				// alert(`You hit par on hole ${hole + 1}`);
+				store.dispatch(
+					showNotification({
+						message: `You hit par on hole ${hole + 1} - you've earned ${newGolfer.achievements[
+							achievementIndex
+						][`par${hole + 1}`].value} GS!`,
+						isExpirable: true
+					})
+				);
+			}
+			if (achievementArray[`birdie${hole + 1}`].completed === false && strokeCount === 2) {
+				newGolfer.achievements[achievementIndex][`birdie${hole + 1}`].completed = true;
+				if ((newGolfer.achievements[achievementIndex][`par${hole + 1}`].completed = false)) {
+					newGolfer.achievements[achievementIndex][`par${hole + 1}`].completed = true;
+					newGolfer.xp = newGolfer.xp + newGolfer.achievements[achievementIndex][`par${hole + 1}`].value;
+				}
+				newGolfer.xp = newGolfer.xp + newGolfer.achievements[achievementIndex][`birdie${hole + 1}`].value;
+				props.setGolfer(newGolfer);
+				store.dispatch(
+					showNotification({
+						message: `You hit birdie on hole ${hole + 1} - you've earned ${newGolfer.achievements[
+							achievementIndex
+						][`birdie${hole + 1}`].value} GS!`,
+						isExpirable: true
+					})
+				);
+			}
+		}
+	}
+
+	console.log('Golfer: ', props.golfer);
+
 	return (
 		<div>
 			<Card {...props.activeCourse} />
-			<p>Per Hole Wager: ${props.activeGame.perHoleWager}</p>
+			{/* <p>Per Hole Wager: ${props.activeGame.perHoleWager}</p> */}
 			{props.activeGame.players.map((player: any, idx: number) => {
 				return (
 					<figure
@@ -120,6 +185,7 @@ export default function GameNav(props: any): JSX.Element {
 					onClick={() => {
 						if (activeHole !== 0) {
 							const newHole = activeHole - 1;
+							checkForAchievement(activeHole);
 							setActiveHole(newHole);
 							localStorage.setItem('activeHole', newHole.toString());
 						}
@@ -144,6 +210,8 @@ export default function GameNav(props: any): JSX.Element {
 					onClick={() => {
 						if (activeHole !== 8) {
 							const newHole = activeHole + 1;
+							checkForAchievement(activeHole);
+
 							setActiveHole(newHole);
 							localStorage.setItem('activeHole', newHole.toString());
 						}
