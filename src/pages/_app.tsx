@@ -76,7 +76,8 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
 		profilePicture:
 			'https://s.yimg.com/ny/api/res/1.2/d6CkB0jKWvG8XAV8G2Nvdw--/YXBwaWQ9aGlnaGxhbmRlcjt3PTk2MDtoPTY0MA--/https://s.yimg.com/os/creatr-uploaded-images/2021-05/b381af10-bdab-11eb-bbcb-41db0ef49265',
 		records: [],
-		achievements: []
+		achievements: [],
+		xp: 0
 	});
 
 	function handleSuccess(data: any) {

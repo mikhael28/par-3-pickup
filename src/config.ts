@@ -26,55 +26,55 @@ export const simpleCourseData = [
 		par: 3,
 		longestDrive: null,
 		winner: null,
-		score: 3
+		score: 5
 	},
 	{
 		par: 3,
 		longestDrive: null,
 		winner: null,
-		score: 3
+		score: 5
 	},
 	{
 		par: 3,
 		longestDrive: null,
 		winner: null,
-		score: 3
+		score: 5
 	},
 	{
 		par: 3,
 		longestDrive: null,
 		winner: null,
-		score: 3
+		score: 5
 	},
 	{
 		par: 3,
 		longestDrive: null,
 		winner: null,
-		score: 3
+		score: 5
 	},
 	{
 		par: 3,
 		longestDrive: null,
 		winner: null,
-		score: 3
+		score: 5
 	},
 	{
 		par: 3,
 		longestDrive: null,
 		winner: null,
-		score: 3
+		score: 5
 	},
 	{
 		par: 3,
 		longestDrive: null,
 		winner: null,
-		score: 3
+		score: 5
 	},
 	{
 		par: 3,
 		longestDrive: null,
 		winner: null,
-		score: 3
+		score: 5
 	}
 ];
 

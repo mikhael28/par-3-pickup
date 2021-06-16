@@ -64,9 +64,7 @@ export default function Profile(props: any): JSX.Element {
 						<h1>
 							<Placeholder content={`${props.golfer.fName} ${props.golfer.lName}`} length="short" />
 						</h1>
-						<p>
-							<Placeholder content={props.golfer.xp} length="short" /> Golfer Score
-						</p>
+						<p>{props.golfer.xp} Golfer Score</p>
 						<p>
 							Phone: <Placeholder content={props.golfer.phone} length="short" />
 						</p>

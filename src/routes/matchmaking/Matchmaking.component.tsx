@@ -326,7 +326,7 @@ export default function Matchmaking(props: any): JSX.Element {
 			</Head>
 			<main style={{ display: 'flex', flexDirection: 'column' }}>
 				<Card {...course} name={`Matchmaking at ${course.name}`} />
-				<div>
+				{/* <div>
 					<h2>$ Skin Per Hole</h2>
 					<input value={stake} onChange={handleStake} placeholder="0" />
 				</div>
@@ -349,9 +349,9 @@ export default function Matchmaking(props: any): JSX.Element {
 					<h1>
 						Tee Time: {hour}:{minute} {time}
 					</h1>
-				</div>
+				</div> */}
 				<div className="flex">
-					<div className="flex-down-select">
+					{/* <div className="flex-down-select">
 						<label htmlFor="hour">Hour</label>
 						<select
 							name="hour"
@@ -372,8 +372,8 @@ export default function Matchmaking(props: any): JSX.Element {
 							<option value="11">11</option>
 							<option value="12">12</option>
 						</select>
-					</div>
-					<div className="flex-down-select">
+					</div> */}
+					{/* <div className="flex-down-select">
 						<label htmlFor="minute">Minute</label>
 						<select
 							name="minute"
@@ -395,7 +395,7 @@ export default function Matchmaking(props: any): JSX.Element {
 							<option value="AM">AM</option>
 							<option value="PM">PM</option>
 						</select>
-					</div>
+					</div> */}
 					{/* <div className="flex-down-select">
 						<label htmlFor="online">Make Game Public or Private?</label>
 						<select
