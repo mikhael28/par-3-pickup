@@ -66,8 +66,6 @@ function ProfileModal(props) {
 		}
 	}
 
-	console.log(process.env.NODE_ENV);
-
 	async function fetchLinkedInInfo(authorizationCode) {
 		// we are sending a post to our LinkedIn OAuth API to get the access token, and then on the server side to get profile info and send it back here, in the form of a returned 'data' object.
 		let link;
@@ -125,10 +123,8 @@ function ProfileModal(props) {
 					<ol style={{ listStyleType: 'upper-roman', padding: 10, margin: 8 }}>
 						<li className="list-style">Track your golfing achievements to grow your GS (Golfer Score)</li>
 						<li className="list-style">
-							Invite connections on LinkedIn to play golf & develop those relationships
+							Coming Soon - Set skins on a game, for a friendly wager with friends. Pay with crypto.
 						</li>
-						<li className="list-style">Set skins on a game, for a friendly wager with friends.</li>
-						<li className="list-style">Join a community of beginner & experienced players alike.</li>
 					</ol>
 					<div id="linkedin-connect">
 						<LinkedIn
