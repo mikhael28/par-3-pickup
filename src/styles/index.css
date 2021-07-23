@@ -12,7 +12,14 @@
 		color: white;
 		padding: 20px;
 	}
+	.cards {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		flex-grow: 1;
+	}
 }
+
 .pay-button {
 	position: relative;
 	background-color: #6bcaa6;

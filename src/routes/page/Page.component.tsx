@@ -129,18 +129,20 @@ export default function Page(props: any): JSX.Element {
 					) : (
 						<div>
 							<h1>Choose your course 🏌️‍♂️ ⛳</h1>
-							{courses.map((course, index) => {
-								return (
-									<Card
-										{...course}
-										handleClick={() => {
-											localStorage.setItem('activeCourse', JSON.stringify(course));
-											router.push(`/matchmaking`);
-										}}
-										key={index}
-									/>
-								);
-							})}
+							<div className="cards">
+								{courses.map((course, index) => {
+									return (
+										<Card
+											{...course}
+											handleClick={() => {
+												localStorage.setItem('activeCourse', JSON.stringify(course));
+												router.push(`/matchmaking`);
+											}}
+											key={index}
+										/>
+									);
+								})}
+							</div>
 						</div>
 					)}
 
