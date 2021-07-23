@@ -1,14 +1,14 @@
 @media (max-width: 600px) {
 	td {
-		background-color: rgb(240, 121, 121);
+		background-color: rgb(19, 170, 82);
 		color: white;
-		padding: 5px;
+		padding: 8px;
 	}
 }
 
 @media (min-width: 601px) {
 	td {
-		background-color: rgb(121, 133, 240);
+		background-color: rgb(19, 170, 82);
 		color: white;
 		padding: 20px;
 	}
