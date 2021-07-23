@@ -4,9 +4,7 @@
 /* eslint-disable react/jsx-indent-props */
 /* eslint-disable no-mixed-spaces-and-tabs */
 import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
-import Card from 'components/card';
 import styles from './GameNav.module.scss';
 import { API } from '@aws-amplify/api';
 import store from 'stores';
@@ -254,8 +252,8 @@ export default function GameNav(props: any): JSX.Element {
 
 	return (
 		<div>
-			<Card {...props.activeCourse} />
-			{/* <p>Per Hole Wager: ${props.activeGame.perHoleWager}</p> */}
+			<h1>Par 3 at {props.activeCourse.name}</h1>
+			<p>Per Hole Wager: ${props.activeGame.perHoleWager}</p>
 			{props.activeGame.players.map((player: any, idx: number) => {
 				return (
 					<figure
@@ -265,34 +263,57 @@ export default function GameNav(props: any): JSX.Element {
 							display: 'flex',
 							alignItems: 'center',
 							justifyContent: 'space-between',
-							cursor: 'default',
-							alignContent: 'center'
+							cursor: 'default'
 						}}
 					>
 						<div>
 							<img
-								src={player.picture}
-								height="60"
-								width="60"
+								src={player.profilePicture}
+								height="80"
+								width="80"
 								alt={player.fName}
 								style={{ borderRadius: 15 }}
 							/>
-							<p>{player.fName}</p>
+							{/* <p>{player.fName}</p> */}
 						</div>
 						<div className="flex-down">
 							<div>
-								<p>Previous Best: {props.golfer.achievements[achIndex].allTimeStrokes[activeHole]}</p>
+								<p>
+									Historical Best: {
+										props.golfer.achievements[achIndex].allTimeStrokes[activeHole]
+									}{' '}
+									Strokes
+								</p>
 							</div>
 							<div style={{ display: 'flex', justifyContent: 'space-between' }}>
 								<button
 									onClick={() => decreaseStroke(player)}
-									style={{ fontSize: 46, marginRight: 14 }}
+									style={{
+										fontSize: 40,
+										marginRight: 24,
+										paddingRight: 12,
+										paddingLeft: 12,
+										borderRadius: '50%',
+										backgroundColor: '#a946d0',
+										color: 'white'
+									}}
 								>
 									-
 								</button>
 								<p>Strokes: {props.activeGame.players[idx].holes[activeHole].score}</p>
 
-								<button onClick={() => increaseStroke(player)} style={{ fontSize: 46, marginLeft: 14 }}>
+								<button
+									onClick={() => increaseStroke(player)}
+									style={{
+										fontSize: 40,
+										marginLeft: 24,
+										paddingRight: 12,
+										paddingLeft: 12,
+										borderRadius: '50%',
+										backgroundColor: '#a946d0',
+										color: 'white'
+									}}
+								>
 									+
 								</button>
 							</div>
@@ -310,45 +331,71 @@ export default function GameNav(props: any): JSX.Element {
 				</button>
 			) : null}
 			<div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
-				<button
-					style={{ backgroundColor: 'green', color: 'white', padding: 6, borderRadius: 4 }}
-					onClick={() => {
-						if (activeHole !== 0) {
-							const newHole = activeHole - 1;
-							checkForAchievement(activeHole);
-							setActiveHole(newHole);
-							localStorage.setItem('activeHole', newHole.toString());
-						}
+				<div
+					style={{
+						backgroundColor: '#a946d0',
+						display: 'flex',
+						alignItems: 'center',
+						borderRadius: 4,
+						margin: 12
 					}}
 				>
-					Previous
-				</button>
-				<div>
-					<h1>Hole {activeHole + 1}</h1>
+					<span class="material-icons" style={{ color: 'white' }}>
+						chevron_left
+					</span>
 					<button
-						onClick={() => {
-							localStorage.clear();
-							window.location.reload();
+						style={{
+							color: 'white',
+							padding: 6,
+							borderRadius: 4,
+							alignItems: 'center'
 						}}
-						style={{ backgroundColor: 'red', color: 'white', borderRadius: 3, padding: 4 }}
+						onClick={() => {
+							if (activeHole !== 0) {
+								const newHole = activeHole - 1;
+								checkForAchievement(activeHole);
+								setActiveHole(newHole);
+								localStorage.setItem('activeHole', newHole.toString());
+							}
+						}}
 					>
-						Delete Data
+						Previous
 					</button>
 				</div>
-				<button
-					style={{ backgroundColor: 'green', color: 'white', padding: 6, borderRadius: 4 }}
-					onClick={() => {
-						if (activeHole !== 8) {
-							const newHole = activeHole + 1;
-							checkForAchievement(activeHole);
 
-							setActiveHole(newHole);
-							localStorage.setItem('activeHole', newHole.toString());
-						}
+				<div>
+					<h1>Hole {activeHole + 1}</h1>
+				</div>
+				<div
+					style={{
+						backgroundColor: '#a946d0',
+						display: 'flex',
+						alignItems: 'center',
+						borderRadius: 4,
+						margin: 12
 					}}
 				>
-					&nbsp;&nbsp;&nbsp;Next&nbsp;&nbsp;&nbsp;
-				</button>
+					<button
+						style={{
+							color: 'white',
+							padding: 6
+						}}
+						onClick={() => {
+							if (activeHole !== 8) {
+								const newHole = activeHole + 1;
+								checkForAchievement(activeHole);
+
+								setActiveHole(newHole);
+								localStorage.setItem('activeHole', newHole.toString());
+							}
+						}}
+					>
+						&nbsp;&nbsp;&nbsp;Next&nbsp;&nbsp;
+					</button>
+					<span class="material-icons" style={{ color: 'white' }}>
+						chevron_right
+					</span>
+				</div>
 			</div>
 		</div>
 	);

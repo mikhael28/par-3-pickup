@@ -29,6 +29,17 @@ export default function Items(): JSX.Element {
 					<Link href={url}>{name}</Link>
 				</li>
 			))}
+
+			<span
+				class="material-icons"
+				style={{ cursor: 'pointer' }}
+				onClick={() => {
+					localStorage.clear();
+					window.location.reload();
+				}}
+			>
+				logout
+			</span>
 		</ul>
 	);
 }

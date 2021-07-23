@@ -138,6 +138,7 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
 				<link rel="apple-touch-startup-image" sizes="196x196" href="/android-chrome-196x196.png" />
 				<link rel="apple-touch-icon" sizes="196x196" href="/android-chrome-196x196.png" />
 				<link rel="manifest" href="/manifest.json" />
+				<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
 			</Head>
 			<Provider store={store}>
 				<ThemeProvider>

@@ -147,6 +147,7 @@
 
 .flex {
 	display: flex;
+	align-items: center;
 }
 
 .social-button {

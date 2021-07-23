@@ -1,6 +1,16 @@
+@media (max-width: 600px) {
+	.card {
+		width: 100%;
+	}
+}
+
+@media (min-width: 601px) {
+	.card {
+		width: 49%;
+	}
+}
 .card {
 	display: block;
-	width: 100%;
 	box-sizing: border-box;
 	padding: 0.5rem 1rem;
 	margin: 0 0 1rem;
