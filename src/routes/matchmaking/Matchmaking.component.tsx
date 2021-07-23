@@ -10,14 +10,15 @@ import PlayerCard from 'components/player-card';
 import { API } from '@aws-amplify/api';
 import { useRouter } from 'next/router';
 import short from 'short-uuid';
-import { golfers, Course, Golfer, simpleCourseData } from '../../config';
+import { Course, Golfer, simpleCourseData } from '../../config';
 import styles from './Matchmaking.module.scss';
 
 const { matchMaking, matchMakingContainer } = styles;
 
 export default function Matchmaking(props: any): JSX.Element {
 	const router = useRouter();
-	const [ gameMode, setGameMode ] = useState<string>('public');
+	const [ gameMode, setGameMode ] = useState<boolean>(false);
+	const [ multiplayer, setMultiplayer ] = useState<boolean>(false);
 	const [ stake, setStake ] = useState<string>('0');
 	const [ time, setTime ] = useState<string>('PM');
 	const [ hour, setHour ] = useState<string>('4');
@@ -26,6 +27,7 @@ export default function Matchmaking(props: any): JSX.Element {
 	const [ minute, setMinute ] = useState<string>('15');
 	const [ disabledButton, setDisabledButton ] = useState<boolean>(true);
 	const [ chosenGolfers, setGolfers ] = useState<Golfer[]>([]);
+	const [ golfers, setFetchedGolfers ] = useState<Golfer[]>([]);
 	const [ course, setCourse ] = useState<Course>({
 		id: '',
 		name: '',
@@ -216,9 +218,30 @@ export default function Matchmaking(props: any): JSX.Element {
 		}
 	}, []);
 
+	useEffect(() => {
+		// fetching list of golfers from the internetz
+		fetchGolfers();
+	}, []);
+
+	async function fetchGolfers() {
+		try {
+			const golfrs = await API.get('matches', `/sp3/date/member`, {});
+			setFetchedGolfers(golfrs);
+		} catch (e) {}
+	}
+
 	function handleSelectChange(event: any) {
+		// I need to add in hole data
+
+		let jsData = JSON.parse(event.target.value);
+
+		let updatedGolfer = {
+			...jsData,
+			holes: simpleCourseData
+		};
+
 		let newGolfers = chosenGolfers.slice();
-		newGolfers.push(JSON.parse(event.target.value));
+		newGolfers.push(updatedGolfer);
 		setGolfers(newGolfers);
 		if (newGolfers.length >= 1) {
 			setDisabledButton(true);
@@ -237,6 +260,14 @@ export default function Matchmaking(props: any): JSX.Element {
 
 	function handleDescription(event: any) {
 		setDescription(event.target.value);
+	}
+
+	function handleMultiplayer(event: any) {
+		setMultiplayer(!multiplayer);
+	}
+
+	function handleGameMode(event: any) {
+		setGameMode(!gameMode);
 	}
 
 	// now, it's time to add the matchmaking, to add the players to the localStorage game, set the gambling amounts, and create.
@@ -270,11 +301,19 @@ export default function Matchmaking(props: any): JSX.Element {
 			achievementRecords.push(courseGoals);
 		}
 
+		let initialPlayerData;
+
+		if (multiplayer === true) {
+			initialPlayerData = chosenGolfers;
+		} else {
+			initialPlayerData = [ you ];
+		}
+
 		const body = {
 			course: course.name,
 			perHoleWager: parseInt(stake, 10) || 0,
 			ldWager: 5,
-			players: [ you ],
+			players: initialPlayerData,
 			holes: course.holes,
 			PK: `${newDate.getMonth() + 1}-${newDate.getDate()}-${newDate.getFullYear()}`,
 			SK: gameSK,
@@ -325,112 +364,118 @@ export default function Matchmaking(props: any): JSX.Element {
 				<title>Matchmaking</title>
 			</Head>
 			<main style={{ display: 'flex', flexDirection: 'column' }}>
-				<Card {...course} name={`Matchmaking at ${course.name}`} />
-				{/* <div>
-					<h2>$ Skin Per Hole</h2>
-					<input value={stake} onChange={handleStake} placeholder="0" />
-				</div>
-				<div>
-					<h2>Host Phone Number</h2>
-					<input value={phone} onChange={handlePhone} placeholder="6508687480" />
-				</div>
-				<div>
-					<h2>Meetup Notes</h2>
-					<textarea
-						onChange={handleDescription}
-						rows={4}
-						placeholder="Meet outside the pro-shop, by the benches close to the first tee."
-					>
-						{description}
-					</textarea>
-				</div>
-
-				<div>
-					<h1>
-						Tee Time: {hour}:{minute} {time}
-					</h1>
-				</div> */}
+				<h1>Matchmaking at {course.name}</h1>
 				<div className="flex">
-					{/* <div className="flex-down-select">
-						<label htmlFor="hour">Hour</label>
-						<select
-							name="hour"
-							id="hours"
-							onChange={(ev: React.ChangeEvent<HTMLSelectElement>): void => setHour(ev.target.value)}
-							value={hour}
-						>
-							<option value="1">1</option>
-							<option value="2">2</option>
-							<option value="3">3</option>
-							<option value="4">4</option>
-							<option value="5">5</option>
-							<option value="6">6</option>
-							<option value="7">7</option>
-							<option value="8">8</option>
-							<option value="9">9</option>
-							<option value="10">10</option>
-							<option value="11">11</option>
-							<option value="12">12</option>
-						</select>
-					</div> */}
-					{/* <div className="flex-down-select">
-						<label htmlFor="minute">Minute</label>
-						<select
-							name="minute"
-							id="minute"
-							value={minute}
-							onChange={(ev: React.ChangeEvent<HTMLSelectElement>): void => setMinute(ev.target.value)}
-						>
-							{minuteItems}
-						</select>
+					<h2>More than one player?</h2>
+					<input type="checkbox" onChange={handleMultiplayer} />
+				</div>
+				{multiplayer ? (
+					<div>
+						<div>
+							<h2>$ Skin Per Hole</h2>
+							<input value={stake} type="number" onChange={handleStake} placeholder="0" />
+						</div>
+
+						<h2>Set Tee Time</h2>
+						<div className="flex">
+							<div className="flex-down-select">
+								<label htmlFor="hour">Hour</label>
+								<select
+									name="hour"
+									id="hours"
+									onChange={(ev: React.ChangeEvent<HTMLSelectElement>): void =>
+										setHour(ev.target.value)}
+									value={hour}
+								>
+									<option value="1">1</option>
+									<option value="2">2</option>
+									<option value="3">3</option>
+									<option value="4">4</option>
+									<option value="5">5</option>
+									<option value="6">6</option>
+									<option value="7">7</option>
+									<option value="8">8</option>
+									<option value="9">9</option>
+									<option value="10">10</option>
+									<option value="11">11</option>
+									<option value="12">12</option>
+								</select>
+							</div>
+							<div className="flex-down-select">
+								<label htmlFor="minute">Minute</label>
+								<select
+									name="minute"
+									id="minute"
+									value={minute}
+									onChange={(ev: React.ChangeEvent<HTMLSelectElement>): void =>
+										setMinute(ev.target.value)}
+								>
+									{minuteItems}
+								</select>
+							</div>
+							<div className="flex-down-select">
+								<label htmlFor="time">AM/PM</label>
+								<select
+									name="time"
+									id="time"
+									value={time}
+									onChange={(ev: React.ChangeEvent<HTMLSelectElement>): void =>
+										setTime(ev.target.value)}
+								>
+									<option value="AM">AM</option>
+									<option value="PM">PM</option>
+								</select>
+							</div>
+						</div>
+
+						<div>
+							{chosenGolfers.length <= 1 ? (
+								<span className="custom-dropdown">
+									<select onChange={handleSelectChange} className="custom-dropdown">
+										<option value="none">Choose Your Players</option>
+										{golfers.map((golfer, idx) => (
+											<option value={JSON.stringify(golfer)} key={idx}>
+												{golfer.fName}
+											</option>
+										))}
+									</select>
+								</span>
+							) : null}
+						</div>
+
+						<br />
+
+						<div className="cards">
+							{chosenGolfers.map((player, idx) => {
+								return <PlayerCard {...player} key={idx} />;
+							})}
+						</div>
+
+						{/* Open invite functionality locked, not ready right now. */}
+						{/* <div>
+							<label htmlFor="online">Open invite to join match?</label>
+							<input type="checkbox" onChange={handleGameMode} />
+							{gameMode ? (
+								<div>
+									<div>
+										<h2>Host Phone Number</h2>
+										<input value={phone} onChange={handlePhone} placeholder="6508687480" />
+									</div>
+									<div>
+										<h2>Meetup Notes</h2>
+										<textarea
+											onChange={handleDescription}
+											rows={4}
+											placeholder="Meet outside the pro-shop, by the benches close to the first tee."
+										>
+											{description}
+										</textarea>
+									</div>
+								</div>
+							) : null}
+						</div> */}
 					</div>
-					<div className="flex-down-select">
-						<label htmlFor="time">AM/PM</label>
-						<select
-							name="time"
-							id="time"
-							value={time}
-							onChange={(ev: React.ChangeEvent<HTMLSelectElement>): void => setTime(ev.target.value)}
-						>
-							<option value="AM">AM</option>
-							<option value="PM">PM</option>
-						</select>
-					</div> */}
-					{/* <div className="flex-down-select">
-						<label htmlFor="online">Make Game Public or Private?</label>
-						<select
-							name="gameMode"
-							id="gameMode"
-							value={gameMode}
-							onChange={(ev: React.ChangeEvent<HTMLSelectElement>): void => setGameMode(ev.target.value)}
-						>
-							<option value="public">Public</option>
-							<option value="private">Private</option>
-						</select>
-					</div> */}
-				</div>
-
-				<br />
-				{/* <div>
-					{chosenGolfers.length <= 1 ? (
-						<span className="custom-dropdown">
-							<select onChange={handleSelectChange} className="custom-dropdown">
-								<option value="none">Choose Your Players</option>
-								{golfers.map((golfer, idx) => (
-									<option value={JSON.stringify(golfer)} key={idx}>
-										{golfer.fName}
-									</option>
-								))}
-							</select>
-						</span>
-					) : null}
-				</div>
-
-				<div className={matchMakingContainer}>
-					{chosenGolfers.map((player, idx) => {
-						return <PlayerCard {...player} key={idx} />;
-					})}
-				</div> */}
+				) : null}
 
 				{disabledButton === true ? (
 					<button
