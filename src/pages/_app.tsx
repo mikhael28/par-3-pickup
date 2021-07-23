@@ -134,6 +134,7 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
 				/>
 				<meta name="apple-mobile-web-app-capable" content="yes" />
 				<meta name="apple-mobile-web-app-status-bar-style" content={statusBarStyle} />
+				<meta name="theme-color" content="#008763" />
 				<link rel="apple-touch-startup-image" sizes="196x196" href="/android-chrome-196x196.png" />
 				<link rel="apple-touch-icon" sizes="196x196" href="/android-chrome-196x196.png" />
 				<link rel="manifest" href="/manifest.json" />

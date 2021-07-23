@@ -17,10 +17,10 @@ export default function Card(props: any) {
 				<h2>{props.name}</h2>
 				<p>{props.city}</p>
 			</div>
-			<div>
+			{/* <div>
 				<p>Par: {props.par}</p>
-				{/* <p>PB: 0</p> */}
-			</div>
+				<p>PB: 0</p>
+			</div> */}
 		</figure>
 	);
 }

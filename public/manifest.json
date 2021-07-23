@@ -1,11 +1,11 @@
 {
 	"short_name": "Par 3",
-	"name": "Seattle Par 3",
+	"name": "Par 3 Pickup",
 	"lang": "en-US",
 	"start_url": "/",
 	"display": "standalone",
 	"orientation": "portrait",
-	"theme_color": "#cb6ce6",
+	"theme_color": "#008763",
 	"background_color": "#000",
 	"icons": [
 		{
@@ -17,6 +17,12 @@
 			"src": "android-chrome-192x192.png",
 			"type": "image/png",
 			"sizes": "192x192",
+			"purpose": "maskable any"
+		},
+		{
+			"src": "android-chrome-512x512.png",
+			"type": "image/png",
+			"sizes": "512x512",
 			"purpose": "maskable any"
 		}
 	]

@@ -9,7 +9,7 @@ export default function Landing(): JSX.Element {
 		<div className={wrapper}>
 			<div className={landing}>
 				<div className={landingText}>
-					<h1>Seattle Par 3</h1>
+					<h1>Par 3 Pickup</h1>
 					<p>
 						Designed to help you kick-start your next project.<br />
 						This boilerplate is production ready and comes with a service worker, redux store, dark-mode,

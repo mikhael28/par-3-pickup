@@ -96,7 +96,7 @@ export default function Page(props: any): JSX.Element {
 	return (
 		<React.Fragment>
 			<Head>
-				<title>Seattle Par 3 Golf</title>
+				<title>Par 3 Pickup</title>
 				<meta name="og:title" content="Seattle Pickup Golf" />
 				<meta
 					name="description"
