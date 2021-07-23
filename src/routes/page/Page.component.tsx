@@ -106,7 +106,7 @@ export default function Page(props: any): JSX.Element {
 				<meta name="robots" content="INDEX,FOLLOW" />
 			</Head>
 			<main>
-				{/* { isLanding && <Landing /> } */}
+				{isLanding && <Landing />}
 				<section>
 					<A2HS />
 					{active === false ? (
