@@ -41,8 +41,6 @@ export default function Page(props: any): JSX.Element {
 		holes: []
 	});
 
-	console.log(props);
-
 	const [ activeGame, setActiveGame ] = useState<Game>({
 		id: '',
 		course: '',
@@ -145,16 +143,6 @@ export default function Page(props: any): JSX.Element {
 							</div>
 						</div>
 					)}
-
-					{/* <Card title="Fore!" description="Click or tap here to start a new game!" onClick={() => props.history.push('/course/jackson')} /> */}
-					{/* <div className={pageContent}>
-                            <>
-                                <figure className={ placeholder } />
-                                <figure className={ placeholder } />
-                                <figure className={ placeholder } />
-                            </>
-                        </div> */}
-					{/* <Sidebar /> */}
 				</section>
 			</main>
 		</React.Fragment>
