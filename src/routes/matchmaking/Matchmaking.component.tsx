@@ -279,9 +279,9 @@ export default function Matchmaking(props: any): JSX.Element {
 			fName: props.golfer.fName,
 			lName: props.golfer.lName,
 			handicap: 36,
-			id: props.golfer.SK,
+			SK: props.golfer.SK,
 			holes: simpleCourseData,
-			picture: props.golfer.profilePicture
+			profilePicture: props.golfer.profilePicture
 		};
 
 		const newDate = new Date();
