@@ -387,7 +387,7 @@ export default function GameNav(props: any): JSX.Element {
 						}
 					}}
 				>
-					<span class="material-icons" style={{ color: 'white' }}>
+					<span className="material-icons" style={{ color: 'white' }}>
 						chevron_left
 					</span>
 					<button
@@ -434,7 +434,7 @@ export default function GameNav(props: any): JSX.Element {
 					>
 						&nbsp;&nbsp;&nbsp;Next&nbsp;&nbsp;
 					</button>
-					<span class="material-icons" style={{ color: 'white' }}>
+					<span className="material-icons" style={{ color: 'white' }}>
 						chevron_right
 					</span>
 				</div>
