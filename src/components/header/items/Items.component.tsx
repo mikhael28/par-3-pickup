@@ -31,7 +31,7 @@ export default function Items(): JSX.Element {
 			))}
 
 			<span
-				class="material-icons"
+				className="material-icons"
 				style={{ cursor: 'pointer' }}
 				onClick={() => {
 					localStorage.clear();
