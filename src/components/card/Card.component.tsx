@@ -1,5 +1,4 @@
 import React from 'react';
-import { REPL_MODE_SLOPPY } from 'repl';
 import styles from './Card.module.scss';
 
 export default function Card(props: any) {
@@ -17,10 +16,6 @@ export default function Card(props: any) {
 				<h2>{props.name}</h2>
 				<p>{props.city}</p>
 			</div>
-			{/* <div>
-				<p>Par: {props.par}</p>
-				<p>PB: 0</p>
-			</div> */}
 		</figure>
 	);
 }

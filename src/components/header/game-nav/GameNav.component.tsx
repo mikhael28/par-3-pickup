@@ -4,24 +4,57 @@
 /* eslint-disable react/jsx-indent-props */
 /* eslint-disable no-mixed-spaces-and-tabs */
 import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import Card from 'components/card';
 import styles from './GameNav.module.scss';
 import { API } from '@aws-amplify/api';
 import store from 'stores';
 import { showNotification } from 'stores/notifications';
-
-const { gameNav, active, player } = styles;
+import { Golfer } from 'config';
 
 export default function GameNav(props: any): JSX.Element {
-	const router = useRouter();
 	const [ activeHole, setActiveHole ] = useState<number>(0);
+	const [ activeGolfers, setActiveGolfers] = useState<any>([]);
+
+	useEffect(() => {
+		// check for hole, fetch profiles
+		const holeCheck = localStorage.getItem('activeHole');
+		if (holeCheck !== null) {
+			setActiveHole(parseInt(holeCheck));
+		};
+
+		fetchProfiles()
+
+	}, []);
+
+	async function fetchProfiles() {
+		let emptyGolferArray: any[] = [];
+		try {
+			// fetch the profile information of the players, to not rely on props.golfer and have multiple profile updates.
+			props.activeGame.players.forEach(async (player: any, idx: number) => {
+				let profileInfo = await API.get('matches', `/sp3/object/member/${player.SK}`, {})
+				emptyGolferArray.push(profileInfo);
+			})
+
+			setActiveGolfers(emptyGolferArray);
+
+		} catch(e) {
+			console.log(e);
+		}
+	}
+
+	function cancelGame() {
+		// function to go back to home 
+		// @TODO: need to add API to edit the profile, and remove the latest record in a user's profile.
+		localStorage.removeItem('activeCourse');
+		localStorage.removeItem('activeGame');
+		localStorage.removeItem('activeHole');
+		props.setActive(false);
+	}
 
 	function increaseStroke(player: any) {
 		const oldGame = { ...props.activeGame };
 		oldGame.players.forEach((team: any, i: any) => {
-			if (team.id === player.id) {
+			if (team.SK === player.SK) {
+				// @TODO: Use the indexes, to make unique stroke modifications
 				team.holes[activeHole].score = team.holes[activeHole].score + 1;
 			}
 		});
@@ -33,7 +66,7 @@ export default function GameNav(props: any): JSX.Element {
 	function decreaseStroke(player: any) {
 		const downGame = { ...props.activeGame };
 		downGame.players.forEach((team: any, i: any) => {
-			if (team.id === player.id) {
+			if (team.SK === player.SK) {
 				team.holes[activeHole].score = team.holes[activeHole].score - 1;
 			}
 		});
@@ -42,208 +75,187 @@ export default function GameNav(props: any): JSX.Element {
 		setActiveHole(activeHole);
 	}
 
-	useEffect(() => {
-		const holeCheck = localStorage.getItem('activeHole');
-		if (holeCheck !== null) {
-			setActiveHole(parseInt(holeCheck));
-		}
-	}, []);
-
-	async function saveRound() {
-		checkForAchievement(activeHole);
-		const records = localStorage.getItem('records');
-		if (records !== null) {
-			const jsRecords = JSON.parse(records);
-			jsRecords.push(props.activeGame);
-			// @TODO: need to make this better, it will break with current JS in the records
-			// localStorage.setItem('records', JSON.stringify(jsRecords));
-
-			await API.put('matches', '/sp3', {
-				body: props.activeGame
-			});
-
-			console.log('Golfer Profile to be saved: ', props.golfer);
-
-			await API.put('matches', '/sp3', {
-				body: props.golfer
-			});
-
-			localStorage.removeItem('activeCourse');
-			localStorage.removeItem('activeGame');
-			localStorage.removeItem('activeHole');
-			props.setActive(false);
-		}
-	}
+	console.log('Active Golfers: ', activeGolfers)
 
 	function checkForAchievement(hole: any) {
-		let achievementArray: any;
-		let achievementIndex: any;
-		let strokeCount = props.activeGame.players[0].holes[hole].score;
-		// this only works for one player
-		props.golfer.achievements.forEach((ach: any, idx: number) => {
-			if (ach.code === props.activeCourse.codeName) {
-				achievementArray = ach;
-				achievementIndex = idx;
-			}
-		});
 
-		// check par
-		if (achievementArray !== undefined) {
-			let newGolfer = { ...props.golfer };
+		let updatedGolferAchievements: any[] = [];
+		activeGolfers.forEach((golfer: any, idx: number) => {
+			console.log('golfer: ', golfer)
 
-			// checking for par
+			let achievementArray: any;
+			let achievementIndex: any;
+			// loop through each of the golfers in this system.
+			let strokeCount = props.activeGame.players[idx].holes[hole].score;
+			// this only works for one player
+			golfer.achievements.forEach((ach: any, idx: number) => {
+				if (ach.code === props.activeCourse.codeName) {
+					achievementArray = ach;
+					achievementIndex = idx;
+				}
+			});
+	
+			// check par
+			if (achievementArray !== undefined) {
+				let newGolfer = { ...golfer };
 
-			if (achievementArray[`par${hole + 1}`].completed === false && strokeCount === 3) {
-				newGolfer.achievements[achievementIndex][`par${hole + 1}`].completed = true;
-				newGolfer.xp = newGolfer.xp + newGolfer.achievements[achievementIndex][`par${hole + 1}`].value;
-				props.setGolfer(newGolfer);
-				// alert(`You hit par on hole ${hole + 1}`);
-				store.dispatch(
-					showNotification({
-						message: `You hit par on hole ${hole + 1} - you've earned ${newGolfer.achievements[
-							achievementIndex
-						][`par${hole + 1}`].value} GS!`,
-						isExpirable: true
-					})
-				);
-			}
 
-			// checking for birdie
-			if (achievementArray[`birdie${hole + 1}`].completed === false && strokeCount === 2) {
-				newGolfer.achievements[achievementIndex][`birdie${hole + 1}`].completed = true;
-				if ((newGolfer.achievements[achievementIndex][`par${hole + 1}`].completed = false)) {
+	
+				// checking for par
+	
+				if (achievementArray[`par${hole + 1}`].completed === false && strokeCount === 3) {
 					newGolfer.achievements[achievementIndex][`par${hole + 1}`].completed = true;
 					newGolfer.xp = newGolfer.xp + newGolfer.achievements[achievementIndex][`par${hole + 1}`].value;
-				}
-				newGolfer.xp = newGolfer.xp + newGolfer.achievements[achievementIndex][`birdie${hole + 1}`].value;
-				store.dispatch(
-					showNotification({
-						message: `You hit birdie on hole ${hole + 1} - you've earned ${newGolfer.achievements[
-							achievementIndex
-						][`birdie${hole + 1}`].value} GS!`,
-						isExpirable: true
-					})
-				);
-			}
 
-			// check for record
-			if (achievementArray.allTimeStrokes[hole] > strokeCount || achievementArray.allTimeStrokes[hole] === 0) {
-				newGolfer.achievements[achievementIndex].allTimeStrokes[hole] = strokeCount;
-				store.dispatch(
-					showNotification({
-						message: `You hit a new record on Hole ${hole + 1}!`,
-						isExpirable: true
-					})
-				);
-			}
 
-			// check for hole in one
-			if (strokeCount === 1 && props.golfer.achievements[achievementIndex].ace.completed === false) {
-				newGolfer.achievements[achievementIndex].ace.completed = true;
-				newGolfer.xp = newGolfer.xp + newGolfer.achievements[achievementIndex].ace.value;
-				store.dispatch(
-					showNotification({
-						message: `Course Achievement Unlocked - Ace (Hole in One)`,
-						isExpirable: true
-					})
-				);
-			}
 
-			// perhaps only running if hole is on 8?
-
-			if (activeHole === 8) {
-				// check for less than all time record
-				let allTimeStrokeCalculation = props.activeGame.players[0].holes.reduce(
-					(accumulator: number, hole: any) => accumulator + hole.score,
-					0
-				);
-
-				// check if finishing your first game
-				if (
-					props.golfer.achievements[achievementIndex].allTimeRecord === 0 &&
-					props.golfer.achievements[achievementIndex].firstTee.completed === false
-				) {
-					newGolfer.achievements[achievementIndex].firstTee.completed = true;
-					newGolfer.xp = newGolfer.xp + newGolfer.achievements[achievementIndex].firstTee.value;
+					// props.setGolfer(newGolfer);
+					// alert(`You hit par on hole ${hole + 1}`);
 					store.dispatch(
 						showNotification({
-							message: `Achievement Unlocked - First Tee!`,
+							message: `${golfer.fName} hit par on hole ${hole + 1} and earned ${newGolfer.achievements[
+								achievementIndex
+							][`par${hole + 1}`].value} GC!`,
 							isExpirable: true
 						})
 					);
 				}
-
-				// check if you beat your all-time record
-				if (
-					allTimeStrokeCalculation < props.golfer.achievements[achievementIndex].allTimeRecord ||
-					props.golfer.achievements[achievementIndex].allTimeRecord === 0
-				) {
-					newGolfer.achievements[achievementIndex].allTimeRecord = allTimeStrokeCalculation;
+	
+				// checking for birdie
+				if (achievementArray[`birdie${hole + 1}`].completed === false && strokeCount === 2) {
+					newGolfer.achievements[achievementIndex][`birdie${hole + 1}`].completed = true;
+					if ((newGolfer.achievements[achievementIndex][`par${hole + 1}`].completed = false)) {
+						newGolfer.achievements[achievementIndex][`par${hole + 1}`].completed = true;
+						newGolfer.xp = newGolfer.xp + newGolfer.achievements[achievementIndex][`par${hole + 1}`].value;
+					}
+					newGolfer.xp = newGolfer.xp + newGolfer.achievements[achievementIndex][`birdie${hole + 1}`].value;
+					store.dispatch(
+						showNotification({
+							message: `${golfer.fName} hit birdie on hole ${hole + 1} and earned ${newGolfer.achievements[
+								achievementIndex
+							][`birdie${hole + 1}`].value} GC!`,
+							isExpirable: true
+						})
+					);
+				}
+	
+				// check for record
+				if (achievementArray.allTimeStrokes[hole] > strokeCount || achievementArray.allTimeStrokes[hole] === 0) {
+					newGolfer.achievements[achievementIndex].allTimeStrokes[hole] = strokeCount;
+					store.dispatch(
+						showNotification({
+							message: `${golfer.fName} hit a new record on Hole ${hole + 1}!`,
+							isExpirable: true
+						})
+					);
+				}
+	
+				// check for hole in one
+				if (strokeCount === 1 && golfer.achievements[achievementIndex].ace.completed === false) {
+					newGolfer.achievements[achievementIndex].ace.completed = true;
+					newGolfer.xp = newGolfer.xp + newGolfer.achievements[achievementIndex].ace.value;
+					store.dispatch(
+						showNotification({
+							message: `Course Achievement Unlocked - Ace (Hole in One)`,
+							isExpirable: true
+						})
+					);
+				}
+	
+				// only running if hole is on 8, perhaps should place this in the 'save' category.
+	
+				if (activeHole === 8) {
+					// check for less than all time record
+					let allTimeStrokeCalculation = props.activeGame.players[idx].holes.reduce(
+						(accumulator: number, hole: any) => accumulator + hole.score,
+						0
+					);
+	
+					// check if finishing your first game
 					if (
-						props.golfer.achievements[achievementIndex].personalBest1.completed === false &&
-						props.golfer.achievements[achievementIndex].personalBest2.completed === false &&
-						props.golfer.achievements[achievementIndex].personalBest3.completed === false
+						golfer.achievements[achievementIndex].allTimeRecord === 0 &&
+						golfer.achievements[achievementIndex].firstTee.completed === false
 					) {
-						newGolfer.achievements[achievementIndex].personalBest1.completed = true;
-						newGolfer.xp = newGolfer.xp + newGolfer.achievements[achievementIndex].personalBest1.value;
+						newGolfer.achievements[achievementIndex].firstTee.completed = true;
+						newGolfer.xp = newGolfer.xp + newGolfer.achievements[achievementIndex].firstTee.value;
 						store.dispatch(
 							showNotification({
-								message: `Achievement Unlocked - Personal Best I`,
-								isExpirable: true
-							})
-						);
-					} else if (
-						props.golfer.achievements[achievementIndex].personalBest1.completed === true &&
-						props.golfer.achievements[achievementIndex].personalBest2.completed === false &&
-						props.golfer.achievements[achievementIndex].personalBest3.completed === false
-					) {
-						newGolfer.achievements[achievementIndex].personalBest2.completed = true;
-						newGolfer.xp = newGolfer.xp + newGolfer.achievements[achievementIndex].personalBest2.value;
-						store.dispatch(
-							showNotification({
-								message: `Achievement Unlocked - Personal Best II`,
-								isExpirable: true
-							})
-						);
-					} else if (
-						props.golfer.achievements[achievementIndex].personalBest1.completed === true &&
-						props.golfer.achievements[achievementIndex].personalBest2.completed === true &&
-						props.golfer.achievements[achievementIndex].personalBest3.completed === false
-					) {
-						newGolfer.achievements[achievementIndex].personalBest3.completed = true;
-						newGolfer.xp = newGolfer.xp + newGolfer.achievements[achievementIndex].personalBest3.value;
-						store.dispatch(
-							showNotification({
-								message: `Achievement Unlocked - Personal Best III`,
+								message: `Achievement Unlocked - First Tee!`,
 								isExpirable: true
 							})
 						);
 					}
+	
+					// check if you beat your all-time record
+					if (
+						allTimeStrokeCalculation < golfer.achievements[achievementIndex].allTimeRecord ||
+						golfer.achievements[achievementIndex].allTimeRecord === 0
+					) {
+						newGolfer.achievements[achievementIndex].allTimeRecord = allTimeStrokeCalculation;
+						if (
+							golfer.achievements[achievementIndex].personalBest1.completed === false &&
+							golfer.achievements[achievementIndex].personalBest2.completed === false &&
+							golfer.achievements[achievementIndex].personalBest3.completed === false
+						) {
+							newGolfer.achievements[achievementIndex].personalBest1.completed = true;
+							newGolfer.xp = newGolfer.xp + newGolfer.achievements[achievementIndex].personalBest1.value;
+							store.dispatch(
+								showNotification({
+									message: `Achievement Unlocked - Personal Best I`,
+									isExpirable: true
+								})
+							);
+						} else if (
+							golfer.achievements[achievementIndex].personalBest1.completed === true &&
+							golfer.achievements[achievementIndex].personalBest2.completed === false &&
+							golfer.achievements[achievementIndex].personalBest3.completed === false
+						) {
+							newGolfer.achievements[achievementIndex].personalBest2.completed = true;
+							newGolfer.xp = newGolfer.xp + newGolfer.achievements[achievementIndex].personalBest2.value;
+							store.dispatch(
+								showNotification({
+									message: `Achievement Unlocked - Personal Best II`,
+									isExpirable: true
+								})
+							);
+						} else if (
+							golfer.achievements[achievementIndex].personalBest1.completed === true &&
+							golfer.achievements[achievementIndex].personalBest2.completed === true &&
+							golfer.achievements[achievementIndex].personalBest3.completed === false
+						) {
+							newGolfer.achievements[achievementIndex].personalBest3.completed = true;
+							newGolfer.xp = newGolfer.xp + newGolfer.achievements[achievementIndex].personalBest3.value;
+							store.dispatch(
+								showNotification({
+									message: `Achievement Unlocked - Personal Best III`,
+									isExpirable: true
+								})
+							);
+						}
+					}
+	
+					// check if you average junior par
+					if (
+						allTimeStrokeCalculation <= 36 &&
+						golfer.achievements[achievementIndex].averageJuniorPar.completed === false
+					) {
+						newGolfer.achievements[achievementIndex].averageJuniorPar.completed === true;
+					}
+	
+					// check if you average par
+					if (
+						allTimeStrokeCalculation <= 27 &&
+						golfer.achievements[achievementIndex].averagePar.completed === false
+					) {
+						newGolfer.achievements[achievementIndex].averagePar.completed === true;
+					}
 				}
 
-				// check if you average junior par
-				if (
-					allTimeStrokeCalculation <= 36 &&
-					props.golfer.achievements[achievementIndex].averageJuniorPar.completed === false
-				) {
-					newGolfer.achievements[achievementIndex].averageJuniorPar.completed === true;
-				}
-
-				// check if you average par
-				if (
-					allTimeStrokeCalculation <= 27 &&
-					props.golfer.achievements[achievementIndex].averagePar.completed === false
-				) {
-					newGolfer.achievements[achievementIndex].averagePar.completed === true;
-				}
+				updatedGolferAchievements.push(newGolfer);	
 			}
-
-			props.setGolfer(newGolfer);
-		}
+		})
+		setActiveGolfers(updatedGolferAchievements);
 	}
-
-	console.log('Golfer: ', props.golfer);
-	console.log('Active game: ', props.activeGame);
 
 	let achIndex = 0;
 	props.golfer.achievements.forEach((ach: any, idx: number) => {
@@ -252,10 +264,32 @@ export default function GameNav(props: any): JSX.Element {
 		}
 	});
 
+	async function saveRound() {
+		checkForAchievement(activeHole);		
+
+		await API.put('matches', '/sp3', {
+			body: props.activeGame
+		});
+
+		activeGolfers.forEach(async (gfr: any, idx: number) => {
+			await API.put('matches', '/sp3', {
+				body: gfr
+			});
+		})
+
+		// @TODO: Refresh the records page so that it has the latest personal best.
+
+		localStorage.removeItem('activeCourse');
+		localStorage.removeItem('activeGame');
+		localStorage.removeItem('activeHole');
+		props.setActive(false);
+		
+	}
+
 	return (
 		<div>
-			<Card {...props.activeCourse} />
-			{/* <p>Per Hole Wager: ${props.activeGame.perHoleWager}</p> */}
+			<h1>Par 3 at {props.activeCourse.name}</h1>
+			<p>Per Hole Wager: ${props.activeGame.perHoleWager}</p>
 			{props.activeGame.players.map((player: any, idx: number) => {
 				return (
 					<figure
@@ -265,34 +299,59 @@ export default function GameNav(props: any): JSX.Element {
 							display: 'flex',
 							alignItems: 'center',
 							justifyContent: 'space-between',
-							cursor: 'default',
-							alignContent: 'center'
+							cursor: 'default'
 						}}
 					>
 						<div>
 							<img
-								src={player.picture}
-								height="60"
-								width="60"
+								src={player.profilePicture}
+								height="80"
+								width="80"
 								alt={player.fName}
 								style={{ borderRadius: 15 }}
 							/>
-							<p>{player.fName}</p>
 						</div>
 						<div className="flex-down">
-							<div>
-								<p>Previous Best: {props.golfer.achievements[achIndex].allTimeStrokes[activeHole]}</p>
-							</div>
+							{props.golfer.SK === player.SK ? (
+								<div>
+									<p>
+									Historical Best: {
+											props.golfer.achievements[achIndex].allTimeStrokes[activeHole]
+										}{' '}
+										Strokes
+									</p>
+								</div>
+							) : <p>{player.fName} {player.lName}</p>
+						}
 							<div style={{ display: 'flex', justifyContent: 'space-between' }}>
 								<button
 									onClick={() => decreaseStroke(player)}
-									style={{ fontSize: 46, marginRight: 14 }}
+									style={{
+										fontSize: 40,
+										marginRight: 24,
+										paddingRight: 12,
+										paddingLeft: 12,
+										borderRadius: '50%',
+										backgroundColor: '#a946d0',
+										color: 'white'
+									}}
 								>
 									-
 								</button>
 								<p>Strokes: {props.activeGame.players[idx].holes[activeHole].score}</p>
 
-								<button onClick={() => increaseStroke(player)} style={{ fontSize: 46, marginLeft: 14 }}>
+								<button
+									onClick={() => increaseStroke(player)}
+									style={{
+										fontSize: 40,
+										marginLeft: 24,
+										paddingRight: 12,
+										paddingLeft: 12,
+										borderRadius: '50%',
+										backgroundColor: '#a946d0',
+										color: 'white'
+									}}
+								>
 									+
 								</button>
 							</div>
@@ -310,8 +369,15 @@ export default function GameNav(props: any): JSX.Element {
 				</button>
 			) : null}
 			<div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
-				<button
-					style={{ backgroundColor: 'green', color: 'white', padding: 6, borderRadius: 4 }}
+				<div
+					style={{
+						backgroundColor: '#a946d0',
+						display: 'flex',
+						alignItems: 'center',
+						borderRadius: 4,
+						margin: 12,
+						cursor: 'pointer'
+					}}
 					onClick={() => {
 						if (activeHole !== 0) {
 							const newHole = activeHole - 1;
@@ -321,22 +387,34 @@ export default function GameNav(props: any): JSX.Element {
 						}
 					}}
 				>
-					Previous
-				</button>
-				<div>
-					<h1>Hole {activeHole + 1}</h1>
+					<span class="material-icons" style={{ color: 'white' }}>
+						chevron_left
+					</span>
 					<button
-						onClick={() => {
-							localStorage.clear();
-							window.location.reload();
+						style={{
+							color: 'white',
+							padding: 6,
+							borderRadius: 4,
+							alignItems: 'center',
 						}}
-						style={{ backgroundColor: 'red', color: 'white', borderRadius: 3, padding: 4 }}
+						
 					>
-						Delete Data
+						Previous
 					</button>
 				</div>
-				<button
-					style={{ backgroundColor: 'green', color: 'white', padding: 6, borderRadius: 4 }}
+
+				<div>
+					<h1>Hole {activeHole + 1}</h1>
+				</div>
+				<div
+					style={{
+						backgroundColor: '#a946d0',
+						display: 'flex',
+						alignItems: 'center',
+						borderRadius: 4,
+						margin: 12,
+						cursor: 'pointer'
+					}}
 					onClick={() => {
 						if (activeHole !== 8) {
 							const newHole = activeHole + 1;
@@ -347,8 +425,19 @@ export default function GameNav(props: any): JSX.Element {
 						}
 					}}
 				>
-					&nbsp;&nbsp;&nbsp;Next&nbsp;&nbsp;&nbsp;
-				</button>
+					<button
+						style={{
+							color: 'white',
+							padding: 6
+						}}
+						
+					>
+						&nbsp;&nbsp;&nbsp;Next&nbsp;&nbsp;
+					</button>
+					<span class="material-icons" style={{ color: 'white' }}>
+						chevron_right
+					</span>
+				</div>
 			</div>
 		</div>
 	);

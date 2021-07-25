@@ -1,5 +1,4 @@
 import React from 'react';
-import { REPL_MODE_SLOPPY } from 'repl';
 import styles from './PlayerCard.module.scss';
 
 export default function Card(props: any) {
@@ -7,13 +6,13 @@ export default function Card(props: any) {
 	return (
 		<figure className={card} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
 			<div>
-				<img src={props.picture} height="60" width="60" alt={props.fName} />
+				<img src={props.profilePicture} height="80" width="80" alt={props.fName} />
 			</div>
 			<div>
-				<h2>
+				<h3>
 					{props.fName} {props.lName}
-				</h2>
-				{/* <p>{props.city}</p> */}
+				</h3>
+				<h4>Golfer Score: {props.xp}</h4>
 			</div>
 		</figure>
 	);

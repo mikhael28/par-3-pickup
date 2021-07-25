@@ -24,28 +24,6 @@ const Transition = React.forwardRef<unknown, TransitionProps>((props: any, ref: 
 	return <Slide direction="up" ref={ref} {...props} />;
 });
 
-function handleAchievement(acType: string, acName: string) {
-	// let myPreviousAchievements = localStorage.getItem('myAchievements');
-	// let prevAchieveJSON;
-	// if (myPreviousAchievements !== null) {
-	// 	prevAchieveJSON = JSON.parse(myPreviousAchievements);
-	// } else {
-	// 	prevAchieveJSON = courseGoals;
-	// }
-	// // this should log out the achievement
-	// console.log(courseGoals[acName]);
-	// prevAchieveJSON[acName].completed = true;
-	// localStorage.setItem('myAchievements', JSON.stringify(prevAchieveJSON));
-	// network request goes before the localStorage
-	// now we need to add the total amount of the score to the profile, and save the profile
-	// prevAchieveJSON[acName].value
-	// now we need to check for achievements compared to records
-}
-
-// we would have a courseGoals object for each course, I imagine.
-
-// would need to have comprehensive logic to update allTimeStrokes count
-
 API.configure({
 	endpoints: [
 		{
@@ -85,11 +63,6 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
 		setMessage('');
 	}
 
-	function handleFailure(error: any) {
-		setCode('');
-		setMessage(error.errorMessage);
-	}
-
 	useEffect(() => {
 		if ('serviceWorker' in navigator) {
 			navigator.serviceWorker.register(process.env.serviceWorkerUrl as string, { scope: '/' });
@@ -105,25 +78,23 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
 				setGolfer(JSON.parse(profileData));
 				fetchProfileData(JSON.parse(profileData).SK);
 			}
-			// @TODO: add async background profile grab to have latest data
 		} else {
 			setAuthenticated(false);
 			setModal(true);
 		}
 	}, []);
 
+	console.log('Authenticated: ', authenticated)
+
 	async function fetchProfileData(id: any) {
 		try {
-			// PK of 'profile', SK of ID?
+			// PK of 'member', SK is their id
 			let response = await API.get('matches', `/sp3/object/member/${id}`, {});
-
 			setGolfer(response);
 		} catch (e) {
 			console.log('Error fetching profile: ', e);
 		}
 	}
-
-	console.log('Golfer data: ', golfer);
 
 	return (
 		<React.Fragment>
@@ -138,6 +109,7 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
 				<link rel="apple-touch-startup-image" sizes="196x196" href="/android-chrome-196x196.png" />
 				<link rel="apple-touch-icon" sizes="196x196" href="/android-chrome-196x196.png" />
 				<link rel="manifest" href="/manifest.json" />
+				<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
 			</Head>
 			<Provider store={store}>
 				<ThemeProvider>

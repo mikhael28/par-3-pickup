@@ -5,6 +5,7 @@ import LinkedIn from 'linkedin-login-for-react';
 import API from '@aws-amplify/api';
 
 function ProfileModal(props) {
+	const [loading, setLoading] = useState(false);
 	async function callbackLinkedIn(error, code, redirectUri) {
 		if (error) {
 			// signin failed
@@ -13,9 +14,13 @@ function ProfileModal(props) {
 			// Obtain authorization token from linkedin api
 			// see https://developer.linkedin.com/docs/oauth2 for more info
 			// set authenticated to true, store something in local storage?
+			setLoading(true);
 			let linkedInfo = await fetchLinkedInInfo(code);
 			let profileInfo = await fetchProfileData(linkedInfo.profile.id);
 			if (profileInfo.fName === undefined) {
+				// let's create a profile if none exists
+				let { pk, sk } = await fetchNewStellarCredentials();
+
 				let body = {
 					PK: 'member',
 					SK: linkedInfo.profile.id,
@@ -30,7 +35,9 @@ function ProfileModal(props) {
 					achievements: [],
 					phone: '',
 					bio: '',
-					xp: 0
+					xp: 0,
+					gcPK: pk,
+					gcSK: sk
 				};
 				try {
 					let newUser = await API.post('matches', '/sp3', { body });
@@ -45,7 +52,10 @@ function ProfileModal(props) {
 				localStorage.setItem('id', linkedInfo.profile.id);
 				props.setAuthenticated(true);
 				props.closeModal();
+				setLoading(false);
 			} else {
+				// let's set our application state since we have our profile
+				setLoading(false);
 				props.setGolfer(profileInfo);
 				localStorage.setItem('golfer', JSON.stringify(profileInfo));
 				localStorage.setItem('authenticated', 'true');
@@ -66,6 +76,13 @@ function ProfileModal(props) {
 		}
 	}
 
+	async function fetchNewStellarCredentials() {
+		let creds = await API.get('util', '/stellar-init');
+		let pk = creds.keys.public;
+		let sk = creds.keys.secret;
+		return { sk, pk };
+	}
+
 	async function fetchLinkedInInfo(authorizationCode) {
 		// we are sending a post to our LinkedIn OAuth API to get the access token, and then on the server side to get profile info and send it back here, in the form of a returned 'data' object.
 		let link;
@@ -84,10 +101,6 @@ function ProfileModal(props) {
 		} catch (e) {
 			console.log('OAuth LI Error: ', e);
 		}
-	}
-
-	function handleName(event) {
-		props.setName(event.target.value);
 	}
 
 	function handleBio(event) {
@@ -113,59 +126,83 @@ function ProfileModal(props) {
 
 	return (
 		<div style={{ padding: 20 }}>
-			{props.authenticated === false ? (
+			{loading === false ? (
 				<div>
-					<div className="flex-between">
-						<h1>Login / Register</h1>
-						{/* <button onClick={props.closeModal}>Close</button> */}
+				{props.authenticated === false ? (
+					<div>
+						<div className="flex-between">
+							<h1>Login / Register</h1>
+						</div>
+						<h2>Benefits</h2>
+						<ol style={{ listStyleType: 'upper-roman', padding: 10, margin: 8 }}>
+							<li className="list-style">Track your golfing achievements to grow your GS (Golfer Score)</li>
+							<li className="list-style">
+								Earn Golf Coins (GC) for each achievement, recorded on the Stellar Blockchain.
+							</li>
+							<li className="list-style">
+								Bet Golf Coins (GC) on skins with your friends.
+							</li>
+						</ol>
+						<div id="linkedin-connect">
+							<LinkedIn
+								clientId="86ydeex4svad2m"
+								callback={callbackLinkedIn}
+								className="social-button"
+								scope={[ 'r_liteprofile', 'r_emailaddress' ]}
+								text="Login With LinkedIn"
+							/>
+						</div>
 					</div>
-					<h2>Benefits</h2>
-					<ol style={{ listStyleType: 'upper-roman', padding: 10, margin: 8 }}>
-						<li className="list-style">Track your golfing achievements to grow your GS (Golfer Score)</li>
-						<li className="list-style">
-							Coming Soon - Set skins on a game, for a friendly wager with friends. Pay with crypto.
-						</li>
-					</ol>
-					<div id="linkedin-connect">
-						<LinkedIn
-							clientId="86ydeex4svad2m"
-							callback={callbackLinkedIn}
-							className="social-button"
-							scope={[ 'r_liteprofile', 'r_emailaddress' ]}
-							text="Login With LinkedIn"
-						/>
+				) : (
+					<div>
+						<div className="flex-between">
+							<h1 style={{ textAlign: 'center' }}>Edit Profile</h1>
+							{/* <button onClick={props.closeModal}>Close</button> */}
+						</div>
+						<DialogContent style={{ textAlign: 'center' }}>
+							<img src={props.golfer.picture} height="100" width="100" />
+							<p>
+								{props.golfer.fName} {props.golfer.lName}
+							</p>
+							{/* Perhaps below is where we have our loading indicator while Stellar does it's thing. */}
+							{/* <form onSubmit={handleSubmit}>
+								<div>
+									<h2>Bio</h2>
+									<input value={props.bio} onChange={handleBio} placeholder="I am a cool golfer" />
+								</div>
+								<div>
+									<h2>Phone Number</h2>
+									<input value={props.phone} onChange={handlePhone} placeholder="6508687480" />
+								</div>
+								<br />
+								<button>Edit</button>
+							</form> */}
+						</DialogContent>
 					</div>
+				)}
 				</div>
 			) : (
 				<div>
-					<div className="flex-between">
-						<h1 style={{ textAlign: 'center' }}>Edit Profile</h1>
-						{/* <button onClick={props.closeModal}>Close</button> */}
+					<h2 style={{display: 'flex', justifyContent: 'center'}}>
+						Loading your Data
+					</h2>
+					<div class="cssload-thecube">
+						<div class="cssload-cube cssload-c1"></div>
+						<div class="cssload-cube cssload-c2"></div>
+						<div class="cssload-cube cssload-c4"></div>
+						<div class="cssload-cube cssload-c3"></div>
 					</div>
-					<DialogContent style={{ textAlign: 'center' }}>
-						<img src={props.golfer.picture} height="100" width="100" />
-						<p>
-							{props.golfer.fName} {props.golfer.lName}
-						</p>
-						<form onSubmit={handleSubmit}>
-							{/* <div>
-								<h2>Name</h2>
-								<input value={props.name} onChange={handleName} placeholder="6508687480" />
-							</div> */}
-							<div>
-								<h2>Bio</h2>
-								<input value={props.bio} onChange={handleBio} placeholder="I am a cool golfer" />
-							</div>
-							<div>
-								<h2>Phone Number</h2>
-								<input value={props.phone} onChange={handlePhone} placeholder="6508687480" />
-							</div>
-							<br />
-							<button>Edit</button>
-						</form>
-					</DialogContent>
-				</div>
+					<br />
+					<br />
+
+					<div style={{display: 'flex', justifyContent: 'center', flexDirection: 'column'}}>
+					<p>When creating your profile, this can take 15 seconds.</p>
+					<p>The Stellar Blockchain is cool, but it is slow.</p>
+					</div>
+			</div>
+
 			)}
+			
 		</div>
 	);
 }

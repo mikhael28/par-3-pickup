@@ -10,22 +10,20 @@ export default function Landing(): JSX.Element {
 			<div className={landing}>
 				<div className={landingText}>
 					<h1>Par 3 Pickup</h1>
-					<p>
-						Designed to help you kick-start your next project.<br />
-						This boilerplate is production ready and comes with a service worker, redux store, dark-mode,
-						router, and plenty other useful features.
-					</p>
+					<li>Earn GolfCoins (GC) for your achievements on the links, show off your Golfer Score (GS).</li>
+					<li>Bet those coins on skins with your friends, with our multiplayer scorecard.</li>
+					<li>Track your all-time-best score, hole-by-hole, on each par 3 course in the Seattle area.</li>
 				</div>
 				<div className={landingNavigationWrapper}>
-					<a href="https://github.com/tomburgs/pwa-boilerplate" target="_blank" rel="noreferrer">
+					<a href="https://github.com/mikhael28/seattle-par-3" target="_blank" rel="noreferrer">
 						View source code on GitHub
 					</a>
-					<p>Available under MIT license</p>
+					<p>Available under GNU General Public License, Version 2 Only</p>
 				</div>
 				<Image
 					className={landingImage}
-					src="/assets/landing.png"
-					alt="Desktop & Mobile PWA Application"
+					src="/android-chrome-384x384.png"
+					alt="Par 3 Pickup Social Golf"
 					width="400px"
 					height="340px"
 				/>

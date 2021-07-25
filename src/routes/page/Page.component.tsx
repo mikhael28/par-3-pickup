@@ -41,8 +41,6 @@ export default function Page(props: any): JSX.Element {
 		holes: []
 	});
 
-	console.log(props);
-
 	const [ activeGame, setActiveGame ] = useState<Game>({
 		id: '',
 		course: '',
@@ -106,9 +104,9 @@ export default function Page(props: any): JSX.Element {
 				<meta name="robots" content="INDEX,FOLLOW" />
 			</Head>
 			<main>
-				{/* { isLanding && <Landing /> } */}
+				{active === false ? <Landing /> : null}
 				<section>
-					<A2HS />
+					{active === false ? <A2HS /> : null}
 					{active === false ? (
 						<div>
 							{/* {games.length > 0 ? <h1>Join a Game Today</h1> : null}
@@ -129,30 +127,22 @@ export default function Page(props: any): JSX.Element {
 					) : (
 						<div>
 							<h1>Choose your course 🏌️‍♂️ ⛳</h1>
-							{courses.map((course, index) => {
-								return (
-									<Card
-										{...course}
-										handleClick={() => {
-											localStorage.setItem('activeCourse', JSON.stringify(course));
-											router.push(`/matchmaking`);
-										}}
-										key={index}
-									/>
-								);
-							})}
+							<div className="cards">
+								{courses.map((course, index) => {
+									return (
+										<Card
+											{...course}
+											handleClick={() => {
+												localStorage.setItem('activeCourse', JSON.stringify(course));
+												router.push(`/matchmaking`);
+											}}
+											key={index}
+										/>
+									);
+								})}
+							</div>
 						</div>
 					)}
-
-					{/* <Card title="Fore!" description="Click or tap here to start a new game!" onClick={() => props.history.push('/course/jackson')} /> */}
-					{/* <div className={pageContent}>
-                            <>
-                                <figure className={ placeholder } />
-                                <figure className={ placeholder } />
-                                <figure className={ placeholder } />
-                            </>
-                        </div> */}
-					{/* <Sidebar /> */}
 				</section>
 			</main>
 		</React.Fragment>

@@ -90,10 +90,20 @@ export interface Game {
 export interface Golfer {
 	fName: string;
 	lName: string;
-	handicap: number;
-	id: number;
-	picture: string;
-	holes: any;
+	// handicap: number;
+	// id: number;
+	profilePicture: string;
+	// holes: any;
+	SK: string;
+	achievements: any;
+	LSI1: string;
+	PK: string;
+	// access_token: string;
+	bio: string;
+	phone: string;
+	records: any;
+	xp: number;
+	// eth: string;
 }
 
 export interface Course {

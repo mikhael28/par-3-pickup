@@ -16,7 +16,6 @@ export default function Stake(props) {
 	const [ records, setRecords ] = useState([]);
 	const [ usd, setUsd ] = useState(1);
 	const router = useRouter();
-	// const [ accounts, setAccounts ] = React.useState([]);
 
 	useEffect(() => {
 		let path = window.location.pathname.split('/');
@@ -100,7 +99,7 @@ export default function Stake(props) {
 	}
 
 	useEffect(() => {
-		//Have to check the ethereum binding on the window object to see if it's installed
+		// Have to check the ethereum binding on the window object to see if it's installed
 		if (Boolean(window.ethereum && window.ethereum.isMetaMask) === true) {
 			registerWallet();
 			openWallet();
@@ -190,26 +189,32 @@ export default function Stake(props) {
 			{records.map((rec, i) => {
 				return (
 					<div style={{ paddingLeft: 20 }} key={i}>
-						<h1>Score Card</h1>
-						<h2>Course: {rec.course}</h2>
+						<h1>{rec.course} Score Card</h1>
 						{rec.players.map((player, idx) => {
+							let total = player.holes.reduce(
+								(accumulator, hole) => accumulator + parseInt(hole.score, 10),
+								0
+							);
 							return (
 								<div key={idx}>
 									<h2>{player.fName}</h2>
 									<div style={{ display: 'flex' }}>
 										<table style={{ flexWrap: 'wrap' }}>
 											<tr style={{ width: '100%' }}>
-												<td>Hole 1</td>
-												<td>Hole 2</td>
-												<td>Hole 3</td>
-												<td>Hole 4</td>
-												<td>Hole 5</td>
-												<td>Hole 6</td>
-												<td>Hole 7</td>
-												<td>Hole 8</td>
-												<td>Hole 9</td>
+												<td>Hole</td>
+												<td>1</td>
+												<td>2</td>
+												<td>3</td>
+												<td>4</td>
+												<td>5</td>
+												<td>6</td>
+												<td>7</td>
+												<td>8</td>
+												<td>9</td>
+												<td>Total</td>
 											</tr>
 											<tr>
+												<td>Strokes</td>
 												{player.holes.map((hole, i) => {
 													return (
 														<td key={i} style={{}}>
@@ -217,6 +222,7 @@ export default function Stake(props) {
 														</td>
 													);
 												})}
+												<td>{total}</td>
 											</tr>
 										</table>
 									</div>
