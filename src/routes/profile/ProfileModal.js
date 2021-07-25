@@ -123,7 +123,10 @@ function ProfileModal(props) {
 					<ol style={{ listStyleType: 'upper-roman', padding: 10, margin: 8 }}>
 						<li className="list-style">Track your golfing achievements to grow your GS (Golfer Score)</li>
 						<li className="list-style">
-							Coming Soon - Set skins on a game, for a friendly wager with friends. Pay with crypto.
+							Earn Golf Coins (GC) for each achievement, recorded on the Stellar Blockchain.
+						</li>
+						<li className="list-style">
+							Bet Golf Coins (GC) on skins with your friends.
 						</li>
 					</ol>
 					<div id="linkedin-connect">
