@@ -12,12 +12,14 @@ Want to contribute? Great!
 To fix a bug or contribute a new feature, follow these steps:
 
 - Fork the repo
+- Run `yarn` to install the dependencies, once you have `cd`'d into the directory
+- Run `yarn development` to start the dev server
 - Create a new branch (`git checkout -b improve-feature`)
 - Make the appropriate changes in the files
 - Add Git changes to reflect the changes made
 - Commit your changes (`git commit -m 'Improve feature'`)
-- Push to the branch (`git push origin improve-feature`)
-- Send the PR, and become a legend
+- Push to the branch 
+- Send a PR, and become a legend
 
 ### Bug / Feature Request
 
