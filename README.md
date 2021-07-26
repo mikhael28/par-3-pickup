@@ -1,14 +1,7 @@
 # Par 3 Pickup
-<table>
-<tr>
-<td>
-  Are you new to golf? Like me? I wanted to create a fun experience for us newbies, to keep us engaged while we struggle through the ridiculous, embarassing, downright depressing period known as being a 'beginner' in golf. You can keep track of your best score on a particular hole, on any par3 course in Seattle. If you are having a terrible round, and have no way of beating your all time score on a course, at least you can focus on getting that sweet, sweet par on hole 6. 
-</td>
-<td>
+Are you new to golf? Like me? I wanted to create a fun experience for us newbies, to keep us engaged while we struggle through the ridiculous, embarassing, downright depressing period known as being a 'beginner' in golf. You can keep track of your best score on a particular hole, on any par3 course in Seattle. If you are having a terrible round, and have no way of beating your all time score on a course, at least you can focus on getting that sweet, sweet par on hole 6. 
+<br />
 For each par, birdie and a few other surprise achievements - you earn 10 Golf Coin, a fancy digital asset/cryptocurrency I created using the Stellar Blockchain. You can then turn around, and bet Golf Coin (GC) on 'skins' with your friends, which is a way of betting 'I will have the lowest score on hole 3' and adding some friendly (and captivating) competition to an otherwise normal day on the Par 3 course.
-</td>
-</tr>
-</table>
 
 ## We are live folks
 Start chipping away at https://seattlepar3.com
