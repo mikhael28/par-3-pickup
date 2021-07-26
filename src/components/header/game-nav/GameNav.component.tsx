@@ -13,6 +13,7 @@ import { Golfer } from 'config';
 export default function GameNav(props: any): JSX.Element {
 	const [ activeHole, setActiveHole ] = useState<number>(0);
 	const [ activeGolfers, setActiveGolfers] = useState<any>([]);
+	const [ preGameGolfers, setPreGameGolfers ] = useState<any>([])
 
 	useEffect(() => {
 		// check for hole, fetch profiles
@@ -20,6 +21,10 @@ export default function GameNav(props: any): JSX.Element {
 		if (holeCheck !== null) {
 			setActiveHole(parseInt(holeCheck));
 		};
+		const activeGolfersCheck = localStorage.getItem('activeGolfers');
+		if (activeGolfersCheck !== null) {
+			setActiveGolfers(JSON.parse(activeGolfersCheck));
+		}
 
 		fetchProfiles()
 
@@ -35,6 +40,8 @@ export default function GameNav(props: any): JSX.Element {
 			})
 
 			setActiveGolfers(emptyGolferArray);
+			// this is a lazy way for me to compare their previous experience, to know how many GC to send. Will fix later, in addition to creating an 'end of round' report.
+			setPreGameGolfers(emptyGolferArray);
 
 		} catch(e) {
 			console.log(e);
@@ -47,6 +54,7 @@ export default function GameNav(props: any): JSX.Element {
 		localStorage.removeItem('activeCourse');
 		localStorage.removeItem('activeGame');
 		localStorage.removeItem('activeHole');
+		localStorage.removeItem('activeGolfers');
 		props.setActive(false);
 	}
 
@@ -86,7 +94,19 @@ export default function GameNav(props: any): JSX.Element {
 			let achievementArray: any;
 			let achievementIndex: any;
 			// loop through each of the golfers in this system.
-			let strokeCount = props.activeGame.players[idx].holes[hole].score;
+			let strokeCount;
+
+			if (props.activeGame.players.length > 1) {
+
+				if (golfer.PK === props.activeGame.players[0].PK) {
+					strokeCount = props.activeGame.players[0].holes[hole].score
+				} else {
+					strokeCount = props.activeGame.players[1].holes[hole].score
+				}
+			} else {
+				strokeCount = props.activeGame.players[0].holes[hole].score
+			}
+			// ugly hack for only two people
 			// this only works for one player
 			golfer.achievements.forEach((ach: any, idx: number) => {
 				if (ach.code === props.activeCourse.codeName) {
@@ -255,6 +275,7 @@ export default function GameNav(props: any): JSX.Element {
 			}
 		})
 		setActiveGolfers(updatedGolferAchievements);
+		localStorage.setItem('activeGolfers', JSON.stringify(updatedGolferAchievements))
 	}
 
 	let achIndex = 0;
@@ -271,18 +292,44 @@ export default function GameNav(props: any): JSX.Element {
 			body: props.activeGame
 		});
 
-		activeGolfers.forEach(async (gfr: any, idx: number) => {
-			await API.put('matches', '/sp3', {
-				body: gfr
-			});
-		})
+		try {
 
-		// @TODO: Refresh the records page so that it has the latest personal best.
+			activeGolfers.forEach(async (gfr: any, idx: number) => {
+				//  this is where we pay people with Stellar at the end of the round
+	
+				console.log('Golfer precacl: ', gfr)
+				let expDifference = gfr.xp - preGameGolfers[idx].xp;
+				console.log('EXP Difference: ', expDifference);
+				if (expDifference > 0) {
+					let payment = await API.post('util', `/stellar-pay`, {
+						body: {
+							sk: gfr.gcSK,
+							amount: expDifference
+						}
+					});
+					console.log('Payment: ', payment);
+				}
+	
+				let updatedProfile = await API.put('matches', '/sp3', {
+					body: gfr
+				});
+				console.log('Updated Profile: ', updatedProfile)
+			})
+		} catch(e) {
+			console.log(e) 
+		} finally {
 
-		localStorage.removeItem('activeCourse');
-		localStorage.removeItem('activeGame');
-		localStorage.removeItem('activeHole');
-		props.setActive(false);
+			
+			localStorage.removeItem('activeCourse');
+			localStorage.removeItem('activeGame');
+			localStorage.removeItem('activeHole');
+			localStorage.removeItem('activeGolfers');
+			// @TODO: Refresh the records page so that it has the latest personal best.
+			// props.fetchProfileData(props.golfer.PK);
+			props.setActive(false);
+		}
+
+
 		
 	}
 

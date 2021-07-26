@@ -19,14 +19,14 @@ export default function Matchmaking(props: any): JSX.Element {
 	const router = useRouter();
 	const [ gameMode, setGameMode ] = useState<boolean>(false);
 	const [ multiplayer, setMultiplayer ] = useState<boolean>(false);
-	const [ stake, setStake ] = useState<string>('0');
+	const [ stake, setStake ] = useState<string>('5');
 	const [ time, setTime ] = useState<string>('PM');
 	const [ hour, setHour ] = useState<string>('4');
 	const [ description, setDescription ] = useState<string>('');
 	const [ phone, setPhone ] = useState<string>('');
 	const [ minute, setMinute ] = useState<string>('15');
 	const [ disabledButton, setDisabledButton ] = useState<boolean>(true);
-	const [ chosenGolfers, setGolfers ] = useState<Golfer[]>([]);
+	const [ chosenGolfers, setGolfers ] = useState<any[]>([]);
 	const [ golfers, setFetchedGolfers ] = useState<Golfer[]>([]);
 	const [ course, setCourse ] = useState<Course>({
 		id: '',
@@ -264,6 +264,11 @@ export default function Matchmaking(props: any): JSX.Element {
 
 	function handleMultiplayer(event: any) {
 		setMultiplayer(!multiplayer);
+		golfers.forEach((gfr, index) => {
+			if (gfr.PK === props.golfer.PK) {
+				setGolfers([{...gfr, holes: simpleCourseData }])
+			}
+		})
 	}
 
 	function handleGameMode(event: any) {
@@ -289,64 +294,91 @@ export default function Matchmaking(props: any): JSX.Element {
 		let gameSK = short.generate();
 
 		// achievements being added in
-		let achievementCheck = false;
-		let achievementRecords = props.golfer.achievements.slice();
-		achievementRecords.forEach((ach: any, i: any) => {
-			if (ach.code === course.codeName) {
-				achievementCheck = true;
-			}
-		});
-
-		if (achievementCheck === false) {
-			achievementRecords.push(courseGoals);
-		}
 
 		let initialPlayerData;
+	
+			if (multiplayer === true) {
+				initialPlayerData = chosenGolfers;
+			} else {
+				initialPlayerData = [ you ];
+			}
+	
+			const body = {
+				course: course.name,
+				perHoleWager: parseInt(stake, 10) || 0,
+				ldWager: 5,
+				players: initialPlayerData,
+				holes: course.holes,
+				PK: `${newDate.getMonth() + 1}-${newDate.getDate()}-${newDate.getFullYear()}`,
+				SK: gameSK,
+				LSI1: props.golfer.SK,
+				time: `${hour}:${minute} ${time}`,
+				hostPhone: phone,
+				description: description,
+				gameMode: gameMode
+			};
 
-		if (multiplayer === true) {
-			initialPlayerData = chosenGolfers;
-		} else {
-			initialPlayerData = [ you ];
-		}
+		chosenGolfers.forEach(async (gr, id) => {
 
-		const body = {
-			course: course.name,
-			perHoleWager: parseInt(stake, 10) || 0,
-			ldWager: 5,
-			players: initialPlayerData,
-			holes: course.holes,
-			PK: `${newDate.getMonth() + 1}-${newDate.getDate()}-${newDate.getFullYear()}`,
-			SK: gameSK,
-			LSI1: props.golfer.SK,
-			time: `${hour}:${minute} ${time}`,
-			hostPhone: phone,
-			description: description,
-			gameMode: gameMode
-		};
+			let achievementCheck = false;
+			let achievementRecords = gr.achievements.slice();
 
-		const recordBody = {
-			course: course.name,
-			courseCode: course.codeName,
-			gamePK: `${newDate.getMonth() + 1}-${newDate.getDate()}-${newDate.getFullYear()}`,
-			gameSK: gameSK
-		};
+		
+			achievementRecords.forEach((ach: any, i: any) => {
+				if (ach.code === course.codeName) {
+					achievementCheck = true;
+				}
+			});
+	
+			if (achievementCheck === false) {
+				achievementRecords.push(courseGoals);
+			}
+	
+			const recordBody = {
+				course: course.name,
+				courseCode: course.codeName,
+				gamePK: `${newDate.getMonth() + 1}-${newDate.getDate()}-${newDate.getFullYear()}`,
+				gameSK: gameSK
+			};
+	
+			let profileBody = { ...gr };
+			profileBody.records.push(recordBody);
+			profileBody.achievements = achievementRecords;
+			console.log('New Profile Body: ', profileBody);
 
-		let profileBody = { ...props.golfer };
-		profileBody.records.push(recordBody);
-		profileBody.achievements = achievementRecords;
-		console.log('New Profile Body: ', profileBody);
+			// This is causing a glitch, setting the opponent as the default golfer
+			// if (profileBody.PK !== props.golfer.PK) {
+
+			// 	props.setGolfer(profileBody);
+			// 	localStorage.setItem('golfer', JSON.stringify(profileBody));
+			// }
+
+
+
+			try {
+				// localStorage.setItem('activeGame', JSON.stringify(body));
+				// await API.post('matches', '/sp3', { body });
+
+				// updating the profile of the player with the achievements record if they don't have it
+				await API.put('matches', `/sp3`, {
+					body: profileBody
+				});
+			
+			} catch (e) {
+				console.error(e);
+			}
+		})
+
+
 		try {
 			localStorage.setItem('activeGame', JSON.stringify(body));
 			await API.post('matches', '/sp3', { body });
-			await API.put('matches', `/sp3`, {
-				body: profileBody
-			});
-			props.setGolfer(profileBody);
-			localStorage.setItem('golfer', JSON.stringify(profileBody));
+			
+			
 			router.push('/');
 		} catch (e) {
 			console.error(e);
-		}
+		}	
 	}
 
 	const minuteItems = [];
@@ -372,8 +404,8 @@ export default function Matchmaking(props: any): JSX.Element {
 				{multiplayer ? (
 					<div>
 						<div>
-							<h2>$ Skin Per Hole</h2>
-							<input value={stake} type="number" onChange={handleStake} placeholder="0" />
+							<h2>GolfCoin Skin Per Hole</h2>
+							<input value={stake} type="number" onChange={handleStake} placeholder="5" disabled />
 						</div>
 
 						<h2>Set Tee Time</h2>

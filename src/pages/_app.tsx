@@ -68,6 +68,7 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
 			navigator.serviceWorker.register(process.env.serviceWorkerUrl as string, { scope: '/' });
 		}
 
+		// localStorage.clear()
 		let storedAuth = localStorage.getItem('authenticated');
 		console.log('Logged in? ', storedAuth);
 		if (storedAuth !== null) {
@@ -124,6 +125,7 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
 						setModal={setModal}
 						golfer={golfer}
 						setGolfer={setGolfer}
+						fetchProfileData={fetchProfileData}
 					/>
 					<Footer />
 					<Dialog

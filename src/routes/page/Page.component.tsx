@@ -123,6 +123,7 @@ export default function Page(props: any): JSX.Element {
 							setActive={setActive}
 							golfer={props.golfer}
 							setGolfer={props.setGolfer}
+							fetchProfileData={props.fetchProfileData}
 						/>
 					) : (
 						<div>
