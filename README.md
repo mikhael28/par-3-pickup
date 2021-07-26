@@ -35,7 +35,7 @@ If you find a bug, have a great idea or just a question - please open an issue [
 
 ## To-do
 - Migrating the Stellar blockchain off the 'test-net' onto the production service. This... costs money (not a lot, one XLM is 20cents) but still makes me hesitant. Definitely on the to-do list, before public advertising/promotion.
-- Stability testing, making sure things don't break - and to record what does (adding Sentry, for example, or LogRocket if I feel good). While single-player achievement tracking works flawlessly, I may or may not have :'( introduced one or two bugs over the weekend (7/23-25) that I haven't had time to fix.
+- Stability testing, making sure things don't break - and to record what does (adding Sentry, for example, or LogRocket if I feel good). While single-player achievement tracking works flawlessly, I may or may not have :'( introduced one or two bugs over the weekend (7/23-25) that I haven't had time to fix. Nothing breaking, but suboptimal in achievement tracking.
 - Online matchmaking for notifications, helping make people aware of games that are announced.
 - Invite your LinkedIn contacts to join a round of par 3
 - Re-enable/re-work Ethereum betting payments. We have MetaMask working, but want to make the user experience a bit smarter. This should actually be a part of stability testing.
