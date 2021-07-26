@@ -28,7 +28,7 @@ If you find a bug, have a great idea or just a question - please open an issue [
 ## Built with 
 
 - [React + TypeScript](https://reactjs.org/) - It's a bit of a hybrid - lots of TS, with some JS components mixed in. Will be migrating everything to TS over time, making more detailed and thorough object models.
-- [Progressive Web Application](https://web.dev/progressive-web-apps/) - It's a bit of a hybrid - lots of TS, with some JS components mixed in. Will be migrating everything to TS over time, making more detailed and thorough object models.
+- [Progressive Web Application](https://web.dev/progressive-web-apps/) - Better than investing time into a mobile application, I figure that having the offline functionality of a PWA will give us the right balance of features and accessibility.
 - [Stellar Blockchain](https://www.stellar.org/) - In order to make Golf Coins, we turned to the blockchain. We needed an affordable (*cough*Ethereum is expensive*cough*), scalable solution that would let us issue our own assets easily. Stellar fit the bill.
 - [AWS Lambda](https://aws.amazon.com/lambda/) - We needed a service to store our Stellar and DynamoDB authentication/data storage. Storing blockchain private keys in the front-end is a no-no.
 - [DynamoDB](https://aws.amazon.com/dynamodb/) - Did you know that the 'correct' way of using a DynamoDB table is to have multiple different storage options with the partition key? For example, as long as your partition key is a string, you can query events with a specific date, or a specific type/brand (for example, 'Gucci'). All in all, this entire application is stored on a single DynamoDB table with multiple access patterns made available through a flexible partition/sort-key schema.
