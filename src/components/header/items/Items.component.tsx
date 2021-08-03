@@ -9,7 +9,7 @@ import styles from './Items.module.scss';
 
 const { items, active } = styles;
 
-const links = [ { name: 'Play', url: '/', alias: [] }, { name: 'Records', url: '/profile', alias: [] } ];
+const links = [ { name: 'Play', url: '/', alias: [] }, { name: 'Pro Shop', url: '/proshop', alias: [] }, { name: 'Records', url: '/profile', alias: [] } ];
 
 export default function Items(): JSX.Element {
 	const { pathname } = useRouter();

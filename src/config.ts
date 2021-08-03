@@ -21,6 +21,29 @@ export const theme = {
  */
 export const statusBarStyle = 'black-translucent';
 
+export const products = [
+	{
+		name: 'Professional Ball Feeder / Shag Bag',
+		description: "Work on your game with proper golf balls. Going to the range is fine and all, but you don't get the experience of hitting fully weighted, regulation balls. This new-age 'shag bag' carries up to 35 balls, so you can either wile out on the chipping green, or play 35 balls on each hole. Just make sure it's a sleepy day, with no one else on the course with you.",
+		maker: 'Callaway',
+		price: '49.99',
+		salePrice: '39.99',
+		amazon: 'https://www.amazon.com/gp/product/B0083A2YT4/ref=ppx_yo_dt_b_asin_title_o01_s00?ie=UTF8&psc=1',
+		picture: 'https://m.media-amazon.com/images/S/aplus-media/vc/34641dc7-5bc7-41d2-9736-4e76a13356e3.__CR0,0,970,600_PT0_SX970_V1___.jpg',
+		youtube: 'https://www.youtube.com/watch?v=x0Jl27XZPxY'
+	},
+	{
+		name: 'Home Putting Green',
+		description: "9 feet long, with 3 holes & a hazard behind the cup to catch errant balls - what more can you ask for, at $30 dollars? The only way that you are going to break 100 is by avoiding triple bogeys, and learning to putt.",
+		maker: 'Put-A-About',
+		price: '49.99',
+		salePrice: '29.99',
+		amazon: 'https://www.amazon.com/gp/product/B001B6CH0S/ref=ppx_yo_dt_b_asin_title_o05_s00?ie=UTF8&psc=1',
+		picture: 'https://i5.walmartimages.com/asr/449b2be0-091d-481a-8009-2fcea7a9a3b3.05729ec11f27cbd0e66a61bb7e02068b.jpeg?odnWidth=612&odnHeight=612&odnBg=ffffff',
+		youtube: 'https://www.youtube.com/watch?v=x0Jl27XZPxY'
+	}
+]
+
 export const simpleCourseData = [
 	{
 		par: 3,
