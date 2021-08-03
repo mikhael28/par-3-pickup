@@ -66,42 +66,10 @@ export default function Profile(props: any): JSX.Element {
 						</h1>
 						<p>{props.golfer.xp} Golfer Score</p>
 						<p>
-							Phone: <Placeholder content={props.golfer.phone} length="short" />
+							Stellar Wallet ID
 						</p>
-						<p>
-							Bio: <Placeholder content={props.golfer.bio} length="long" />
-						</p>
-						{/* <h3>
-                            <Icon
-                              asset="People"
-                              className={ followersIcon }
-                            />
-                            {
-                                followers ?? <span className={ followersPlaceholder } />
-                            } Followers
-                        </h3> */}
-						<div className="flex-between">
-							<h3
-								style={{ cursor: 'pointer' }}
-								// onClick={() => {
-								// 	props.setModal(true);
-								// 	router.push('/');
-								// }}
-							>
-								<Icon asset="People" className={followersIcon} />
-								Edit
-							</h3>
-							<h3
-								style={{ cursor: 'pointer' }}
-								onClick={() => {
-									localStorage.clear();
-									router.push('/');
-								}}
-							>
-								<Icon asset="People" className={followersIcon} />
-								Logout
-							</h3>
-						</div>
+						<a style={{fontSize: 9, textDecoration: 'underline'}} target="_blank" rel="noopener" href={`https://horizon-testnet.stellar.org/accounts/${props.golfer.gcPK}`}>{props.golfer.gcPK}</a>
+						
 					</div>
 				</div>
 
