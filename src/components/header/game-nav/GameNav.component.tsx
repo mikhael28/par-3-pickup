@@ -361,12 +361,13 @@ export default function GameNav(props: any): JSX.Element {
 						<div className="flex-down">
 							{props.golfer.SK === player.SK ? (
 								<div>
-									<p>
+									{/* Need to refactor this, a breaking change */}
+									{/* <p>
 									Historical Best: {
 											props.golfer.achievements[achIndex].allTimeStrokes[activeHole]
 										}{' '}
 										Strokes
-									</p>
+									</p> */}
 								</div>
 							) : <p>{player.fName} {player.lName}</p>
 						}
