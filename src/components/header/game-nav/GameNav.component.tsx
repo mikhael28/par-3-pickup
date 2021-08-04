@@ -362,6 +362,7 @@ export default function GameNav(props: any): JSX.Element {
 							{props.golfer.SK === player.SK ? (
 								<div>
 									{/* Need to refactor this, a breaking change */}
+									{/* Could be breaking because when I create a multiplayer game for someone else, if they do not already have an achievements array for that course - then they are screwed. Need to make sure both profiles are set up first, before assuming they are. */}
 									{/* <p>
 									Historical Best: {
 											props.golfer.achievements[achIndex].allTimeStrokes[activeHole]

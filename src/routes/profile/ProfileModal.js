@@ -40,8 +40,8 @@ function ProfileModal(props) {
 					gcSK: sk
 				};
 				try {
-					let newUser = await API.post('matches', '/sp3', { body });
-					console.log('New User: ', newUser);
+					await API.post('matches', '/sp3', { body });
+					// Setting props.golfer to be the golfer that was just created, and saved in localStorage
 					props.setGolfer(body);
 					localStorage.setItem('golfer', JSON.stringify(body));
 				} catch (e) {
@@ -84,7 +84,6 @@ function ProfileModal(props) {
 	}
 
 	async function fetchLinkedInInfo(authorizationCode) {
-		// we are sending a post to our LinkedIn OAuth API to get the access token, and then on the server side to get profile info and send it back here, in the form of a returned 'data' object.
 		let link;
 		process.env.NODE_ENV === 'development'
 			? (link = 'http://localhost:3000/')
@@ -96,31 +95,9 @@ function ProfileModal(props) {
 					uri: link
 				}
 			});
-			console.log('Profile Data: ', data);
 			return data;
 		} catch (e) {
 			console.log('OAuth LI Error: ', e);
-		}
-	}
-
-	function handleBio(event) {
-		props.setBio(event.target.value);
-	}
-
-	function handlePhone(event) {
-		props.setPhone(event.target.value);
-	}
-
-	function handleSubmit(event) {
-		event.preventDefault();
-
-		try {
-			localStorage.setItem('phone', props.phone);
-			localStorage.setItem('name', props.name);
-			localStorage.setItem('bio', props.bio);
-			props.closeModal();
-		} catch (e) {
-			console.log(e);
 		}
 	}
 
@@ -131,7 +108,7 @@ function ProfileModal(props) {
 				{props.authenticated === false ? (
 					<div>
 						<div className="flex-between">
-							<h1>Login / Register</h1>
+							<h1>Login with LinkedIn</h1>
 						</div>
 						<h2>Benefits</h2>
 						<ol style={{ listStyleType: 'upper-roman', padding: 10, margin: 8 }}>
@@ -155,28 +132,11 @@ function ProfileModal(props) {
 					</div>
 				) : (
 					<div>
+						{/* Currently disabled, could be a modal to edit profile/view information when already authenticated and loaded */}
 						<div className="flex-between">
-							<h1 style={{ textAlign: 'center' }}>Edit Profile</h1>
-							{/* <button onClick={props.closeModal}>Close</button> */}
+							<h1 style={{ textAlign: 'center' }}>Lorem Ipsum</h1>
 						</div>
 						<DialogContent style={{ textAlign: 'center' }}>
-							<img src={props.golfer.picture} height="100" width="100" />
-							<p>
-								{props.golfer.fName} {props.golfer.lName}
-							</p>
-							{/* Perhaps below is where we have our loading indicator while Stellar does it's thing. */}
-							{/* <form onSubmit={handleSubmit}>
-								<div>
-									<h2>Bio</h2>
-									<input value={props.bio} onChange={handleBio} placeholder="I am a cool golfer" />
-								</div>
-								<div>
-									<h2>Phone Number</h2>
-									<input value={props.phone} onChange={handlePhone} placeholder="6508687480" />
-								</div>
-								<br />
-								<button>Edit</button>
-							</form> */}
 						</DialogContent>
 					</div>
 				)}

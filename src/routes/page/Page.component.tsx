@@ -5,27 +5,17 @@ import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import Landing from 'routes/page/landing';
 import A2HS from 'components/a2hs';
-import Sidebar from 'components/sidebar';
-import Html from 'components/html';
 import API from '@aws-amplify/api';
 import Card from 'components/card';
 import GameNav from 'components/header/game-nav';
-import { usePageData, usePageDetails } from 'hooks/page';
-import { injectClassNames } from 'utils/css';
-import RecordCard from 'components/record-card';
+// import RecordCard from 'components/record-card';
 import { useRouter } from 'next/router';
 import { courses, Course, Game } from '../../config';
-import styles from './Page.module.scss';
-
-const { page, pageLanding, pageContent, placeholder } = styles;
 
 export default function Page(props: any): JSX.Element {
-	const { isLanding } = props;
-	const { title = '', description = '' } = usePageDetails();
-	const { content = '' } = usePageData();
 	const router = useRouter();
 	const [ active, setActive ] = useState<boolean>(false);
-	const [ games, setGames ] = useState<Game[]>([]);
+	// const [ games, setGames ] = useState<Game[]>([]);
 	const [ activeCourse, setActiveCourse ] = useState<Course>({
 		id: '',
 		name: '',
@@ -50,27 +40,25 @@ export default function Page(props: any): JSX.Element {
 		holes: []
 	});
 
-	const classNames = injectClassNames(page, [ pageLanding, isLanding ]);
-
 	useEffect(() => {
 		// localStorage.clear();
 		const gameCheck = localStorage.getItem('activeCourse');
+		const activeCheck = localStorage.getItem('activeGame');
+		const recordCheck = localStorage.getItem('records');
+
 		if (gameCheck !== null) {
-			// console.log('Course Check: ', JSON.parse(gameCheck));
 			setActiveCourse(JSON.parse(gameCheck));
 		}
-		const activeCheck = localStorage.getItem('activeGame');
-		// console.log('Game? : ', activeCheck);
 		if (activeCheck !== null) {
-			// console.log('Game check: ', JSON.parse(activeCheck));
 			setActiveGame(JSON.parse(activeCheck));
 			setActive(true);
 		}
-		const recordCheck = localStorage.getItem('records');
 		if (recordCheck === null) {
+			// Setting an initial empty array, to avoid errors? Revisit
 			localStorage.setItem('records', JSON.stringify([]));
 		}
-		fetchOnlineGames();
+		// @TODO: Add online game matchmaking back in at some point
+		// fetchOnlineGames();
 	}, []);
 
 	function update(game: any) {
@@ -78,6 +66,7 @@ export default function Page(props: any): JSX.Element {
 	}
 
 	async function fetchOnlineGames() {
+		// currently disabled
 		const newDate = new Date();
 		try {
 			const onlineGames = await API.get(
@@ -85,7 +74,7 @@ export default function Page(props: any): JSX.Element {
 				`/sp3/date/${newDate.getMonth() + 1}-${newDate.getDate()}-${newDate.getFullYear()}`,
 				{}
 			);
-			setGames(onlineGames);
+			// setGames(onlineGames);
 		} catch (e) {
 			console.error('Problem fetching todays games: ', e);
 		}
@@ -107,14 +96,6 @@ export default function Page(props: any): JSX.Element {
 				{active === false ? <Landing /> : null}
 				<section>
 					{active === false ? <A2HS /> : null}
-					{active === false ? (
-						<div>
-							{/* {games.length > 0 ? <h1>Join a Game Today</h1> : null}
-							{games.map((game, idx) => {
-								return <RecordCard {...game} key={idx} />;
-							})} */}
-						</div>
-					) : null}
 					{active === true ? (
 						<GameNav
 							activeGame={activeGame}

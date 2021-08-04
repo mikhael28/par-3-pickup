@@ -2,29 +2,23 @@
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import Image from 'components/image';
-import Icon from 'components/icon';
 import Placeholder from 'components/placeholder';
-import { useUser } from 'hooks/user';
 import { useRouter } from 'next/router';
 import SmallRecordCard from 'components/small-record-card';
 import Collapsible from 'react-collapsible';
 import styles from './Profile.module.scss';
 import SmallAchievementCard from 'components/small-achievement-card';
 
-const { profile, profileMain, profilePicture, profileContent, followersIcon, followersPlaceholder, about } = styles;
+const { profile, profileMain, profilePicture, profileContent } = styles;
 
 export default function Profile(props: any): JSX.Element {
-	const { name, bio, avatar_url, followers } = useUser();
-	const [ newName, setName ] = useState<string>('Panther Forest');
-	const [ newBio, setBio ] = useState<string>('New to the tour.');
-	const [ newPhone, setPhone ] = useState<string>('6508687480');
-	const [ refresh, setRefresh ] = useState<boolean>(false);
 	const [ records, setRecords ] = useState([]);
 	const [ achievements, setAchievements ] = useState([]);
 	const router = useRouter();
 
 	useEffect(
 		() => {
+			// @TODO: I need to rethink how this value get's updated
 			let recs = localStorage.getItem('records');
 			if (recs !== null) {
 				setRecords(props.golfer.records);
@@ -37,20 +31,6 @@ export default function Profile(props: any): JSX.Element {
 		[ props.golfer ]
 	);
 
-	useEffect(() => {
-		let localName = localStorage.getItem('name');
-		let localBio = localStorage.getItem('bio');
-		let localPhone = localStorage.getItem('phone');
-
-		if (localName === null || localBio === null || localPhone === null) {
-			setRefresh(!refresh);
-		} else {
-			setName(localName);
-			setBio(localBio);
-			setPhone(localPhone);
-		}
-	}, []);
-
 	return (
 		<React.Fragment>
 			<Head>
@@ -59,16 +39,13 @@ export default function Profile(props: any): JSX.Element {
 			</Head>
 			<main className={profile}>
 				<div className={profileMain}>
-					<Image isPlaceholder={!avatar_url} src={props.golfer.profilePicture} className={profilePicture} />
+					<Image isPlaceholder={false} src={props.golfer.profilePicture} className={profilePicture} />
 					<div className={profileContent}>
 						<h1>
 							<Placeholder content={`${props.golfer.fName} ${props.golfer.lName}`} length="short" />
 						</h1>
 						<p>{props.golfer.xp} Golfer Score</p>
-						<p>
-							Stellar Wallet ID
-						</p>
-						<a style={{fontSize: 9, textDecoration: 'underline'}} target="_blank" rel="noopener" href={`https://horizon-testnet.stellar.org/accounts/${props.golfer.gcPK}`}>{props.golfer.gcPK}</a>
+						<a style={{fontSize: 12, textDecoration: 'underline'}} target="_blank" rel="noopener" href={`https://horizon-testnet.stellar.org/accounts/${props.golfer.gcPK}`}>View Stellar Wallet Info</a>
 						
 					</div>
 				</div>
