@@ -75,7 +75,7 @@ export default function Profile(props: any): JSX.Element {
                 >
                   {ach.allTimeStrokes.map((stroke: any, idx: any) => {
                     return (
-                      <div style={{ textAlign: "center", margin: 2 }}>
+                      <div style={{ textAlign: "center", margin: 2 }} key={idx}>
                         <h3>#{idx + 1}</h3>
                         <p>{stroke}</p>
                       </div>
@@ -122,11 +122,12 @@ export default function Profile(props: any): JSX.Element {
           );
         })}
         <h2>Review Previous Game Scores</h2>
-        {records.map((rec: any, i) => {
+        {records.map((rec: any, i: any) => {
           return (
             <SmallRecordCard
               course={rec.course}
               gamePK={rec.gamePK}
+              key={i}
               handleClick={() => {
                 localStorage.setItem("activeRecord", JSON.stringify(rec));
                 router.push(`/stakes/stake/${rec.gamePK}_${rec.gameSK}`);
