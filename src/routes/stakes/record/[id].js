@@ -172,18 +172,6 @@ export default function Stake(props) {
 		}
 	}
 
-	// the lobby itself may or may not contain the game details? That would be contained in each individuals record, and the game would just pull the records from the individual records?
-	// pk - date
-	// sk - gameId
-	// lsi (second sort key): hostID
-
-	// this is for each user record record
-	// user pk - username
-	// sk: gameId
-	// lsi sk: course - to pull all courses through filter expression
-
-	// I will need to treat the game record as a separate thing, and the lobby is it's own record - but it can store the record, at the end of the day.
-
 	return (
 		<div className="stakes-root" style={{ paddingTop: 80 }}>
 			{records.map((rec, i) => {
