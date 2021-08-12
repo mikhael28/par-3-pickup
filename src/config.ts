@@ -108,7 +108,7 @@ export const products = [
   },
 ];
 
-export const caddy = [
+export const lessons = [
   {
     name: "The Grip",
     description: "The grip",
