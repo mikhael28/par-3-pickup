@@ -1,31 +1,35 @@
 # Par 3 Pickup
-Are you new to golf? Like me? I wanted to create a fun experience for us newbies, to keep us engaged while we struggle through the ridiculous, embarassing, downright depressing period known as being a 'beginner' in golf. You can keep track of your best score on a particular hole, on any par3 course in Seattle. If you are having a terrible round, and have no way of beating your all time score on a course, at least you can focus on getting that sweet, sweet par on hole 6. 
+
+Are you new to golf? Like me? I wanted to create a fun experience for us newbies, to keep us engaged while we struggle through the ridiculous, embarassing, downright depressing period known as being a 'beginner' in golf. You can keep track of your best score on a particular hole, on any par3 course in Seattle. If you are having a terrible round, and have no way of beating your all time score on a course, at least you can focus on getting that sweet, sweet par on hole 6.
 <br /><br />
 For each par, birdie and a few other surprise achievements - you earn 10 Golf Coin, a fancy digital asset/cryptocurrency I created using the Stellar Blockchain. You can then turn around, and bet Golf Coin (GC) on 'skins' with your friends, which is a way of betting 'I will have the lowest score on hole 3' and adding some friendly (and captivating) competition to an otherwise normal day on the Par 3 course.
 
 ## We are live folks
+
 Start chipping away at https://seattlepar3.com
 
 ### Open-Source Development
+
 Want to contribute? Great!
 
 To fix a bug or contribute a new feature, follow these steps:
 
 - Fork the repo
 - Run `yarn` to install the dependencies, once you have `cd`'d into the directory
+- Run `yarn build` to create the next-generated pages
 - Run `yarn development` to start the dev server
 - Create a new branch (`git checkout -b improve-feature`)
 - Make the appropriate changes in the files
 - Add Git changes to reflect the changes made
 - Commit your changes (`git commit -m 'Improve feature'`)
-- Push to the branch 
+- Push to the branch
 - Send a PR, and become a legend
 
 ### Bug / Feature Request
 
 If you find a bug, have a great idea or just a question - please open an issue [here](https://github.com/mikhael28/seattle-par-3/issues/new)!
 
-## Built with 
+## Built with
 
 - [React + TypeScript](https://reactjs.org/) - It's a bit of a hybrid - lots of TS, with some JS components mixed in. Will be migrating everything to TS over time, making more detailed and thorough object models.
 - [Progressive Web Application](https://web.dev/progressive-web-apps/) - Better than investing time into a mobile application, I figure that having the offline functionality of a PWA will give us the right balance of features and accessibility.
@@ -34,6 +38,7 @@ If you find a bug, have a great idea or just a question - please open an issue [
 - [DynamoDB](https://aws.amazon.com/dynamodb/) - Did you know that the 'correct' way of using a DynamoDB table is to have multiple different storage options with the partition key? For example, as long as your partition key is a string, you can query events with a specific date, or a specific type/brand (for example, 'Gucci'). All in all, this entire application is stored on a single DynamoDB table with multiple access patterns made available through a flexible partition/sort-key schema.
 
 ## To-do
+
 - Migrating the Stellar blockchain off the 'test-net' onto the production service. This... costs money (not a lot, one XLM is 20cents) but still makes me hesitant. Definitely on the to-do list, before public advertising/promotion.
 - Stability testing, making sure things don't break - and to record what does (adding Sentry, for example, or LogRocket if I feel good). While single-player achievement tracking works flawlessly, I may or may not have :'( introduced one or two bugs over the weekend (7/23-25) that I haven't had time to fix. Nothing breaking, but suboptimal in achievement tracking.
 - Online matchmaking for notifications, helping make people aware of games that are announced.

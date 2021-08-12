@@ -1,41 +1,25 @@
-/* eslint-disable indent */
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Head from "next/head";
 import Image from "components/image";
 import Placeholder from "components/placeholder";
-import { useUser } from "hooks/user";
-import { useRouter } from "next/router";
 import styles from "./Caddy.module.scss";
-import { caddy } from "config";
+import { lessons } from "config";
 
-const {
-  profile,
-  profileMain,
-  profilePicture,
-  profileContent,
-  followersIcon,
-  followersPlaceholder,
-  about,
-  proshop,
-  proshopMain,
-} = styles;
+const { profilePicture, profileContent, caddy, caddyMain } = styles;
 
 export default function Caddy(props: any): JSX.Element {
-  const router = useRouter();
-  const { name, bio, avatar_url, followers } = useUser();
-
   return (
     <React.Fragment>
       <Head>
         <title>Caddy</title>
         <meta name="robots" content="noindex" />
       </Head>
-      <main className={proshop}>
-        {caddy.map((topics, i) => {
+      <main className={caddy}>
+        {lessons.map((topics, i) => {
           return (
-            <div className={proshopMain} key={i}>
+            <div className={caddyMain} key={i}>
               <Image
-                isPlaceholder={!avatar_url}
+                isPlaceholder={false}
                 src={topics.picture}
                 className={profilePicture}
               />

@@ -13,8 +13,6 @@ import short from "short-uuid";
 import { Course, Golfer, simpleCourseData } from "../../config";
 import styles from "./Matchmaking.module.scss";
 
-const { matchMaking, matchMakingContainer } = styles;
-
 export default function Matchmaking(props: any): JSX.Element {
   const router = useRouter();
   const [gameMode, setGameMode] = useState<boolean>(false);
@@ -315,7 +313,7 @@ export default function Matchmaking(props: any): JSX.Element {
       console.log("New Profile Body: ", profileBody);
 
       // This was causing a glitch, setting the opponent as the default golfer - is it fixed?
-      if (profileBody.SK !== props.golfer.SK) {
+      if (profileBody.SK === props.golfer.SK) {
         props.setGolfer(profileBody);
         localStorage.setItem("golfer", JSON.stringify(profileBody));
       }

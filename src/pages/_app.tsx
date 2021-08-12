@@ -1,7 +1,3 @@
-/* eslint-disable react/jsx-curly-spacing */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-/* eslint-disable no-mixed-spaces-and-tabs */
-/* eslint-disable indent */
 import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import { ThemeProvider } from "contexts/theme";
@@ -60,19 +56,17 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
 
   useEffect(() => {
     if ("serviceWorker" in navigator) {
+      console.log("Service Worker URL: ", process.env.serviceWorkerUrl);
       navigator.serviceWorker.register(process.env.serviceWorkerUrl as string, {
         scope: "/",
       });
     }
 
-    // localStorage.clear()
     let storedAuth = localStorage.getItem("authenticated");
-    console.log("Logged in? ", storedAuth);
     if (storedAuth !== null) {
       // get profile data if it's not already there
       let profileData = localStorage.getItem("golfer");
       if (profileData !== null) {
-        console.log(JSON.parse(profileData));
         setGolfer(JSON.parse(profileData));
         fetchProfileData(JSON.parse(profileData).SK);
       }
@@ -81,8 +75,6 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
       setModal(true);
     }
   }, []);
-
-  console.log("Authenticated: ", authenticated);
 
   async function fetchProfileData(id: any) {
     try {
@@ -106,7 +98,7 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
           name="apple-mobile-web-app-status-bar-style"
           content={statusBarStyle}
         />
-        <meta name="theme-color" content="#008763" />
+        <meta name="theme-color" content="#a946d0" />
         <link
           rel="apple-touch-startup-image"
           sizes="196x196"
@@ -139,17 +131,12 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
           />
           <Footer />
           <Dialog
-            style={{}}
             open={modal}
             TransitionComponent={Transition}
             keepMounted
             disableEscapeKeyDown={true}
-            // fullScreen={true}
-            // fullWidth={true}
-            disableBackdropClick={true}
-            // hideBackdrop={false}
-            aria-labelledby="edit-profile"
-            aria-describedby="Edit the profile"
+            aria-labelledby="now-loading"
+            aria-describedby="Fetching Profile Data"
           >
             <ProfileModal
               closeModal={() => setModal(false)}

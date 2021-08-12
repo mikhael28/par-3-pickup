@@ -1,14 +1,8 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-/* eslint-disable react/jsx-curly-spacing */
-/* eslint-disable indent */
-/* eslint-disable react/jsx-indent-props */
-/* eslint-disable no-mixed-spaces-and-tabs */
 import React, { useState, useEffect } from "react";
 import styles from "./GameNav.module.scss";
 import { API } from "@aws-amplify/api";
 import store from "stores";
 import { showNotification } from "stores/notifications";
-import { Golfer } from "config";
 
 export default function GameNav(props: any): JSX.Element {
   const [activeHole, setActiveHole] = useState<number>(0);
@@ -24,9 +18,9 @@ export default function GameNav(props: any): JSX.Element {
     const activeGolfersCheck = localStorage.getItem("activeGolfers");
     if (activeGolfersCheck !== null) {
       setActiveGolfers(JSON.parse(activeGolfersCheck));
+    } else {
+      fetchProfiles();
     }
-
-    fetchProfiles();
   }, []);
 
   async function fetchProfiles() {
@@ -60,11 +54,12 @@ export default function GameNav(props: any): JSX.Element {
     props.setActive(false);
   }
 
+  // @TODO: could merge increase and decrease into one function
+
   function increaseStroke(player: any) {
     const oldGame = { ...props.activeGame };
     oldGame.players.forEach((team: any, i: any) => {
       if (team.SK === player.SK) {
-        // @TODO: Use the indexes, to make unique stroke modifications
         team.holes[activeHole].score = team.holes[activeHole].score + 1;
       }
     });
@@ -85,27 +80,38 @@ export default function GameNav(props: any): JSX.Element {
     setActiveHole(activeHole);
   }
 
-  console.log("Active Golfers: ", activeGolfers);
-
   function checkForAchievement(hole: any) {
+    console.log(`Hole ${hole} being evaluated.`);
     let updatedGolferAchievements: any[] = [];
     activeGolfers.forEach((golfer: any, idx: number) => {
-      console.log("golfer: ", golfer);
+      console.log(`Evaluating ${golfer.fName}.`);
 
       let achievementArray: any;
       let achievementIndex: any;
-      // loop through each of the golfers in this system.
       let strokeCount;
 
+      // loop through each of the golfers in this system.
       if (props.activeGame.players.length > 1) {
-        if (golfer.PK === props.activeGame.players[0].PK) {
-          strokeCount = props.activeGame.players[0].holes[hole].score;
+        if (golfer.SK === props.activeGame.players[0].SK) {
+          strokeCount = parseInt(
+            props.activeGame.players[0].holes[hole].score,
+            10
+          );
         } else {
-          strokeCount = props.activeGame.players[1].holes[hole].score;
+          strokeCount = parseInt(
+            props.activeGame.players[1].holes[hole].score,
+            10
+          );
         }
       } else {
-        strokeCount = props.activeGame.players[0].holes[hole].score;
+        strokeCount = parseInt(
+          props.activeGame.players[0].holes[hole].score,
+          10
+        );
       }
+
+      console.log(`${golfer.fName}'s Stroke Count: ${strokeCount}`);
+      console.log("Count Type: ", typeof strokeCount);
       // ugly hack for only two people
       // this only works for one player
       golfer.achievements.forEach((ach: any, idx: number) => {
@@ -120,19 +126,22 @@ export default function GameNav(props: any): JSX.Element {
         let newGolfer = { ...golfer };
 
         // checking for par
+        console.log("Pre modification achievement arr: ", achievementArray);
+        console.log("Achievement Index: ", achievementIndex);
 
         if (
           achievementArray[`par${hole + 1}`].completed === false &&
           strokeCount === 3
         ) {
+          console.log("Checking par");
           newGolfer.achievements[achievementIndex][`par${hole + 1}`].completed =
             true;
           newGolfer.xp =
             newGolfer.xp +
             newGolfer.achievements[achievementIndex][`par${hole + 1}`].value;
 
-          // props.setGolfer(newGolfer);
-          // alert(`You hit par on hole ${hole + 1}`);
+          // the store dispatch failed to fire, though the achievment was marked as true
+
           store.dispatch(
             showNotification({
               message: `${golfer.fName} hit par on hole ${
@@ -150,9 +159,11 @@ export default function GameNav(props: any): JSX.Element {
           achievementArray[`birdie${hole + 1}`].completed === false &&
           strokeCount === 2
         ) {
+          console.log("Checking birdie");
           newGolfer.achievements[achievementIndex][
             `birdie${hole + 1}`
           ].completed = true;
+          // also marking par as complete, if it has not yet happened
           if (
             (newGolfer.achievements[achievementIndex][
               `par${hole + 1}`
@@ -165,6 +176,7 @@ export default function GameNav(props: any): JSX.Element {
               newGolfer.xp +
               newGolfer.achievements[achievementIndex][`par${hole + 1}`].value;
           }
+          // marking birdie as completed
           newGolfer.xp =
             newGolfer.xp +
             newGolfer.achievements[achievementIndex][`birdie${hole + 1}`].value;
@@ -183,9 +195,10 @@ export default function GameNav(props: any): JSX.Element {
 
         // check for record
         if (
-          achievementArray.allTimeStrokes[hole] > strokeCount ||
-          achievementArray.allTimeStrokes[hole] === 0
+          achievementArray.allTimeStrokes[hole] > strokeCount &&
+          achievementArray.allTimeStrokes[hole] !== 0
         ) {
+          console.log("New record");
           newGolfer.achievements[achievementIndex].allTimeStrokes[hole] =
             strokeCount;
           store.dispatch(
@@ -215,14 +228,6 @@ export default function GameNav(props: any): JSX.Element {
         // only running if hole is on 8, perhaps should place this in the 'save' category.
 
         if (activeHole === 8) {
-          // check for less than all time record
-          let allTimeStrokeCalculation = props.activeGame.players[
-            idx
-          ].holes.reduce(
-            (accumulator: number, hole: any) => accumulator + hole.score,
-            0
-          );
-
           // check if finishing your first game
           if (
             golfer.achievements[achievementIndex].allTimeRecord === 0 &&
@@ -239,6 +244,14 @@ export default function GameNav(props: any): JSX.Element {
               })
             );
           }
+
+          // check for less than all time record
+          let allTimeStrokeCalculation = props.activeGame.players[
+            idx
+          ].holes.reduce(
+            (accumulator: number, hole: any) => accumulator + hole.score,
+            0
+          );
 
           // check if you beat your all-time record
           if (
@@ -323,27 +336,25 @@ export default function GameNav(props: any): JSX.Element {
             allTimeStrokeCalculation <= 27 &&
             golfer.achievements[achievementIndex].averagePar.completed === false
           ) {
-            newGolfer.achievements[achievementIndex].averagePar.completed ===
+            newGolfer.achievements[achievementIndex].averagePar.completed =
               true;
           }
         }
 
+        console.log(
+          `New Achievements: ${newGolfer.achievements[achievementIndex]}`
+        );
+
         updatedGolferAchievements.push(newGolfer);
       }
     });
+    console.log("Updated Golfer Achievements", updatedGolferAchievements);
     setActiveGolfers(updatedGolferAchievements);
     localStorage.setItem(
       "activeGolfers",
       JSON.stringify(updatedGolferAchievements)
     );
   }
-
-  let achIndex = 0;
-  props.golfer.achievements.forEach((ach: any, idx: number) => {
-    if (ach.code === props.activeCourse.codeName) {
-      achIndex = idx;
-    }
-  });
 
   async function saveRound() {
     checkForAchievement(activeHole);
@@ -353,7 +364,8 @@ export default function GameNav(props: any): JSX.Element {
     });
 
     try {
-      activeGolfers.forEach(async (gfr: any, idx: number) => {
+      // @TODO: need to make this async, it loads the synchronous localstorage functions too quickly
+      await activeGolfers.forEach(async (gfr: any, idx: number) => {
         //  this is where we pay people with Stellar at the end of the round
 
         console.log("Golfer precacl: ", gfr);
@@ -376,16 +388,36 @@ export default function GameNav(props: any): JSX.Element {
       });
     } catch (e) {
       console.log(e);
-    } finally {
-      // @TODO: Update the records with the new achievements from the course, right away
-      localStorage.removeItem("activeCourse");
-      localStorage.removeItem("activeGame");
-      localStorage.removeItem("activeHole");
-      localStorage.removeItem("activeGolfers");
-      // @TODO: Refresh the records page so that it has the latest personal best.
-      // props.fetchProfileData(props.golfer.PK);
-      props.setActive(false);
+      console.log("Rerunning api requests, purely temporary");
+      await activeGolfers.forEach(async (gfr: any, idx: number) => {
+        //  this is where we pay people with Stellar at the end of the round
+
+        console.log("Golfer precacl: ", gfr);
+        let expDifference = gfr.xp - preGameGolfers[idx].xp;
+        console.log("EXP Difference: ", expDifference);
+        if (expDifference > 0) {
+          let payment = await API.post("util", `/stellar-pay`, {
+            body: {
+              sk: gfr.gcSK,
+              amount: expDifference,
+            },
+          });
+          console.log("Payment: ", payment);
+        }
+
+        let updatedProfile = await API.put("matches", "/sp3", {
+          body: gfr,
+        });
+        console.log("Updated Profile: ", updatedProfile);
+      });
     }
+    localStorage.removeItem("activeCourse");
+    localStorage.removeItem("activeGame");
+    localStorage.removeItem("activeHole");
+    localStorage.removeItem("activeGolfers");
+    // @TODO: Refresh the records page so that it has the latest personal best.
+    props.fetchProfileData(props.golfer.SK);
+    props.setActive(false);
   }
 
   return (
@@ -393,6 +425,12 @@ export default function GameNav(props: any): JSX.Element {
       <h1>Par 3 at {props.activeCourse.name}</h1>
       <p>Per Hole Wager: ${props.activeGame.perHoleWager}</p>
       {props.activeGame.players.map((player: any, idx: number) => {
+        //  let achIndex = 0;
+        //  props.golfer.achievements.forEach((ach: any, idx: number) => {
+        //    if (ach.code === props.activeCourse.codeName) {
+        //      achIndex = idx;
+        //    }
+        //  });
         return (
           <figure
             className={styles.player}
