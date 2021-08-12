@@ -57,9 +57,7 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
   useEffect(() => {
     if ("serviceWorker" in navigator) {
       console.log("Service Worker URL: ", process.env.serviceWorkerUrl);
-      navigator.serviceWorker.register(process.env.serviceWorkerUrl as string, {
-        scope: "/",
-      });
+      navigator.serviceWorker.register(process.env.serviceWorkerUrl as string);
     }
 
     let storedAuth = localStorage.getItem("authenticated");
