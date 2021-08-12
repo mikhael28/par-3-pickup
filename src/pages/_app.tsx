@@ -134,12 +134,8 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
             TransitionComponent={Transition}
             keepMounted
             disableEscapeKeyDown={true}
-            // fullScreen={true}
-            // fullWidth={true}
-            disableBackdropClick={true}
-            // hideBackdrop={false}
-            aria-labelledby="edit-profile"
-            aria-describedby="Edit the profile"
+            aria-labelledby="now-loading"
+            aria-describedby="Fetching Profile Data"
           >
             <ProfileModal
               closeModal={() => setModal(false)}
