@@ -6,6 +6,7 @@ const getBuildManifest = (): NextBuildManifest => {
   return Object.entries(manifest).reduce<NextBuildManifest>(
     (manifest, [page, assets]) => ({
       ...manifest,
+      //   @TODO: investigate service worker, works on mobile, broken on desktop. M1 issue?
       //   [page]: assets.map((url) => `/_next/${url}`),
     }),
     {}

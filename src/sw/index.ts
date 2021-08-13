@@ -8,14 +8,18 @@
  * For all others we use StaleWhileRevalidate.
  */
 
-import { setCacheNameDetails, cacheNames } from 'workbox-core';
-import { CacheFirst, NetworkFirst, StaleWhileRevalidate } from 'workbox-strategies';
-import { precacheAndRoute } from 'workbox-precaching';
+import { setCacheNameDetails, cacheNames } from "workbox-core";
+import {
+  CacheFirst,
+  NetworkFirst,
+  StaleWhileRevalidate,
+} from "workbox-strategies";
+import { precacheAndRoute } from "workbox-precaching";
 
-import deleteEntriesForCache from 'sw/utils/deleteEntriesForCache';
-import getBuildManifest from 'sw/utils/getBuildManifest';
-import getBuildManifestPages from 'sw/utils/getBuildManifestPages';
-import Router from 'sw/utils/router';
+import deleteEntriesForCache from "sw/utils/deleteEntriesForCache";
+import getBuildManifest from "sw/utils/getBuildManifest";
+import getBuildManifestPages from "sw/utils/getBuildManifestPages";
+import Router from "sw/utils/router";
 
 /*
  * Fix incorrect self definition:
@@ -23,14 +27,14 @@ import Router from 'sw/utils/router';
  */
 declare const self: ServiceWorkerGlobalScope;
 declare global {
-	interface NextBuildManifest {
-		[key: string]: Array<string>;
-	}
+  interface NextBuildManifest {
+    [key: string]: Array<string>;
+  }
 
-	interface ServiceWorkerGlobalScope {
-		__BUILD_MANIFEST: NextBuildManifest;
-		__BUILD_ID: string;
-	}
+  interface ServiceWorkerGlobalScope {
+    __BUILD_MANIFEST: NextBuildManifest;
+    __BUILD_ID: string;
+  }
 }
 
 /*
@@ -43,10 +47,10 @@ importScripts(`/_next/static/${self.__BUILD_ID}/_buildManifest.js`);
  * to be consistent with names.
  */
 setCacheNameDetails({
-	prefix: 'app',
-	suffix: 'v1',
-	runtime: 'cache-runtime',
-	precache: 'cache-precache'
+  prefix: "app",
+  suffix: "v1",
+  runtime: "cache-runtime",
+  precache: "cache-precache",
 });
 
 const { runtime: CACHE_NAME_RUNTIME } = cacheNames;
@@ -55,6 +59,7 @@ const { runtime: CACHE_NAME_RUNTIME } = cacheNames;
  * Generate documents to pre-fetch
  */
 const manifest = getBuildManifest();
+console.log("Manifest: ", manifest);
 const buildManifestPages = getBuildManifestPages();
 const revision = `${Date.now()}`;
 
@@ -62,8 +67,8 @@ const revision = `${Date.now()}`;
  * Routes that we need to cache.
  */
 const documentURLsToCache = buildManifestPages.map((url) => ({
-	url,
-	revision
+  url,
+  revision,
 }));
 
 /*
@@ -72,11 +77,11 @@ const documentURLsToCache = buildManifestPages.map((url) => ({
  * No need to add revision as their URLs include version.
  */
 const documentFilesToCache = buildManifestPages
-	.reduce<string[]>((pages, name) => [ ...pages, ...manifest[name] ], [])
-	.map((url) => ({
-		url,
-		revision: null
-	}));
+  .reduce<string[]>((pages, name) => [...pages, ...manifest[name]], [])
+  .map((url) => ({
+    url,
+    revision: null,
+  }));
 
 /*
  * Precache static build files.
@@ -84,17 +89,21 @@ const documentFilesToCache = buildManifestPages
  * Set during build time using
  * workbox-webpack-plugin.
  */
-precacheAndRoute([ ...(self.__WB_MANIFEST || []), ...documentURLsToCache, ...documentFilesToCache ]);
+precacheAndRoute([
+  ...(self.__WB_MANIFEST || []),
+  ...documentURLsToCache,
+  ...documentFilesToCache,
+]);
 
 /*
  * On re-deploy delete all cached runtime requests.
  */
-self.addEventListener('activate', (event: ExtendableEvent) => {
-	event.waitUntil(deleteEntriesForCache(CACHE_NAME_RUNTIME));
+self.addEventListener("activate", (event: ExtendableEvent) => {
+  event.waitUntil(deleteEntriesForCache(CACHE_NAME_RUNTIME));
 });
 
-self.addEventListener('install', () => {
-	self.skipWaiting();
+self.addEventListener("install", () => {
+  self.skipWaiting();
 });
 
 /*
