@@ -32,24 +32,15 @@ If you find a bug, have a great idea or just a question - please open an issue [
 ## Built with
 
 - [React + TypeScript](https://reactjs.org/) - It's a bit of a hybrid - lots of TS, with some JS components mixed in. Will be migrating everything to TS over time, making more detailed and thorough object models.
-- [Progressive Web Application](https://web.dev/progressive-web-apps/) - Better than investing time into a mobile application, I figure that having the offline functionality of a PWA will give us the right balance of features and accessibility.
+- [Progressive Web Application](https://web.dev/progressive-web-apps/) - Better than investing time into a mobile application, I figure that having the offline functionality of a PWA will give us the right balance of features and accessibility. Right now, the PWA only installs on mobile - this is 100% intended to be used on phones, while on the links.
 - [Stellar Blockchain](https://www.stellar.org/) - In order to make Golf Coins, we turned to the blockchain. We needed an affordable (*cough*Ethereum is expensive*cough*), scalable solution that would let us issue our own assets easily. Stellar fit the bill.
-- [AWS Lambda](https://aws.amazon.com/lambda/) - We needed a service to store our Stellar and DynamoDB authentication/data storage. Storing blockchain private keys in the front-end is a no-no.
-- [DynamoDB](https://aws.amazon.com/dynamodb/) - Did you know that the 'correct' way of using a DynamoDB table is to have multiple different storage options with the partition key? For example, as long as your partition key is a string, you can query events with a specific date, or a specific type/brand (for example, 'Gucci'). All in all, this entire application is stored on a single DynamoDB table with multiple access patterns made available through a flexible partition/sort-key schema.
+- [AWS Lambda](https://aws.amazon.com/lambda/) - We needed a service to store our Stellar and DynamoDB authentication/data storage, and wanted to avoid paying $10/mo for a container instance on a side-project that is only used by two people (as of 8.12.21, at least)
+- [DynamoDB](https://aws.amazon.com/dynamodb/) - The 'correct' way of using a DynamoDB table, at least according to some ReInvent talks I watched, is to have multiple different storage options with the partition key? For example, as long as your partition key is a string, you can query events with a specific date ('6-12-2021'), or a specific type/brand (for example, 'Gucci') and return different types of items. All in all, this entire application is stored on a single DynamoDB table with multiple access patterns made available through a flexible partition/sort-key schema.
 
-## To-do
-
-- Migrating the Stellar blockchain off the 'test-net' onto the production service. This... costs money (not a lot, one XLM is 20cents) but still makes me hesitant. Definitely on the to-do list, before public advertising/promotion.
-- Stability testing, making sure things don't break - and to record what does (adding Sentry, for example, or LogRocket if I feel good). While single-player achievement tracking works flawlessly, I may or may not have :'( introduced one or two bugs over the weekend (7/23-25) that I haven't had time to fix. Nothing breaking, but suboptimal in achievement tracking.
-- Online matchmaking for notifications, helping make people aware of games that are announced.
-- Invite your LinkedIn contacts to join a round of par 3
-- Re-enable/re-work Ethereum betting payments. We have MetaMask working, but want to make the user experience a bit smarter. This should actually be a part of stability testing.
-- Online leaderboards, tracking the legends at a particular course
 
 ## Team
 
 [![Michael 'Misha' Litchev](https://avatars.githubusercontent.com/u/15205259?s=400&u=64ad9374b8d98f09dc5709fcc737e5ec4f2447f3&v=4)](https://github.com/mikhael28)
----|---
 
 ## [License](https://github.com/mikhael28/seattle-par-3/blob/main/LICENSE)
 
