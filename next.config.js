@@ -4,10 +4,10 @@ const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
 
-const baseUrl = 'https://pwa-boilerplate.com';
+const baseUrl = 'https://seattlepar3.com';
 
 const sitemapDest = path.resolve('.next/static');
-const skipIndex = [ '/profile' ];
+const skipIndex = [ '/profile', '/caddy', '/proshop' ];
 
 const serviceWorkerPath = 'static/sw.js';
 const serviceWorkerUrl = `/_next/${serviceWorkerPath}`;
@@ -29,6 +29,7 @@ const SentryWebpackPluginOptions = {
 
 
 const moduleExports = {
+	// module.exports = {
 	reactStrictMode: true,
 	env: {
 		serviceWorkerUrl
@@ -89,7 +90,7 @@ const moduleExports = {
 			/*
              * In development mode pre-cache files up-to 5MB
              */
-			const maximumFileSizeToCacheInBytes = dev ? 5000000 : undefined;
+			const maximumFileSizeToCacheInBytes = dev ? 25000000 : undefined;
 
 			config.plugins.push(
 				new WorkboxPlugin.InjectManifest({
