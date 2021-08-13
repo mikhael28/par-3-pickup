@@ -12,7 +12,7 @@ const { items, active } = styles;
 const links = [
   { name: "Clubhouse", url: "/", alias: [] },
   { name: "Proshop", url: "/proshop", alias: [] },
-  { name: "Caddy", url: "/caddy", alias: [] },
+  // { name: "Caddy", url: "/caddy", alias: [] },
   { name: "Scores", url: "/profile", alias: [] },
 ];
 
