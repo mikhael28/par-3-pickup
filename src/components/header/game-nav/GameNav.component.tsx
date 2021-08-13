@@ -81,11 +81,8 @@ export default function GameNav(props: any): JSX.Element {
   }
 
   function checkForAchievement(hole: any) {
-    console.log(`Hole ${hole} being evaluated.`);
     let updatedGolferAchievements: any[] = [];
     activeGolfers.forEach((golfer: any, idx: number) => {
-      console.log(`Evaluating ${golfer.fName}.`);
-
       let achievementArray: any;
       let achievementIndex: any;
       let strokeCount;
@@ -110,10 +107,6 @@ export default function GameNav(props: any): JSX.Element {
         );
       }
 
-      console.log(`${golfer.fName}'s Stroke Count: ${strokeCount}`);
-      console.log("Count Type: ", typeof strokeCount);
-      // ugly hack for only two people
-      // this only works for one player
       golfer.achievements.forEach((ach: any, idx: number) => {
         if (ach.code === props.activeCourse.codeName) {
           achievementArray = ach;
@@ -126,14 +119,10 @@ export default function GameNav(props: any): JSX.Element {
         let newGolfer = { ...golfer };
 
         // checking for par
-        console.log("Pre modification achievement arr: ", achievementArray);
-        console.log("Achievement Index: ", achievementIndex);
-
         if (
           achievementArray[`par${hole + 1}`].completed === false &&
           strokeCount === 3
         ) {
-          console.log("Checking par");
           newGolfer.achievements[achievementIndex][`par${hole + 1}`].completed =
             true;
           newGolfer.xp =
@@ -159,7 +148,6 @@ export default function GameNav(props: any): JSX.Element {
           achievementArray[`birdie${hole + 1}`].completed === false &&
           strokeCount === 2
         ) {
-          console.log("Checking birdie");
           newGolfer.achievements[achievementIndex][
             `birdie${hole + 1}`
           ].completed = true;
@@ -198,7 +186,6 @@ export default function GameNav(props: any): JSX.Element {
           achievementArray.allTimeStrokes[hole] > strokeCount &&
           achievementArray.allTimeStrokes[hole] !== 0
         ) {
-          console.log("New record");
           newGolfer.achievements[achievementIndex].allTimeStrokes[hole] =
             strokeCount;
           store.dispatch(
@@ -341,14 +328,9 @@ export default function GameNav(props: any): JSX.Element {
           }
         }
 
-        console.log(
-          `New Achievements: ${newGolfer.achievements[achievementIndex]}`
-        );
-
         updatedGolferAchievements.push(newGolfer);
       }
     });
-    console.log("Updated Golfer Achievements", updatedGolferAchievements);
     setActiveGolfers(updatedGolferAchievements);
     localStorage.setItem(
       "activeGolfers",
@@ -364,52 +346,28 @@ export default function GameNav(props: any): JSX.Element {
     });
 
     try {
-      // @TODO: need to make this async, it loads the synchronous localstorage functions too quickly
+      // @TODO: need to rework this, combine stellar and dynamo updates into one API call per player
+      // Stellar test-net occasionally breaks, I actually need to migrate to prod if I want to keep this system
       await activeGolfers.forEach(async (gfr: any, idx: number) => {
         //  this is where we pay people with Stellar at the end of the round
 
-        console.log("Golfer precacl: ", gfr);
         let expDifference = gfr.xp - preGameGolfers[idx].xp;
-        console.log("EXP Difference: ", expDifference);
+
+        await API.put("matches", "/sp3", {
+          body: gfr,
+        });
+
         if (expDifference > 0) {
-          let payment = await API.post("util", `/stellar-pay`, {
+          await API.post("util", `/stellar-pay`, {
             body: {
               sk: gfr.gcSK,
               amount: expDifference,
             },
           });
-          console.log("Payment: ", payment);
         }
-
-        let updatedProfile = await API.put("matches", "/sp3", {
-          body: gfr,
-        });
-        console.log("Updated Profile: ", updatedProfile);
       });
     } catch (e) {
       console.log(e);
-      console.log("Rerunning api requests, purely temporary");
-      await activeGolfers.forEach(async (gfr: any, idx: number) => {
-        //  this is where we pay people with Stellar at the end of the round
-
-        console.log("Golfer precacl: ", gfr);
-        let expDifference = gfr.xp - preGameGolfers[idx].xp;
-        console.log("EXP Difference: ", expDifference);
-        if (expDifference > 0) {
-          let payment = await API.post("util", `/stellar-pay`, {
-            body: {
-              sk: gfr.gcSK,
-              amount: expDifference,
-            },
-          });
-          console.log("Payment: ", payment);
-        }
-
-        let updatedProfile = await API.put("matches", "/sp3", {
-          body: gfr,
-        });
-        console.log("Updated Profile: ", updatedProfile);
-      });
     }
     localStorage.removeItem("activeCourse");
     localStorage.removeItem("activeGame");
@@ -455,7 +413,6 @@ export default function GameNav(props: any): JSX.Element {
               {props.golfer.SK === player.SK ? (
                 <div>
                   {/* Need to refactor this, a breaking change */}
-                  {/* Could be breaking because when I create a multiplayer game for someone else, if they do not already have an achievements array for that course - then they are screwed. Need to make sure both profiles are set up first, before assuming they are. */}
                   {/* <p>
 						Historical Best: {
 								props.golfer.achievements[achIndex].allTimeStrokes[activeHole]

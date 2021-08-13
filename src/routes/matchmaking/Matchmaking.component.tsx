@@ -310,9 +310,7 @@ export default function Matchmaking(props: any): JSX.Element {
       let profileBody = { ...gr };
       profileBody.records.push(recordBody);
       profileBody.achievements = achievementRecords;
-      console.log("New Profile Body: ", profileBody);
 
-      // This was causing a glitch, setting the opponent as the default golfer - is it fixed?
       if (profileBody.SK === props.golfer.SK) {
         props.setGolfer(profileBody);
         localStorage.setItem("golfer", JSON.stringify(profileBody));

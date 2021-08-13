@@ -168,6 +168,7 @@ export default function Stake(props) {
 				params: [ transactionParameters ]
 			});
 
+			// @TODO: in the future, display details of transaction to user/update the game's record files to allow someone to view details on ether-scan
 			console.log(txHash);
 		}
 	}
