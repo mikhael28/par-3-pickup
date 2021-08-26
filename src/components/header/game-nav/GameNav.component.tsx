@@ -335,7 +335,6 @@ export default function GameNav(props: any): JSX.Element {
               true;
           }
         }
-
         updatedGolferAchievements.push(newGolfer);
       }
     });
@@ -353,10 +352,19 @@ export default function GameNav(props: any): JSX.Element {
       body: props.activeGame,
     });
 
+    // doing this localStorage thing, because of a race condition (my working theory)
+    // @TODO refactor to eliminate race condition
     try {
+      let localActive = localStorage.getItem('activeGolfers');
+      let jsonActive;
+      if (localActive !== null) {
+        jsonActive = JSON.parse(localActive);
+      } else {
+        jsonActive = [];
+      }
       // @TODO: need to rework this, combine stellar and dynamo updates into one API call per player
       // Stellar test-net occasionally breaks, I actually need to migrate to prod if I want to keep this system
-      await activeGolfers.forEach(async (gfr: any, idx: number) => {
+      await jsonActive.forEach(async (gfr: any, idx: number) => {
         //  this is where we pay people with Stellar at the end of the round
 
         let expDifference = gfr.xp - preGameGolfers[idx].xp;
