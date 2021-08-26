@@ -18,6 +18,8 @@ export default function GameNav(props: any): JSX.Element {
     const activeGolfersCheck = localStorage.getItem("activeGolfers");
     if (activeGolfersCheck !== null) {
       setActiveGolfers(JSON.parse(activeGolfersCheck));
+      fetchProfiles();
+
     } else {
       fetchProfiles();
     }
@@ -80,12 +82,16 @@ export default function GameNav(props: any): JSX.Element {
     setActiveHole(activeHole);
   }
 
+  console.log('Active Game Props: ', props.activeGame)
+
   function checkForAchievement(hole: any) {
     let updatedGolferAchievements: any[] = [];
     activeGolfers.forEach((golfer: any, idx: number) => {
       let achievementArray: any;
       let achievementIndex: any;
       let strokeCount;
+
+      console.log('Golfer checked: ', golfer)
 
       // loop through each of the golfers in this system.
       if (props.activeGame.players.length > 1) {
@@ -182,9 +188,11 @@ export default function GameNav(props: any): JSX.Element {
         }
 
         // check for record
+        console.log(achievementArray.allTimeStrokes)
+        console.log('Hole: ', hole)
+        console.log('Stroke: ', strokeCount)
         if (
-          achievementArray.allTimeStrokes[hole] > strokeCount &&
-          achievementArray.allTimeStrokes[hole] !== 0
+          achievementArray.allTimeStrokes[hole] > strokeCount || achievementArray.allTimeStrokes[hole] === 0
         ) {
           newGolfer.achievements[achievementIndex].allTimeStrokes[hole] =
             strokeCount;
@@ -383,12 +391,12 @@ export default function GameNav(props: any): JSX.Element {
       <h1>Par 3 at {props.activeCourse.name}</h1>
       <p>Per Hole Wager: ${props.activeGame.perHoleWager}</p>
       {props.activeGame.players.map((player: any, idx: number) => {
-        //  let achIndex = 0;
-        //  props.golfer.achievements.forEach((ach: any, idx: number) => {
-        //    if (ach.code === props.activeCourse.codeName) {
-        //      achIndex = idx;
-        //    }
-        //  });
+         let achIndex = 0;
+         props.golfer.achievements.forEach((ach: any, idx: number) => {
+           if (ach.code === props.activeCourse.codeName) {
+             achIndex = idx;
+           }
+         });
         return (
           <figure
             className={styles.player}
@@ -412,13 +420,12 @@ export default function GameNav(props: any): JSX.Element {
             <div className="flex-down">
               {props.golfer.SK === player.SK ? (
                 <div>
-                  {/* Need to refactor this, a breaking change */}
-                  {/* <p>
+                  <p>
 						Historical Best: {
 								props.golfer.achievements[achIndex].allTimeStrokes[activeHole]
 							}{' '}
 							Strokes
-						</p> */}
+						</p>
                 </div>
               ) : (
                 <p>

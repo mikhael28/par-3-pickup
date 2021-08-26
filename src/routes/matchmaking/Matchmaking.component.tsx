@@ -284,19 +284,17 @@ export default function Matchmaking(props: any): JSX.Element {
       initialPlayerData = [you];
     }
 
+    // the bug is that the activeGame props are not being updated with the new player achievements, though the player profiles are...
+    // need to manage the async data flow or figure out another hack
+
     initialPlayerData.forEach(async (gr, id) => {
       let achievementCheck = false;
-      let achievementRecords = gr.achievements.slice();
 
-      achievementRecords.forEach((ach: any, i: any) => {
+      gr.achievements.forEach((ach: any, i: any) => {
         if (ach.code === course.codeName) {
           achievementCheck = true;
         }
       });
-
-      if (achievementCheck === false) {
-        achievementRecords.push(courseGoals);
-      }
 
       const recordBody = {
         course: course.name,
@@ -309,12 +307,16 @@ export default function Matchmaking(props: any): JSX.Element {
 
       let profileBody = { ...gr };
       profileBody.records.push(recordBody);
-      profileBody.achievements = achievementRecords;
+      if (achievementCheck === false) {
+        profileBody.achievements.push(courseGoals);
+      }
 
       if (profileBody.SK === props.golfer.SK) {
         props.setGolfer(profileBody);
         localStorage.setItem("golfer", JSON.stringify(profileBody));
       }
+
+      console.log('Profile body created: ', profileBody)
 
       try {
         // updating the profile of the player with the new records object
@@ -325,6 +327,7 @@ export default function Matchmaking(props: any): JSX.Element {
         console.error(e);
       }
     });
+
 
     const body = {
       course: course.name,
