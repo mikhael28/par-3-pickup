@@ -6,6 +6,10 @@
  * These values are used only in the theme-color meta tag,
  * changing these values will not change any css.
  */
+
+// const cedar = require('assets/cedars.png');
+// const greenlake = require('assets/greenlake.jpg');
+
 export const theme = {
   light: "#fff",
   dark: "#2c2c2c",
@@ -235,6 +239,17 @@ export const simpleCourseData = [
   },
 ];
 
+export const etiquette = [
+  'All plays off the first tee only. Order of play is "first come, first served".',
+  "Please play in groups of four whenever possible to improve pace of play.",
+  "Play only one ball, unless you are either a) by yourself or b) no one is behind you.",
+  "For the enjoyment and benefit of all, please keep up with the group in front of you.",
+  "If need be, please allow faster players to play through.",
+  "Please replace your divocts and repair your ball marks at all times.",
+  "Please keep pull carts at least 15 feet from the greens.",
+  "Each player should have their own set of clubs, at a minimum one putter and one other club.",
+]
+
 export const courses = [
   {
     id: "1",
@@ -242,29 +257,44 @@ export const courses = [
     codeName: "jackson",
     par3: true,
     eighteen: true,
-    street: "",
+    street: "1000 NE 125th Street",
     city: "Seattle",
-    zip: "",
+    zip: "98125",
     par: 27,
+    state: 'WA',
     putting: 0,
+    photo: '',
+    phone: '(206) 363-4747',
     picture:
-      "http://www.seattle.gov/Images/Council/Logos/City-of-Seattle-Logo_Color-on-Transparent.png",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNwNHVvgIzQ0fmnlQW7G71DAA2txyVQKe50A&usqp=CAU",
     holes: simpleCourseData,
+    distances: [105, 81, 78, 136, 117, 138, 142, 81, 154],
+    handicap: [7, 8, 9, 1, 5, 3, 2, 6, 4],
+    junior: [3, 3, 3, 4, 3, 4, 4, 3, 4],
+    
   },
   {
     id: "2",
-    name: "Willow Run",
+    name: "Willows Run",
     codeName: "willow",
     par3: true,
     eighteen: true,
-    street: "",
+    street: "10402 Willows Road NE",
     city: "Redmond",
-    zip: "",
+    zip: "98052",
+    state: 'WA',
     par: 27,
     putting: 18,
+    phone: '(425) 885-5476',
+    photo: '',
     picture:
       "https://i2.wp.com/innovationtriangle.us/wp-content/uploads/2018/04/Logo-4.png?resize=500%2C500&ssl=1",
     holes: simpleCourseData,
+    distances: [86, 125, 95, 147, 98, 158, 170, 127, 101],
+    handicap: [9, 4, 8, 2, 7, 3, 1, 5, 6],
+    junior: [3, 3, 3, 4, 3, 4, 4, 4, 3],
+    
+
   },
   {
     id: "3",
@@ -272,14 +302,22 @@ export const courses = [
     codeName: "crossroads",
     par3: true,
     eighteen: true,
-    street: "",
+    street: "15801 NE 15th Street",
     city: "Bellevue",
-    zip: "",
+    zip: "98008",
     par: 27,
+    state: 'WA',
     putting: 0,
+    photo: '',
+    phone: '(425) 452-4873',
     picture:
       "https://d3926qxcw0e1bh.cloudfront.net/pages_avatar_photos/64/0a/640ab7afec2c9468e9512fefbaca1223.jpg",
     holes: simpleCourseData,
+    distances: [93, 107, 98, 64, 69, 99, 78, 87, 102],
+    handicap: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    junior: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    
+
   },
   {
     id: "4",
@@ -287,14 +325,22 @@ export const courses = [
     codeName: "greenlake",
     par3: true,
     eighteen: false,
-    street: "",
+    street: "5701 East Greenlake Way N.",
     city: "Seattle",
-    zip: "",
+    zip: "98103",
     par: 27,
+    state: 'WA',
     putting: 0,
+    photo: '',
+    phone: '(206) 632-2280',
     picture:
       "http://www.seattle.gov/Images/Council/Logos/City-of-Seattle-Logo_Color-on-Transparent.png",
     holes: simpleCourseData,
+    distances: [75, 60, 65, 80, 115, 80, 80, 75, 75],
+    handicap: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    junior: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    
+
   },
   {
     id: "5",
@@ -302,14 +348,22 @@ export const courses = [
     codeName: "jefferson",
     par3: true,
     eighteen: true,
-    street: "",
+    street: "4101 Beacon Ave S",
     city: "Seattle",
-    zip: "",
+    zip: "98108",
     par: 27,
+    state: 'WA',
     putting: 0,
+    photo: '',
+    phone: '(206) 762-4513',
     picture:
-      "http://www.seattle.gov/Images/Council/Logos/City-of-Seattle-Logo_Color-on-Transparent.png",
+      "https://logos.bluegolf.com/jeffersonparkgc/profile.png",
     holes: simpleCourseData,
+    distances: [153, 85, 43, 71, 128, 132, 140, 125, 150],
+    handicap: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    junior: [2, 8, 3, 9, 6, 4, 7, 5, 1],
+    
+
   },
   {
     id: "6",
@@ -317,13 +371,83 @@ export const courses = [
     codeName: "interbay",
     par3: true,
     eighteen: false,
-    street: "",
+    street: "2501 15th Avenue West",
     city: "Seattle",
-    zip: "",
+    zip: "98119",
     par: 27,
+    state: 'WA',
     putting: 0,
+    photo: '',
+    phone: '(206) 285-2200',
     picture:
       "https://cdn.cybergolf.com/images/2285/PremierGC_interbay_2021logo_r1.png",
     holes: simpleCourseData,
+    distances: [290, 150, 100, 108, 130, 175, 172, 111, 130],
+    handicap: [2, 6, 9, 8, 4, 1, 3, 7, 5],
+    junior: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    
+  },
+  {
+    id: "7",
+    name: "Battle Creek",
+    codeName: "battle",
+    par3: true,
+    eighteen: false,
+    street: "6006 Meridian Ave N",
+    city: "Tulalip",
+    zip: "98271",
+    par: 27,
+    state: 'WA',
+    putting: 0,
+    photo: '',
+    phone: '(360) 659-7931',
+    picture:
+      "https://images.squarespace-cdn.com/content/v1/57646734414fb55ecccf62e7/dba4dea9-ec35-47d3-ab06-e7fc4c306faa/BC+logo+trees+fot+ts.png?format=1500w",
+    holes: simpleCourseData,
+    distances: [78, 83, 130, 102, 102, 196, 106, 108, 150],
+    handicap: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    junior: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  },
+  {
+    id: "8",
+    name: "Highlands",
+    codeName: "highlands",
+    par3: true,
+    eighteen: false,
+    street: "1400 N Highlands Pkwy",
+    city: "Tacoma",
+    zip: "98406",
+    par: 27,
+    state: 'WA',
+    putting: 0,
+    photo: 'https://www.highlandsgolf.net/wp-content/uploads/sites/3485/2014/11/course.jpg',
+    phone: '(253) 759-3622',
+    picture:
+      "https://i.ytimg.com/vi/XwjMUu-Uwrg/maxresdefault.jpg",
+    holes: simpleCourseData,
+    distances: [100, 130, 170, 190, 110, 112, 180, 100, 135],
+    handicap: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    junior: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+  },
+  {
+    id: "9",
+    name: "High Cedars",
+    codeName: "cedars",
+    par3: true,
+    eighteen: false,
+    street: "14604 149th St. Court East",
+    city: "Orting",
+    zip: "98360",
+    par: 27,
+    state: 'WA',
+    putting: 0,
+    photo: '',
+    phone: '(360) 893-3171',
+    picture:
+      "https://highcedars.com/wp-content/uploads/2014/12/high-cedars-logo.png",
+    holes: simpleCourseData,
+    distances: [90, 194, 120, 160, 280, 134, 90, 295, 155],
+    handicap: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    junior: [0, 0, 0, 0, 0, 0, 0, 0, 0],
   },
 ];

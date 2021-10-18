@@ -1,8 +1,8 @@
 {
-  "name": "seattle-par-3",
+  "name": "par-3-pickup",
   "description": "The community for beginner golf players to hit the links and improve their skills on local Par 3 courses.",
   "version": "0.1.0",
-  "license": "MIT",
+  "license": "GNU 2",
   "dependencies": {
     "@aws-amplify/api": "^4.0.1",
     "@material-ui/core": "^4.11.4",
