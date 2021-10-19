@@ -20,6 +20,11 @@
   }
 }
 
+.flex-down {
+  display: flex;
+  flex-direction: column;
+}
+
 .pay-button {
   position: relative;
   background-color: #6bcaa6;

@@ -37,7 +37,11 @@ export default function Matchmaking(props: any): JSX.Element {
     par: 27,
     putting: 0,
     picture: "",
+    photo: '',
     holes: [],
+    distances: [],
+    handicap: [],
+    junior: []
   });
 
   const courseGoals = {
@@ -369,6 +373,9 @@ export default function Matchmaking(props: any): JSX.Element {
     // @TODO: Have the ability to cancel the game, delete it from your record history (pop from the last array element) and save the game.
   }
 
+  console.log('Course: ', course)
+  console.log('Props: ', props)
+
   return (
     <React.Fragment>
       <Head>
@@ -376,6 +383,10 @@ export default function Matchmaking(props: any): JSX.Element {
       </Head>
       <main style={{ display: "flex", flexDirection: "column" }}>
         <h1>Matchmaking at {course.name}</h1>
+        <button onClick={() => {
+          props.setPictureLink(course.photo);
+          props.setPictureModal(true);
+        }}>View Course Map</button>
         <div className="flex">
           <h2>More than one player?</h2>
           <input type="checkbox" onChange={handleMultiplayer} />

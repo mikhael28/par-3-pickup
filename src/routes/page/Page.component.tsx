@@ -105,6 +105,8 @@ export default function Page(props: any): JSX.Element {
 							golfer={props.golfer}
 							setGolfer={props.setGolfer}
 							fetchProfileData={props.fetchProfileData}
+							setPictureLink={props.setPictureLink}
+							setPictureModal={props.setPictureModal}
 						/>
 					) : (
 						<div>

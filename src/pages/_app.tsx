@@ -42,6 +42,8 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
   const [newBio, setBio] = useState<string>("New to the tour.");
   const [newPhone, setPhone] = useState<string>("6508687480");
   const [modal, setModal] = useState<boolean>(false);
+  const [pictureModal, setPictureModal] = useState<boolean>(false);
+  const [pictureLink, setPictureLink] = useState<string>('');
   const [authenticated, setAuthenticated] = useState<boolean>(false);
 
   const [golfer, setGolfer] = useState({
@@ -126,6 +128,8 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
             golfer={golfer}
             setGolfer={setGolfer}
             fetchProfileData={fetchProfileData}
+            setPictureLink={setPictureLink}
+            setPictureModal={setPictureModal}
           />
           <Footer />
           <Dialog
@@ -148,8 +152,24 @@ export default function App({ Component, pageProps }: AppProps): JSX.Element {
               setAuthenticated={setAuthenticated}
               golfer={golfer}
               setGolfer={setGolfer}
+              
             />
           </Dialog>
+          <Dialog
+            open={pictureModal}
+            TransitionComponent={Transition}
+            keepMounted
+            disableEscapeKeyDown={true}
+            aria-labelledby="now-loading"
+            aria-describedby="Fetching Profile Data"
+          >
+            <div className="flex-down">
+              <img src={pictureLink} style={{height: '80%', width: '80%'}} alt="Picture of Golf Course" />
+              <button onClick={() => setPictureModal(false)} style={{ backgroundColor: "green", color: "white", padding: 12 }}
+                >Close</button>
+            </div>
+          </Dialog>
+          
         </ThemeProvider>
       </Provider>
     </React.Fragment>
