@@ -10,9 +10,9 @@ import styles from "./Items.module.scss";
 const { items, active } = styles;
 
 const links = [
-  { name: "Clubhouse", url: "/", alias: [] },
-  { name: "Proshop", url: "/proshop", alias: [] },
-  // { name: "Caddy", url: "/caddy", alias: [] },
+  { name: "Play", url: "/", alias: [] },
+  { name: "Pro Shop", url: "/proshop", alias: [] },
+  { name: "Caddy", url: "/caddy", alias: [] },
   { name: "Scores", url: "/profile", alias: [] },
 ];
 
