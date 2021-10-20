@@ -58,10 +58,12 @@ export interface Course {
   eighteen: boolean;
   street: string;
   city: string;
+  state: string;
   zip: string;
   par: number;
   putting: number;
   photo: any;
+  phone: string;
   picture: string;
   holes: any;
   distances: any;

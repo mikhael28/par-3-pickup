@@ -3,15 +3,11 @@
 /* eslint-disable indent */
 import React, { useState, useEffect } from "react";
 import Head from "next/head";
-import Pages from "components/pages";
-import Placeholder from "components/placeholder";
-import Card from "components/card";
 import PlayerCard from "components/player-card";
 import { API } from "@aws-amplify/api";
 import { useRouter } from "next/router";
 import short from "short-uuid";
 import { Course, Golfer, simpleCourseData } from "../../config";
-import styles from "./Matchmaking.module.scss";
 
 export default function Matchmaking(props: any): JSX.Element {
   const router = useRouter();
@@ -33,11 +29,13 @@ export default function Matchmaking(props: any): JSX.Element {
     eighteen: false,
     street: "",
     city: "",
+    state: "",
     zip: "",
     par: 27,
     putting: 0,
     picture: "",
     photo: '',
+    phone: '',
     holes: [],
     distances: [],
     handicap: [],
@@ -369,24 +367,27 @@ export default function Matchmaking(props: any): JSX.Element {
     minuteItems.push(<option value={`${iStr}`}>{iStr}</option>);
   }
 
-  async function cancelGame() {
-    // @TODO: Have the ability to cancel the game, delete it from your record history (pop from the last array element) and save the game.
-  }
-
-  console.log('Course: ', course)
-  console.log('Props: ', props)
-
   return (
     <React.Fragment>
       <Head>
         <title>Matchmaking</title>
       </Head>
       <main style={{ display: "flex", flexDirection: "column" }}>
-        <h1>Matchmaking at {course.name}</h1>
-        <button onClick={() => {
-          props.setPictureLink(course.photo);
-          props.setPictureModal(true);
-        }}>View Course Map</button>
+        <h1>{course.name}</h1>
+        <a href={`https://maps.google.com/?q=${course.street}+${course.city}+${course.state}+${course.zip}`} target="_blank" style={{fontSize: 14,  textDecorationLine: 'underline'}}>
+          {course.street}<br />{course.city}, {course.state} {course.zip}
+        </a>
+        <br />
+        <a href={`tel:${course.phone}`} style={{fontWeight: 'bold', textDecorationLine: 'underline'}}>{course.phone}</a>
+        <div>
+          <h3>Hole Distances (yards)</h3>
+          <ul style={{listStyle: 'none', display: 'flex', justifyContent: 'space-evenly', flexWrap: 'wrap'}}>
+          {course.distances.map((dist: number) => {
+            return <li style={{margin: 12, fontWeight: 'bold'}}>{dist}</li>
+          })}
+          </ul>
+        </div>
+
         <div className="flex">
           <h2>More than one player?</h2>
           <input type="checkbox" onChange={handleMultiplayer} />
@@ -484,15 +485,22 @@ export default function Matchmaking(props: any): JSX.Element {
           </div>
         ) : null}
 
+        <div className="flex-between"> 
+
+        <div className="span-button" onClick={() => {
+            props.setPictureLink(course.photo);
+            props.setPictureModal(true);
+        }}><span>View Course Map</span></div>
+
         {disabledButton === true ? (
-          <button
-            className="pay-button"
+          <div
+            className="span-button"
             onClick={startGame}
-            style={{ backgroundColor: "green", color: "white", padding: 12 }}
           >
-            Start game
-          </button>
+            <span>Start game</span>
+          </div>
         ) : null}
+        </div>
       </main>
     </React.Fragment>
   );
