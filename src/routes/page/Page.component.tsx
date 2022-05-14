@@ -16,7 +16,7 @@ export default function Page(props: any): JSX.Element {
 	const router = useRouter();
 	const [ active, setActive ] = useState<boolean>(false);
 	// const [ games, setGames ] = useState<Game[]>([]);
-	const [ activeCourse, setActiveCourse ] = useState<Course>({
+	const [ activeCourse, setActiveCourse ] = useState<any>({
 		id: '',
 		name: '',
 		codeName: '',
