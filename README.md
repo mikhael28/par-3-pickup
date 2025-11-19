@@ -4,10 +4,6 @@ Are you new to golf? Like me? I wanted to create a fun experience for us newbies
 <br /><br />
 For each par, birdie and a few other surprise achievements - you earn 10 Golf Coin, a fancy digital asset/cryptocurrency I created using the Stellar Blockchain. You can then turn around, and bet Golf Coin (GC) on 'skins' with your friends, which is a way of betting 'I will have the lowest score on hole 3' and adding some friendly (and captivating) competition to an otherwise normal day on the Par 3 course.
 
-## We are live folks
-
-Start chipping away at https://seattlepar3.com
-
 ### Open-Source Development
 
 Want to contribute? Great!
